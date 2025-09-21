@@ -1,10 +1,9 @@
-import { resolve } from 'path'
+import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import eslint from 'vite-plugin-eslint2'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
@@ -29,11 +28,10 @@ export default defineConfig(({ mode }) => {
         exclude: [],
       }),
       tsconfigPaths(),
-      tailwindcss(),
     ],
     resolve: {
       alias: {
-        '@': resolve(__dirname, './src'),
+        '@': path.resolve(__dirname, './src'),
       },
     },
     server: {

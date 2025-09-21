@@ -1,5 +1,5 @@
 import { Given } from '@badeball/cypress-cucumber-preprocessor'
 
-Given('I open the landing page', () => {
+Given('I visit the landing page', () => {
   cy.visit('/')
 })
