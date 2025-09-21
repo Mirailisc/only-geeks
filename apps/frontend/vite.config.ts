@@ -19,16 +19,14 @@ export default defineConfig(({ mode }) => {
         exclude: [],
         include: [/node_modules/],
       },
-      rollupOptions: {
-        external: ['cypress', /cypress\/.*/],
-      }
+      exclude: ['cypress/**'],
     },
     base: '/',
     plugins: [
       react(),
       eslint({
         fix: true,
-        exclude: ['./src/lib/i18n.mjs', './src/constants/translation.ts'],
+        exclude: [],
       }),
       tsconfigPaths(),
       tailwindcss(),

@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "types": ["cypress", "@badeball/cypress-cucumber-preprocessor", "node"]
+  },
+  "include": ["cypress/support/**/*.ts", "cypress/e2e/**/*.ts", "cypress.config.js"]
+}
