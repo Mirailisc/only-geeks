@@ -107,10 +107,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Prisma Generate
-        run: cd packages/db && pnpm run generate
+        run: pnpm prisma:generate
 
       - name: Build Prisma
-        run: cd packages/db && pnpm run build
+        run: pnpm prisma:build
 
       - name: Run Backend Build
         run: cd apps/backend && pnpm run build
