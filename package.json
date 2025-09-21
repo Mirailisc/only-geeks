@@ -1,0 +1,22 @@
+{
+  "name": "only-geeks",
+  "version": "1.0.0",
+  "description": "",
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "frontend:dev": "pnpm --filter=frontend run dev",
+    "backend:dev": "pnpm --filter=backend run start:dev",
+    "prisma:generate": "pnpm --filter=@package/prisma run generate",
+    "prisma:migrate": "pnpm --filter=@package/prisma run migrate:dev",
+    "prisma:build": "pnpm --filter=@package/prisma run build",
+    "prisma:pull": "pnpm --filter=@package/prisma run pull",
+    "prisma:studio": "pnpm --filter=@package/prisma run studio"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "turbo": "^2.5.6"
+  }
+}

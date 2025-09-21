@@ -1,0 +1,28 @@
+{
+  "name": "@package/prisma",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  },
+  "scripts": {
+    "generate": "dotenv -e ../../.env -- prisma generate",
+    "migrate:dev": "dotenv -e ../../.env -- prisma migrate dev",
+    "pull": "dotenv -e ../../.env -- prisma db pull",
+    "build": "tsc --project tsconfig.json",
+    "studio": "dotenv -e ../../.env -- prisma studio"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "6.14.0",
+    "typescript": "^5.1.3"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^10.0.0",
+    "prisma": "^6.14.0"
+  }
+}
