@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import { BASE_PATH } from './constants/routes'
 import Home from './pages/Home'
+import { Toaster } from 'sonner'
 
 const router = createBrowserRouter([
   {
@@ -10,7 +11,12 @@ const router = createBrowserRouter([
 ])
 
 function App() {
-  return <RouterProvider router={router} />
+  return (
+    <div>
+      <Toaster position="bottom-right" />
+      <RouterProvider router={router} />
+    </div>
+  )
 }
 
 export default App

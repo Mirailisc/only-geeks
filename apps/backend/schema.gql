@@ -24,4 +24,6 @@ scalar DateTime
 type Query {
   getHealth: Health!
   getAllUser: [User!]!
+  getGoogleOauthUrl: String!
+  me: User!
 }

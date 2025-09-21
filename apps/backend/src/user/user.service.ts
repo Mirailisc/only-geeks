@@ -10,6 +10,14 @@ export class UserService {
     return await this.prisma.user.findMany()
   }
 
+  async findUserById(id: string) {
+    return await this.prisma.user.findUnique({ where: { id } })
+  }
+
+  async findUserByEmail(email: string) {
+    return await this.prisma.user.findUnique({ where: { email } })
+  }
+
   async createUser(input: CreateUserInput) {
     return await this.prisma.user.create({ data: input })
   }
