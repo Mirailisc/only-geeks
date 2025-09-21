@@ -1,14 +1,8 @@
+import { GET_GOOGLE_OAUTH_URL } from '@/graphql/auth'
 import { Button } from '../ui/button'
-import { gql } from '@apollo/client'
 import { useLazyQuery } from '@apollo/client/react'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
-
-const GET_GOOGLE_OAUTH_URL = gql`
-  query GetGoogleOauthUrl {
-    getGoogleOauthUrl
-  }
-`
 
 interface GetGoogleOauthUrlData {
   getGoogleOauthUrl: string
