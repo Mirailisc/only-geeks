@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Controller,
   Get,
+  Post,
   Req,
   Res,
   UnauthorizedException,
@@ -11,6 +12,7 @@ import { Request, Response } from 'express'
 import { ACCESS_TOKEN } from 'src/constants/cookie'
 import { ConfigService } from '@nestjs/config'
 import axios, { isAxiosError } from 'axios'
+import { ForbiddenError } from '@nestjs/apollo'
 
 @Controller('auth')
 export class AuthController {
@@ -95,5 +97,31 @@ export class AuthController {
         isAxiosError(err) ? err.response?.data || err.message : err,
       )
     }
+  }
+
+  @Post('test-login')
+  async testLogin(@Req() req: Request, @Res() res: Response) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new ForbiddenError('Test login is not allowed in production')
+    }
+
+    const { email } = req.body
+
+    const user = await this.authService.validateOrCreateUser({
+      email,
+      firstName: 'Test',
+      lastName: 'User',
+    })
+
+    const token = await this.authService.generateJwt(user)
+
+    res.cookie(ACCESS_TOKEN, token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    })
+
+    return res.status(200).json({ message: 'Logged in' })
   }
 }
