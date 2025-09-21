@@ -19,6 +19,9 @@ export default defineConfig(({ mode }) => {
         exclude: [],
         include: [/node_modules/],
       },
+      rollupOptions: {
+        external: ['cypress', /cypress\/.*/],
+      }
     },
     base: '/',
     plugins: [

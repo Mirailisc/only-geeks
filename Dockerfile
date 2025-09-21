@@ -31,8 +31,8 @@ COPY apps/backend ./apps/backend
 COPY packages/prisma ./packages/prisma
 
 RUN pnpm install --frozen-lockfile
-RUN pnpm --filter @package/db run generate
-RUN pnpm --filter @package/db run build
+RUN pnpm prisma:generate
+RUN pnpm prisma:build
 
 WORKDIR /app/apps/backend
 RUN pnpm run build
@@ -60,7 +60,7 @@ COPY --from=frontend-build /app/apps/frontend/dist ./apps/backend/public
 COPY --from=backend-build /app/packages/prisma/dist ./packages/prisma/dist
 
 RUN pnpm install --frozen-lockfile
-RUN pnpm --filter @package/db run generate
+RUN pnpm prisma:generate
 RUN pnpm prune --prod
 
 ENV NODE_ENV=production
