@@ -27,6 +27,7 @@ DATABASE_URL="postgresql://admin:adminOnlyGeek@localhost:5432/ongeki"
 BACKEND_URL=""
 GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
+JWT_SECRET=""
 ```
 
 ### Setup
