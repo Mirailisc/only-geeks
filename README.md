@@ -31,7 +31,7 @@ GOOGLE_CLIENT_SECRET=""
 
 ### Setup
 
-1. Clone the repository and open it again in your terminal.
+1. Clone this repository.
 2. Run `docker compose up -d db` to start the database.
 3. Run `pnpm install` to install dependencies.
 4. Run `pnpm prisma:generate` to generate prisma client.
