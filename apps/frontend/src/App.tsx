@@ -11,10 +11,6 @@ const router = createBrowserRouter([
     element: <Boot />,
     children: [
       {
-        path: BASE_PATH,
-        element: <Home />,
-      },
-      {
         path: PROFILE_PATH,
         element: (
           <ProtectedRoute>
@@ -23,6 +19,10 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: BASE_PATH,
+    element: <Home />,
   },
 ])
 

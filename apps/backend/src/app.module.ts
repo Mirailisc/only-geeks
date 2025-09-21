@@ -17,6 +17,7 @@ import { AuthModule } from './auth/auth.module'
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
       playground: false,
+      context: ({ req, res }) => ({ req, res }),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     HealthModule,
