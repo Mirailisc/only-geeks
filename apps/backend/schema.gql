@@ -27,3 +27,7 @@ type Query {
   getGoogleOauthUrl: String!
   me: User!
 }
+
+type Mutation {
+  logout: Boolean!
+}

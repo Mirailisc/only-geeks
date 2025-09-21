@@ -86,7 +86,9 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
 
-      return res.redirect(this.configService.get<string>('FRONTEND_URL')!)
+      return res.redirect(
+        this.configService.get<string>('FRONTEND_URL') + '/profile',
+      )
     } catch (err) {
       console.error(isAxiosError(err) ? err.response?.data || err.message : err)
       throw new UnauthorizedException(
