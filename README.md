@@ -1,5 +1,7 @@
 # Only Geeks
 
+Blogs & Portfolio website only for geeks 👨‍💻
+
 ## Development
 
 ### Pre-requisites
