@@ -34,6 +34,12 @@ jobs:
           node-version: "24.x"
           cache: "pnpm"
 
+      - name: Set up Cypress binary cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-cypress-${{ hashFiles('pnpm-lock.yaml') }}
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -69,7 +75,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          project: ./apps/frontend
+          working-directory: ./apps/frontend
           install: false
           wait-on: "http://localhost:3000"
           start: pnpm dev
