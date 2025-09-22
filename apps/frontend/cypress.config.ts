@@ -14,6 +14,7 @@ export default defineConfig({
   e2e: {
     specPattern: '**/*.feature',
     supportFile: 'cypress/support/e2e.ts',
+    video: true,
     retries: {
       runMode: 2,
       openMode: 0,
