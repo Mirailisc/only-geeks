@@ -37,6 +37,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Create .env file
+        run: |
+          cat > .env << 'EOF'
+          DATABASE_URL=postgresql://actionUser:adminActionUser@localhost:5432/ongeki
+          BACKEND_URL=http://localhost:4000
+          FRONTEND_URL=http://localhost:3000
+          GOOGLE_CLIENT_ID=dummy-google-client-id
+          GOOGLE_CLIENT_SECRET=dummy-google-client-secret
+          JWT_SECRET=super-secret-jwt
+          EOF
+
       - name: Generate Prisma client
         run: pnpm prisma:generate
 
@@ -48,7 +59,7 @@ jobs:
 
       - name: Start backend
         run: pnpm backend:dev &
-      
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
