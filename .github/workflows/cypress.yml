@@ -34,12 +34,6 @@ jobs:
           node-version: "24.x"
           cache: "pnpm"
 
-      - name: Set up Cypress binary cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-cypress-${{ hashFiles('pnpm-lock.yaml') }}
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -65,11 +59,6 @@ jobs:
 
       - name: Start backend
         run: pnpm backend:dev &
-
-      - name: Install Cypress
-        uses: cypress-io/github-action@v6
-        with:
-          runTests: false
 
       - name: Run Frontend
         run: pnpm frontend:dev &
