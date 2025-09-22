@@ -71,14 +71,11 @@ jobs:
         with:
           runTests: false
 
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
-        with:
-          browser: chrome
-          working-directory: ./apps/frontend
-          install: false
-          wait-on: "http://localhost:3000"
-          start: pnpm dev
+      - name: Run Frontend
+        run: pnpm frontend:dev &
+
+      - name: Run Cypress
+        run: cd apps/frontend && pnpm run cypress:ci
 
       - name: Upload Cypress Videos
         uses: actions/upload-artifact@v4
