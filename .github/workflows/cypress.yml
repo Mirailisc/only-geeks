@@ -1,0 +1,84 @@
+name: Cypress Test
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: actionUser
+          POSTGRES_PASSWORD: adminActionUser
+          POSTGRES_DB: ongeki
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U admin -d ongeki"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+          cache: "pnpm"
+
+      - name: Cache Cypress Binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-cypress-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Cypress Binary
+        run: pnpx cypress install
+
+      - name: Create .env file
+        run: |
+          cat > .env << 'EOF'
+          DATABASE_URL=postgresql://actionUser:adminActionUser@localhost:5432/ongeki
+          BACKEND_URL=http://localhost:4000
+          FRONTEND_URL=http://localhost:3000
+          GOOGLE_CLIENT_ID=dummy-google-client-id
+          GOOGLE_CLIENT_SECRET=dummy-google-client-secret
+          JWT_SECRET=super-secret-jwt
+          EOF
+
+      - name: Generate Prisma client
+        run: pnpm prisma:generate
+
+      - name: Run migrations
+        run: pnpm prisma:migrate deploy
+
+      - name: Build Prisma client
+        run: pnpm prisma:build
+
+      - name: Start backend
+        run: pnpm backend:dev &
+
+      - name: Run Frontend
+        run: pnpm frontend:dev &
+
+      - name: Run Cypress
+        run: cd apps/frontend && pnpm run cypress:ci
+
+      - name: Upload Cypress Videos
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cypress Videos
+          path: apps/frontend/cypress/videos
