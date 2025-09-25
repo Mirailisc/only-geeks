@@ -34,11 +34,16 @@ jobs:
           node-version: "24.x"
           cache: "pnpm"
 
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Install Cypress Binary
-        run: pnpx cypress install
+        run: cd apps/frontend && pnpx cypress install
 
       - name: Create .env file
         run: |
