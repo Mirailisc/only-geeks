@@ -39,3 +39,9 @@ JWT_SECRET=""
 5. Run `pnpm prisma:migrate` to apply schema changes to the database. (if you don't have schemas, run `pnpm prisma:push` instead)
 6. Run `pnpm prisma:build` to build prisma client.
 7. Run `pnpm dev` to start the server. (If you want to start specific app, run `pnpm dev:frontend` or `pnpm dev:backend`)
+
+## Testing
+
+To run tests, you need to open cypress app inside `apps/frontend` using `pnpm cypress:open`
+
+To write tests, please refer to [Cypress E2E Documentation](https://docs.cypress.io/app/end-to-end-testing/testing-your-app)
