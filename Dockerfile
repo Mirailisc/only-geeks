@@ -24,7 +24,6 @@ RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend ./apps/backend
 COPY packages/prisma ./packages/prisma
-COPY .env ./
 
 # Install ALL deps including devDependencies
 RUN pnpm install --frozen-lockfile
