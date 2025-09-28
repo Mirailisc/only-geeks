@@ -12,7 +12,7 @@ RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/frontend ./apps/frontend
 
-RUN pnpm install --frozen-lockfile --filter frontend --workspace-root
+RUN pnpm install --frozen-lockfile --filter frontend --workspace-root --prod
 RUN pnpm --filter frontend run build
 
 # --- Backend Build ---
@@ -30,7 +30,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend ./apps/backend
 COPY packages/prisma ./packages/prisma
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod
 RUN pnpm prisma:generate
 RUN pnpm prisma:build
 
@@ -59,9 +59,8 @@ COPY --from=backend-build /app/apps/backend/dist ./apps/backend/dist
 COPY --from=frontend-build /app/apps/frontend/dist ./apps/backend/public
 COPY --from=backend-build /app/packages/prisma/dist ./packages/prisma/dist
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod
 RUN pnpm prisma:generate
-RUN pnpm prune --prod
 
 ENV NODE_ENV=production
 

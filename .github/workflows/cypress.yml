@@ -76,8 +76,15 @@ jobs:
       - name: Run Frontend
         run: pnpm frontend:dev &
 
-      - name: Run Cypress
-        run: cd apps/frontend && pnpm run cypress:ci
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: apps/frontend
+          build: pnpm build
+          start: pnpm dev
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 60
+          browser: chrome
 
       - name: Upload Cypress Videos
         uses: actions/upload-artifact@v4
