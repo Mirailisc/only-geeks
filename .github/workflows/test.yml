@@ -142,3 +142,11 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build --no-cache -t ${{ secrets.IMAGE_NAME }} -f Dockerfile .
+
+      - name: Show Docker Image Summary
+        run: |
+          IMAGE=${{ secrets.IMAGE_NAME }}
+          echo "Image Summary:"
+          echo "| IMAGE ID | SIZE |"
+          echo "|----------|------|"
+          docker images --format "| {{.ID}} | {{.Size}} |" $IMAGE
