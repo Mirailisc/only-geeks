@@ -48,20 +48,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
-# Copy workspace files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend/package.json ./apps/backend/package.json
 COPY packages/prisma/package.json ./packages/prisma/package.json
-COPY packages/prisma/prisma ./packages/prisma/prisma
-
-# Copy built backend and frontend
-COPY --from=backend-build /app/apps/backend/dist ./apps/backend/dist
-COPY --from=frontend-build /app/apps/frontend/dist ./apps/backend/public
-COPY --from=backend-build /app/packages/prisma/dist ./packages/prisma/dist
 
 RUN pnpm install --frozen-lockfile --prod
-RUN pnpm prisma:generate
+
+COPY --from=backend-build /app/apps/backend/dist ./apps/backend/dist
+COPY --from=backend-build /app/packages/prisma/dist ./packages/prisma/dist
+COPY --from=frontend-build /app/apps/frontend/dist ./apps/backend/public
 
 ENV NODE_ENV=production
+ENV DATABASE_URL=postgresql://actionUser:adminActionUser@localhost:5432/ongeki
 
 CMD ["node", "apps/backend/dist/main"]
