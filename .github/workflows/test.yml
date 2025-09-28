@@ -147,6 +147,6 @@ jobs:
         run: |
           IMAGE=${{ secrets.IMAGE_NAME }}
           echo "Image Summary:"
-          echo "| IMAGE NAME | IMAGE ID | SIZE |"
-          echo "|------------|----------|------|"
-          docker images --format "| {{.Repository}} | {{.ID}} | {{.Size}} |" $IMAGE
+          echo "| IMAGE ID | SIZE |"
+          echo "|----------|------|"
+          docker images --format "| {{.ID}} | {{.Size}} |" $IMAGE
