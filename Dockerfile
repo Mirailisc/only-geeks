@@ -34,20 +34,31 @@ WORKDIR /app/apps/backend
 RUN pnpm run build
 
 # --- Final Runtime Stage ---
-FROM node:24-alpine AS final
+FROM node:24-slim AS final
+
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates unzip openssl libssl-dev pkg-config && \
+    rm -rf /var/lib/apt/lists/*
+
+
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend/package.json ./apps/backend/package.json
 COPY packages/prisma/package.json ./packages/prisma/package.json
-
-RUN pnpm install --frozen-lockfile --prod --filter apps/backend --workspace-root
+COPY packages/prisma/prisma ./packages/prisma/prisma
 
 COPY --from=backend-build /app/apps/backend/dist ./apps/backend/dist
+COPY --from=frontend-build /app/apps/frontend/dist ./apps/backend/public
 COPY --from=backend-build /app/packages/prisma/dist ./packages/prisma/dist
 
 COPY --from=frontend-build /app/apps/frontend/dist ./apps/backend/public
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm run prisma:generate
+RUN pnpm prune --prod
 
 ENV NODE_ENV=production
 
