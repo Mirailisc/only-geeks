@@ -12,7 +12,8 @@
     "migrate:dev": "dotenv -e ../../.env -- prisma migrate dev",
     "pull": "dotenv -e ../../.env -- prisma db pull",
     "build": "tsc --project tsconfig.json",
-    "studio": "dotenv -e ../../.env -- prisma studio"
+    "studio": "dotenv -e ../../.env -- prisma studio",
+    "migrate:reset": "dotenv -e ../../.env -- prisma migrate reset"
   },
   "keywords": [],
   "author": "",

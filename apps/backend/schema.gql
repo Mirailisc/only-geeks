@@ -8,9 +8,13 @@ type Health {
 
 type User {
   id: String!
-  firstName: String!
-  lastName: String!
+  firstName: String
+  lastName: String
   email: String!
+  bio: String
+  picture: String
+  location: String
+  organization: String
   isAdmin: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -21,13 +25,31 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type AuthUser {
+  firstName: String
+  lastName: String
+  email: String!
+  isAdmin: Boolean!
+  picture: String
+}
+
 type Query {
   getHealth: Health!
-  getAllUser: [User!]!
+  getMyProfile: User!
+  getProfileByUserId(id: String!): User!
   getGoogleOauthUrl: String!
-  me: User!
+  me: AuthUser!
 }
 
 type Mutation {
+  updateProfileInfo(input: UpdateUserInput!): User!
   logout: Boolean!
+}
+
+input UpdateUserInput {
+  bio: String
+  firstName: String
+  lastName: String
+  location: String
+  organization: String
 }
