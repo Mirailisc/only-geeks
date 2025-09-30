@@ -90,7 +90,9 @@ export class AuthController {
       })
 
       return res.redirect(
-        this.configService.get<string>('FRONTEND_URL') + '/profile',
+        process.env.NODE_ENV === 'production'
+          ? `${this.configService.get<string>('URL')}/profile`
+          : 'http://localhost:3000/profile',
       )
     } catch (err) {
       console.error(isAxiosError(err) ? err.response?.data || err.message : err)
