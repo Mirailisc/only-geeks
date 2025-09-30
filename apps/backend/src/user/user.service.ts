@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateUserInput } from './dto/create-user.input'
+import { UpdateUserInput } from './dto/update-user.input'
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async createUser(input: CreateUserInput) {
+    return await this.prisma.user.create({ data: input })
+  }
 
   async getAllUser() {
     return await this.prisma.user.findMany()
@@ -15,10 +20,15 @@ export class UserService {
   }
 
   async findUserByEmail(email: string) {
-    return await this.prisma.user.findUnique({ where: { email } })
+    return await this.prisma.user.findUnique({
+      where: { email },
+    })
   }
 
-  async createUser(input: CreateUserInput) {
-    return await this.prisma.user.create({ data: input })
+  async updateUserInfo(userId: string, input: UpdateUserInput) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: input,
+    })
   }
 }

@@ -66,7 +66,7 @@ export class AuthController {
         },
       )
 
-      const { email, given_name, family_name } = userRes.data
+      const { email, given_name, family_name, picture } = userRes.data
       if (!email || !given_name || !family_name) {
         throw new UnauthorizedException(
           'Failed to retrieve user info from Google',
@@ -77,6 +77,7 @@ export class AuthController {
         email,
         firstName: given_name,
         lastName: family_name,
+        picture,
       })
 
       const token = await this.authService.generateJwt(user)
@@ -111,6 +112,7 @@ export class AuthController {
       email,
       firstName: 'Test',
       lastName: 'User',
+      picture: '',
     })
 
     const token = await this.authService.generateJwt(user)

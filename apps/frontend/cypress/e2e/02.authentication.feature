@@ -13,5 +13,6 @@ Feature: Authentication
   Scenario: Logout
     Given I am logged in as "user@test.com"
     Then I view my profile
+    Then I click dropdown menu
     Then I click logout button
     Then I should see "Hello World!"
