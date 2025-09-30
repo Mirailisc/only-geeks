@@ -5,7 +5,6 @@ import createEsbuildPlugin from '@badeball/cypress-cucumber-preprocessor/esbuild
 import { PrismaClient } from '@package/prisma'
 import * as path from 'path'
 import * as dotenv from 'dotenv'
-import { randomUUID } from 'crypto'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
@@ -32,31 +31,20 @@ export default defineConfig({
 
       on('task', {
         async 'db:seed'() {
-          const adminId = randomUUID()
-          const userId = randomUUID()
-
           await prisma.user.createMany({
             data: [
               {
-                id: adminId,
                 email: 'admin@test.com',
                 firstName: 'Admin',
                 lastName: 'User',
                 isAdmin: true,
               },
               {
-                id: userId,
                 email: 'user@test.com',
                 firstName: 'User',
                 lastName: 'User',
                 isAdmin: false,
               },
-            ],
-          })
-          await prisma.profile.createMany({
-            data: [
-              { userId: adminId, picture: '' },
-              { userId: userId, picture: '' },
             ],
           })
           return null
@@ -66,12 +54,7 @@ export default defineConfig({
             where: { email: { in: ['admin@test.com', 'user@test.com'] } },
             select: { id: true },
           })
-
           const userIds = users.map((u) => u.id)
-
-          await prisma.profile.deleteMany({
-            where: { userId: { in: userIds } },
-          })
           await prisma.user.deleteMany({
             where: { id: { in: userIds } },
           })

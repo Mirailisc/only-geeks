@@ -1,4 +1,4 @@
-import type { Profile } from '@/pages/Profile'
+import type { Profile } from '@/pages/profile'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import React, { useEffect } from 'react'
@@ -65,11 +65,11 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
       form.setValue('location', profile.location ?? '')
       form.setValue('organization', profile.organization ?? '')
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile])
 
   return (
-    <div className='border border-black/10 p-4 rounded-md m-4'>
+    <div className="m-4 rounded-md border border-black/10 p-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -79,12 +79,13 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               <FormItem>
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="First Name" {...field} />
+                  <Input placeholder="First Name" {...field} data-cy="input-firstName" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="lastName"
@@ -92,12 +93,13 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Last Name" {...field} />
+                  <Input placeholder="Last Name" {...field} data-cy="input-lastName" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="bio"
@@ -111,12 +113,14 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
                     {...field}
                     value={field.value ?? ''}
                     onChange={(e) => field.onChange(e.target.value)}
+                    data-cy="input-bio"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="location"
@@ -124,12 +128,13 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               <FormItem>
                 <FormLabel>Location</FormLabel>
                 <FormControl>
-                  <Input placeholder="Location" {...field} />
+                  <Input placeholder="Location" {...field} data-cy="input-location" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="organization"
@@ -137,13 +142,14 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               <FormItem>
                 <FormLabel>Organization</FormLabel>
                 <FormControl>
-                  <Input placeholder="Organization" {...field} />
+                  <Input placeholder="Organization" {...field} data-cy="input-organization" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className='w-full' disabled={updating}>
+
+          <Button type="submit" className="w-full" disabled={updating} data-cy="submit">
             {updating ? 'Updating...' : 'Submit'}
           </Button>
         </form>

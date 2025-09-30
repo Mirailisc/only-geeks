@@ -18,6 +18,24 @@ export const GET_MY_PROFILE_QUERY = gql`
   }
 `
 
+export const GET_PROFILE_BY_USER_ID_QUERY = gql`
+  query GetProfileByUserId($id: String!) {
+    getProfileByUserId(id: $id) {
+      id
+      firstName
+      lastName
+      email
+      bio
+      picture
+      location
+      organization
+      isAdmin
+      createdAt
+      updatedAt
+    }
+  }
+`
+
 export const UPDATE_PROFILE_INFO_MUTATION = gql`
   mutation UpdateProfileInfo($input: UpdateUserInput!) {
     updateProfileInfo(input: $input) {
