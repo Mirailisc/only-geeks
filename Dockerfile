@@ -25,14 +25,11 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend ./apps/backend
 COPY packages/prisma ./packages/prisma
 
-# Install ALL deps including devDependencies
 RUN pnpm install --frozen-lockfile
 
-# Generate Prisma client (dotenv-cli needed here)
 RUN pnpm prisma:generate
 RUN pnpm prisma:build
 
-# Build backend
 WORKDIR /app/apps/backend
 RUN pnpm run build
 
@@ -41,20 +38,17 @@ FROM node:24-alpine AS final
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
-# Install only production dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend/package.json ./apps/backend/package.json
 COPY packages/prisma/package.json ./packages/prisma/package.json
-RUN pnpm install --frozen-lockfile --prod
 
-# Copy built backend and generated Prisma client
+RUN pnpm install --frozen-lockfile --prod --filter apps/backend --workspace-root
+
 COPY --from=backend-build /app/apps/backend/dist ./apps/backend/dist
 COPY --from=backend-build /app/packages/prisma/dist ./packages/prisma/dist
 
-# Copy frontend static assets
 COPY --from=frontend-build /app/apps/frontend/dist ./apps/backend/public
 
 ENV NODE_ENV=production
-ENV DATABASE_URL=postgresql://actionUser:adminActionUser@localhost:5432/ongeki
 
 CMD ["node", "apps/backend/dist/main"]
