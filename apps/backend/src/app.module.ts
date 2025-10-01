@@ -6,7 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
-import { AppController } from './app.controller'
+// import { AppController } from './app.controller'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 
@@ -27,13 +27,13 @@ import { join } from 'path'
       rootPath: join(__dirname, '..', 'public'),
       exclude: ['/auth*', '/graphql*'],
       serveStaticOptions: {
-        index: false,
+        index: 'index.html',
       },
     }),
     HealthModule,
     UserModule,
     AuthModule,
   ],
-  controllers: [AppController],
+  // controllers: [AppController],
 })
 export class AppModule {}
