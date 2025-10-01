@@ -38,7 +38,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div>
-      <Toaster position="bottom-right" />
+      <Toaster richColors position="bottom-right" />
       <RouterProvider router={router} />
     </div>
   )
