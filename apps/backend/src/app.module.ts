@@ -24,7 +24,7 @@ import { ServeStaticModule } from '@nestjs/serve-static'
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
-      renderPath: '/*',
+      renderPath: '/(.*)*',
       exclude: ['/auth*', '/graphql*'],
     }),
     HealthModule,
