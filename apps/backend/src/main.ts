@@ -3,12 +3,14 @@ import { AppModule } from './app.module'
 import * as cookieParser from 'cookie-parser'
 import * as bodyParser from 'body-parser'
 import { NestExpressApplication } from '@nestjs/platform-express'
+import { join } from 'path'
 
 const DEFAULT_PORT = 4000
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
+  app.useStaticAssets(join(__dirname, '..', 'public'))
   app.enableCors({
     origin: [process.env.URL ?? 'http://localhost:3000'],
     credentials: true,
