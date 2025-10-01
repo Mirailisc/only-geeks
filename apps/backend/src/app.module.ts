@@ -6,8 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
-import { AppController } from './app.controller'
-import { SpaFallbackMiddleware } from './middlewares/client.middleware'
+import { SpaFallbackMiddleware } from './client.middleware'
 
 @Module({
   imports: [
@@ -26,7 +25,6 @@ import { SpaFallbackMiddleware } from './middlewares/client.middleware'
     UserModule,
     AuthModule,
   ],
-  controllers: [AppController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
