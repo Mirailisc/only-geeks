@@ -1,11 +1,15 @@
-import { Controller, Get, Res } from '@nestjs/common'
+import { Controller, Get, Req, Res } from '@nestjs/common'
 import { join } from 'path'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 
 @Controller()
 export class AppController {
   @Get('*')
-  serveReactApp(@Res() res: Response) {
-    res.sendFile(join(__dirname, '..', 'public', 'index.html'))
+  serveApp(@Req() req: Request, @Res() res: Response) {
+    if (req.path.startsWith('/auth') || req.path.startsWith('/graphql')) {
+      return res.status(404).send('Not Found')
+    }
+
+    return res.sendFile(join(__dirname, '..', 'public', 'index.html'))
   }
 }

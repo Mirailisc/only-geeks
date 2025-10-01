@@ -7,6 +7,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
 import { AppController } from './app.controller'
+import { ServeStaticModule } from '@nestjs/serve-static'
+import { join } from 'path'
 
 @Module({
   imports: [
@@ -20,6 +22,13 @@ import { AppController } from './app.controller'
       playground: false,
       context: ({ req, res }) => ({ req, res }),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      exclude: ['/auth*', '/graphql*'],
+      serveStaticOptions: {
+        index: false,
+      },
     }),
     HealthModule,
     UserModule,
