@@ -7,6 +7,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
 import { SpaFallbackMiddleware } from './client.middleware'
+import { join } from 'path'
+import { ServeStaticModule } from '@nestjs/serve-static'
 
 @Module({
   imports: [
@@ -20,6 +22,10 @@ import { SpaFallbackMiddleware } from './client.middleware'
       playground: false,
       context: ({ req, res }) => ({ req, res }),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      exclude: ['/auth*', '/graphql*'],
     }),
     HealthModule,
     UserModule,
