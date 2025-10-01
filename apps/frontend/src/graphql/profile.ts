@@ -10,6 +10,7 @@ export const GET_MY_PROFILE_QUERY = gql`
       bio
       picture
       location
+      username
       organization
       isAdmin
       createdAt
@@ -18,9 +19,9 @@ export const GET_MY_PROFILE_QUERY = gql`
   }
 `
 
-export const GET_PROFILE_BY_USER_ID_QUERY = gql`
-  query GetProfileByUserId($id: String!) {
-    getProfileByUserId(id: $id) {
+export const GET_PROFILE_BY_USERNAME_QUERY = gql`
+  query GetProfileByUsername($username: String!) {
+    getProfileByUsername(username: $username) {
       id
       firstName
       lastName
@@ -28,6 +29,7 @@ export const GET_PROFILE_BY_USER_ID_QUERY = gql`
       bio
       picture
       location
+      username
       organization
       isAdmin
       createdAt
@@ -45,6 +47,7 @@ export const UPDATE_PROFILE_INFO_MUTATION = gql`
       email
       bio
       picture
+      username
       location
       organization
       isAdmin

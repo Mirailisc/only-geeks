@@ -9,6 +9,7 @@ import UpdateProfileForm from '@/components/Profile/UpdateProfileForm'
 export interface Profile {
   id: string
   email: string
+  username: string
   firstName: string
   lastName: string
   bio: string

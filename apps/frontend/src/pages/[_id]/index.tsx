@@ -2,20 +2,20 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Profile } from '../profile'
 import { useQuery } from '@apollo/client/react'
-import { GET_PROFILE_BY_USER_ID_QUERY } from '@/graphql/profile'
 import { toast } from 'sonner'
 import AuthNavbar from '@/components/utils/AuthNavbar'
+import { GET_PROFILE_BY_USERNAME_QUERY } from '@/graphql/profile'
 
 export default function UserProfile() {
   const [profile, setProfile] = useState<Profile | null>(null)
 
-  const { userId } = useParams()
+  const { username } = useParams()
 
-  const { data, loading, error } = useQuery<{ getProfileByUserId: Profile }>(GET_PROFILE_BY_USER_ID_QUERY, {
+  const { data, loading, error } = useQuery<{ getProfileByUsername: Profile }>(GET_PROFILE_BY_USERNAME_QUERY, {
     variables: {
-      id: userId,
+      username: username,
     },
-    skip: !userId,
+    skip: !username,
   })
 
   useEffect(() => {
@@ -24,11 +24,11 @@ export default function UserProfile() {
 
   useEffect(() => {
     if (data) {
-      setProfile(data.getProfileByUserId)
+      setProfile(data.getProfileByUsername)
     }
   }, [data])
 
-  if (!userId) return <div>Not Found</div>
+  if (!username) return <div>Not Found</div>
   if (loading) return <div>Loading...</div>
 
   return (

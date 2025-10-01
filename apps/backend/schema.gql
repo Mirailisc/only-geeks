@@ -8,6 +8,7 @@ type Health {
 
 type User {
   id: String!
+  username: String!
   firstName: String
   lastName: String
   email: String!
@@ -36,7 +37,7 @@ type AuthUser {
 type Query {
   getHealth: Health!
   getMyProfile: User!
-  getProfileByUserId(id: String!): User!
+  getProfileByUsername(username: String!): User!
   getGoogleOauthUrl: String!
   me: AuthUser!
 }
