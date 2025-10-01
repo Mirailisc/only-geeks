@@ -15,4 +15,4 @@ Feature: Authentication
     Then I view my profile
     Then I click dropdown menu
     Then I click logout button
-    Then I should see "Hello World!"
+    Then I should see "Welcome back"
