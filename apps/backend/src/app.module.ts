@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { HealthModule } from './health/health.module'
 import { ConfigModule } from '@nestjs/config'
 import { GraphQLModule } from '@nestjs/graphql'
@@ -6,9 +6,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
-// import { AppController } from './app.controller'
-import { ServeStaticModule } from '@nestjs/serve-static'
-import { join } from 'path'
+import { AppController } from './app.controller'
+import { SpaFallbackMiddleware } from './middlewares/client.middleware'
 
 @Module({
   imports: [
@@ -23,17 +22,14 @@ import { join } from 'path'
       context: ({ req, res }) => ({ req, res }),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-      exclude: ['/auth*', '/graphql*'],
-      serveStaticOptions: {
-        index: 'index.html',
-      },
-    }),
     HealthModule,
     UserModule,
     AuthModule,
   ],
-  // controllers: [AppController],
+  controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SpaFallbackMiddleware).forRoutes('*')
+  }
+}
