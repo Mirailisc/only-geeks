@@ -7,6 +7,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
 import { AppController } from './app.controller'
+import { AuthController } from './auth/auth.controller'
+import { BlogModule } from './blog/blog.module'
 
 @Module({
   imports: [
@@ -24,7 +26,11 @@ import { AppController } from './app.controller'
     HealthModule,
     UserModule,
     AuthModule,
+    BlogModule,
   ],
-  controllers: [AppController],
+  controllers: [
+    AuthController,
+    ...(process.env.NODE_ENV === 'production' ? [AppController] : []),
+  ],
 })
 export class AppModule {}

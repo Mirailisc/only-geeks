@@ -8,6 +8,7 @@ type Health {
 
 type User {
   id: String!
+  username: String!
   firstName: String
   lastName: String
   email: String!
@@ -33,17 +34,33 @@ type AuthUser {
   picture: String
 }
 
+type Blog {
+  id: String!
+  title: String!
+  content: String
+  isPublish: Boolean!
+  userId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   getHealth: Health!
   getMyProfile: User!
-  getProfileByUserId(id: String!): User!
+  getProfileByUsername(username: String!): User!
   getGoogleOauthUrl: String!
   me: AuthUser!
+  getBlogs: [Blog!]!
+  getBlogBySlugAndUsername(slug: String!, username: String!): Blog!
+  getBlogsByUsername(username: String!): [Blog!]!
+  getMyBlogs: [Blog!]!
 }
 
 type Mutation {
   updateProfileInfo(input: UpdateUserInput!): User!
   logout: Boolean!
+  createBlog(input: CreateBlogInput!): Blog!
+  updateBlog(id: String!, input: UpdateBlogInput!): Blog!
 }
 
 input UpdateUserInput {
@@ -52,4 +69,14 @@ input UpdateUserInput {
   lastName: String
   location: String
   organization: String
+}
+
+input CreateBlogInput {
+  title: String!
+  content: String
+}
+
+input UpdateBlogInput {
+  title: String!
+  content: String
 }

@@ -10,6 +10,7 @@ const DEFAULT_PORT = 4000
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
+  app.useStaticAssets(join(__dirname, '..', 'public'))
   app.enableCors({
     origin: [process.env.URL ?? 'http://localhost:3000'],
     credentials: true,
@@ -24,7 +25,6 @@ async function bootstrap() {
       'Baggage',
     ],
   })
-  app.useStaticAssets(join(__dirname, '..', 'public'))
   app.use(cookieParser())
 
   app.use(bodyParser.json({ limit: '50mb' }))

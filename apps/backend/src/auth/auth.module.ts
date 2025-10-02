@@ -2,7 +2,6 @@ import { forwardRef, Global, Module } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
 import { UserModule } from 'src/user/user.module'
-import { AuthController } from './auth.controller'
 import { JwtModule } from '@nestjs/jwt'
 import { GoogleStrategy } from './strategies/google.strategy'
 import { ConfigModule, ConfigService } from '@nestjs/config'
@@ -20,7 +19,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
       }),
     }),
   ],
-  controllers: [AuthController],
   providers: [AuthResolver, AuthService, GoogleStrategy],
   exports: [AuthService],
 })

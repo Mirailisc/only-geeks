@@ -2,26 +2,18 @@
 CREATE TABLE "public"."User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
     "firstName" TEXT,
     "lastName" TEXT,
+    "bio" TEXT,
+    "picture" TEXT,
+    "location" TEXT,
+    "organization" TEXT,
     "isAdmin" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "public"."Profile" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "picture" TEXT,
-    "location" TEXT,
-    "organization" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -54,16 +46,13 @@ CREATE TABLE "public"."Preference" (
 CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "public"."User"("username");
+
+-- CreateIndex
 CREATE INDEX "User_email_idx" ON "public"."User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Profile_userId_key" ON "public"."Profile"("userId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Preference_userId_key" ON "public"."Preference"("userId");
-
--- AddForeignKey
-ALTER TABLE "public"."Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."Education" ADD CONSTRAINT "Education_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

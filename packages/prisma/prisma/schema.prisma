@@ -10,6 +10,7 @@ datasource db {
 model User {
   id           String  @id @default(uuid())
   email        String  @unique
+  username     String  @unique
   firstName    String?
   lastName     String?
   bio          String?
@@ -20,6 +21,7 @@ model User {
   isAdmin Boolean @default(false)
 
   education  Education[]
+  blog       Blog[]
   preference Preference?
 
   createdAt DateTime @default(now())
@@ -50,4 +52,20 @@ model Preference {
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model Blog {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  content   String?
+  slug      String
+  isPublish Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, slug])
+  @@index([title])
 }

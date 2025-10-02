@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 export interface Profile {
   id: string
   email: string
+  username: string
   firstName: string
   lastName: string
   bio: string
