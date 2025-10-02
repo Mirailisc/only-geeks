@@ -35,6 +35,7 @@ export default defineConfig({
             data: [
               {
                 email: 'admin@test.com',
+                username: 'adminu',
                 firstName: 'Admin',
                 lastName: 'User',
                 isAdmin: true,
@@ -42,6 +43,7 @@ export default defineConfig({
               {
                 email: 'user@test.com',
                 firstName: 'User',
+                username: 'useru',
                 lastName: 'User',
                 isAdmin: false,
               },
