@@ -54,7 +54,7 @@ export default function UserProfile() {
         <Card>
           <CardContent className='flex flex-row xl:flex-col'>
             <Avatar className='w-[240px] h-[240px] xl:w-[368px] xl:h-[368px] mb-4'>
-              <AvatarImage src={profile?.picture.replace("=s96-c","=s400-c") || undefined} alt={profile?.firstName || 'Avatar'} />
+              <AvatarImage src={profile?.picture ? profile.picture.replace("=s96-c","=s400-c") : undefined} alt={profile?.firstName || 'Avatar'} />
               <AvatarFallback className='bg-blue-300'>
                 {profile?.firstName[0].toUpperCase()}
                 {profile?.lastName[0].toUpperCase()}
