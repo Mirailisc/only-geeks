@@ -81,6 +81,7 @@ jobs:
         run: pnpx cypress run --headless -b chrome --reporter junit
 
       - name: Upload Cypress Videos
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Cypress Videos
