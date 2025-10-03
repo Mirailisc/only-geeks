@@ -252,7 +252,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
           <Button type="submit" className="w-full" disabled={updating} data-cy="submit">
             {updating ? 'Updating...' : 'Submit'}
           </Button>
-          <h4 className='text-sm mt-4 text-muted-foreground'>You&apos;re login as {profile?.email}</h4>
+          <span className='text-sm mt-4 text-muted-foreground'>You&apos;re login as {profile?.email}</span>
         </form>
       </Form>
     </div>
