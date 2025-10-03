@@ -36,12 +36,14 @@ export default defineConfig({
               {
                 email: 'admin@test.com',
                 username: 'adminu',
+                picture: 'https://i.pravatar.cc/300?img=5',
                 firstName: 'Admin',
                 lastName: 'User',
                 isAdmin: true,
               },
               {
                 email: 'user@test.com',
+                picture: 'https://i.pravatar.cc/300?img=3',
                 firstName: 'User',
                 username: 'useru',
                 lastName: 'User',
