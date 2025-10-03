@@ -255,7 +255,9 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               )}
             />
           </div>
-          <Button type="submit" className="w-full mt-4" disabled={updating} data-cy="submit">
+          <Button type="button" className="w-full mt-4" disabled={updating} data-cy="submit" onClick={()=>{
+            form.handleSubmit(onSubmit)() // manually trigger form submission (since button type is "button")
+          }}>
             {updating ? 'Updating...' : 'Submit'}
           </Button>
           <PrintLoginAs email={profile?.email} className="text-sm mt-4 text-muted-foreground" />
