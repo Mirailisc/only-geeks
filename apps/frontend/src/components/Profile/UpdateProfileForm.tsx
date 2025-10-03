@@ -184,9 +184,9 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
                   <FormControl>
                     <div>
                       <Input placeholder="Username" maxLength={20} className="w-full" {...field} data-cy="input-username" />
-                      {/* <div className="text-xs text-muted-foreground mt-1">
+                      <div className="text-xs text-muted-foreground mt-1">
                         Profile visible at <div className="inline font-mono text-sm">{`${window.location.origin}/user/${field.value || 'username'}`}</div>
-                      </div> */}
+                      </div>
                     </div>
                   </FormControl>
                   <FormMessage />
