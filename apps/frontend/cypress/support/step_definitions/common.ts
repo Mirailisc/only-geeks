@@ -23,6 +23,9 @@ Then('I click dropdown menu', () => {
 Then('I should see {string}', (text: string) => {
   cy.contains(text, { timeout: 10000 }).should('be.visible')
 })
+Then('I should see toast with {string}', (message: string) => {
+  cy.contains(message, { timeout: 10000 }).should('be.visible')
+})
 
 BeforeAll(() => {
   cy.task('db:seed')
