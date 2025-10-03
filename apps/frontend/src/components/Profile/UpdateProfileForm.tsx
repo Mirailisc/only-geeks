@@ -29,11 +29,7 @@ const formSchema = z.object({
   location: z.string().optional(),
   organization: z.string().optional(),
 })
-function PrintLoginAs({email, className}: {email: string, className?: string}) {
-  return (
-    <h4 className={className}>You&apos;re login with {email ? email : "Unknown"}</h4>
-  )
-}
+
 export default function UpdateProfileForm({ profile, setProfile }: Props) {
   // const [isUploading, setIsUploading] = React.useState(false);
   const [currentImageUrl, setCurrentImageUrl] = React.useState<null|string>(null);
@@ -133,7 +129,6 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
   return (
     <div className="rounded-md border border-black/10 p-4">
       {/* <input id="file-input" type="file" accept="image/*" onChange={handleFileUpload} className="hidden" /> */}
-      {/* <h4><strong>Login as {profile ? profile.email : "Unknown"}</strong></h4> */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex-col sm:items-start items-center flex sm:flex-row gap-4 w-full">
@@ -146,12 +141,12 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
                   {profile.lastName[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex items-center gap-2">
-                {/* <Button type={"button"} variant={"outline"} onClick={() => document.getElementById("file-input")?.click()} size={"sm"} disabled={isUploading}>
+              {/* <div className="flex items-center gap-2">
+                <Button type={"button"} variant={"outline"} onClick={() => document.getElementById("file-input")?.click()} size={"sm"} disabled={isUploading}>
                   <UploadCloudIcon className="mr-2 h-4 w-4" />
                   {isUploading ? "Uploading..." : "Upload Image"}
-                </Button> */}
-              </div>
+                </Button>
+              </div> */}
             </div>
             <div className='flex flex-col space-y-4 w-full'>
               <div className='flex flex-col md:flex-row gap-4 w-full'>
@@ -257,7 +252,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
           <Button type="submit" className="w-full" disabled={updating} data-cy="submit">
             {updating ? 'Updating...' : 'Submit'}
           </Button>
-          <PrintLoginAs email={profile?.email} className="text-sm mt-4 text-muted-foreground" />
+          <h4 className='text-sm mt-4 text-muted-foreground'>You&apos;re login as {profile?.email}</h4>
         </form>
       </Form>
     </div>
