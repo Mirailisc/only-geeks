@@ -184,9 +184,9 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
                   <FormControl>
                     <div>
                       <Input placeholder="Username" maxLength={20} className="w-full" {...field} data-cy="input-username" />
-                      <div className="text-xs text-muted-foreground mt-1">
+                      {/* <div className="text-xs text-muted-foreground mt-1">
                         Profile visible at <div className="inline font-mono text-sm">{`${window.location.origin}/user/${field.value || 'username'}`}</div>
-                      </div>
+                      </div> */}
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -255,9 +255,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               )}
             />
           </div>
-          <Button type="button" className="w-full mt-4" disabled={updating} data-cy="submit" onClick={()=>{
-            form.handleSubmit(onSubmit)() // manually trigger form submission (since button type is "button")
-          }}>
+          <Button type="submit" className="w-full mt-4" disabled={updating} data-cy="submit">
             {updating ? 'Updating...' : 'Submit'}
           </Button>
           <PrintLoginAs email={profile?.email} className="text-sm mt-4 text-muted-foreground" />

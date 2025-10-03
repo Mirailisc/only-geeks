@@ -13,10 +13,6 @@ Then('I change input {string} value to {string}', (label: string, value: string)
 })
 
 Then('I click submit button', () => {
-  cy.get('[data-cy="submit"]').then($btn => {
-    // eslint-disable-next-line no-console
-    console.log($btn.prop('disabled'))
-  })
   cy.get('[data-cy="submit"]').click()
 })
 
