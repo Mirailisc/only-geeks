@@ -127,6 +127,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
 
   return (
     <div className="rounded-md border border-black/10 p-4">
+      <input id="file-input" type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex-col sm:items-start items-center flex sm:flex-row gap-4 w-full">
@@ -144,7 +145,6 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
                   <UploadCloudIcon className="mr-2 h-4 w-4" />
                   {isUploading ? "Uploading..." : "Upload Image"}
                 </Button>
-                <input id="file-input" type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
               </div>
             </div>
             <div className="flex flex-col space-y-4 w-full">
