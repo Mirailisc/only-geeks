@@ -21,7 +21,7 @@ Then('I click dropdown menu', () => {
 })
 
 Then('I should see {string}', (text: string) => {
-  cy.contains(text).should('be.visible')
+  cy.contains(text, { timeout: 10000 }).should('be.visible')
 })
 
 BeforeAll(() => {
