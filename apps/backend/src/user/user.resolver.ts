@@ -28,7 +28,6 @@ export class UserResolver {
     @CurrentUser() user: any,
     @Args('input') input: UpdateUserInput,
   ) {
-    console.log(input)
     return await this.userService.updateUserInfo(user.id, input)
   }
 }
