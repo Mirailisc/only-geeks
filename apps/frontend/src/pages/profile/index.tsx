@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import UpdateProfileForm from '@/components/Profile/UpdateProfileForm'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { TerminalIcon } from 'lucide-react'
 
@@ -57,18 +57,7 @@ export default function Profile() {
             </AlertDescription>
           </Alert>
         }
-        {/* <div>{JSON.stringify(profile, null, 2)}</div> */}
-        <Tabs defaultValue="profile" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          </TabsList>
-          <TabsContent value="profile">
-            {/* <h4>Login as {profile ? profile.email : "Unknown"}</h4> */}
-            {profile && <UpdateProfileForm profile={profile} setProfile={setProfile} />}
-          </TabsContent>
-          <TabsContent value="appearance">Appearance</TabsContent>
-        </Tabs>
+        {profile && <UpdateProfileForm profile={profile} setProfile={setProfile} />}
       </div>
     </>
   )
