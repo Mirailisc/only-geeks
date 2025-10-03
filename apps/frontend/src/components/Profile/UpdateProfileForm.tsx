@@ -31,7 +31,7 @@ const formSchema = z.object({
 })
 function PrintLoginAs({email, className}: {email: string, className?: string}) {
   return (
-    <h4 className={className}><strong>You&apos;re login with {email ? email : "Unknown"}</strong></h4>
+    <h4 className={className}>You&apos;re login with {email ? email : "Unknown"}</h4>
   )
 }
 export default function UpdateProfileForm({ profile, setProfile }: Props) {
@@ -147,7 +147,6 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
                 <input id="file-input" type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
               </div>
             </div>
-            <PrintLoginAs email={profile?.email} className="block sm:hidden" />
             <div className="flex flex-col space-y-4 w-full">
               <div className="flex flex-col md:flex-row gap-4 w-full">
               <FormField
@@ -183,7 +182,12 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
                 <FormItem className="flex-1">
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                  <Input placeholder="Username" className="w-full" {...field} data-cy="input-username" />
+                    <div>
+                      <Input placeholder="Username" maxLength={20} className="w-full" {...field} data-cy="input-username" />
+                      <div className="text-xs text-muted-foreground mt-1">
+                        Profile visible at <div className="inline font-mono text-sm">{`${window.location.origin}/user/${field.value || 'username'}`}</div>
+                      </div>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -221,7 +225,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               />
             </div>
           </div>
-          <PrintLoginAs email={profile?.email} className="hidden sm:block" />
+          
           <div className="flex flex-col md:flex-row gap-4 w-full">
             <FormField
               control={form.control}
@@ -254,6 +258,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
           <Button type="submit" className="w-full mt-4" disabled={updating} data-cy="submit">
             {updating ? 'Updating...' : 'Submit'}
           </Button>
+          <PrintLoginAs email={profile?.email} className="text-sm mt-4 text-muted-foreground" />
         </form>
       </Form>
     </div>
