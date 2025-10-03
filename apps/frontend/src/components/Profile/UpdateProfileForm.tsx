@@ -13,7 +13,7 @@ import { Button } from '../ui/button'
 // import { Switch } from '../ui/switch'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Label } from '../ui/label'
-import { UploadCloudIcon } from 'lucide-react'
+// import { UploadCloudIcon } from 'lucide-react'
 
 type Props = {
   profile: Profile
@@ -39,7 +39,8 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
   const [updateProfileInfo, { loading: updating, error: updateError }] = useMutation<{ updateProfileInfo: Profile }>(
     UPDATE_PROFILE_INFO_MUTATION,
   )
-
+  // eslint-disable-next-line no-console
+  console.log(isUploading);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -142,10 +143,10 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
                 </AvatarFallback>
               </Avatar>
               <div className="flex items-center gap-2">
-                <Button type={"button"} variant={"outline"} onClick={() => document.getElementById("file-input")?.click()} size={"sm"} disabled={isUploading}>
+                {/* <Button type={"button"} variant={"outline"} onClick={() => document.getElementById("file-input")?.click()} size={"sm"} disabled={isUploading}>
                   <UploadCloudIcon className="mr-2 h-4 w-4" />
                   {isUploading ? "Uploading..." : "Upload Image"}
-                </Button>
+                </Button> */}
               </div>
             </div>
             <div className='flex flex-col space-y-4 w-full'>
