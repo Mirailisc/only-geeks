@@ -22,6 +22,7 @@ type Props = {
 const formSchema = z.object({
   firstName: z.string().nonempty('First name is required'),
   lastName: z.string().nonempty('Last name is required'),
+  username: z.string().nonempty('Username is required'),
   bio: z.string().optional(),
   location: z.string().optional(),
   organization: z.string().optional(),
@@ -36,6 +37,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: '',
+      username: '',
       lastName: '',
       bio: '',
       location: '',
@@ -66,6 +68,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
       form.setValue('lastName', profile.lastName ?? '')
       form.setValue('bio', profile.bio ?? '')
       form.setValue('location', profile.location ?? '')
+      form.setValue('username', profile.username ?? '')
       form.setValue('organization', profile.organization ?? '')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,6 +76,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
 
   return (
     <div className="rounded-md border border-black/10 p-4">
+      <h4><strong>Login as {profile ? profile.email : "Unknown"}</strong></h4>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className='flex-col items-center flex sm:flex-row gap-4 w-full'>
@@ -114,13 +118,19 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
                     </FormItem>
                   )}
                 />
-                <FormItem className='flex-1'>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Username" className='w-full' disabled />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem className='flex-1'>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Username" className='w-full' {...field} data-cy="input-username" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
               <FormField
                 control={form.control}
