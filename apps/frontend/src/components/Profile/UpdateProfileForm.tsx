@@ -125,10 +125,9 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile])
 
-
   return (
     <div className="rounded-md border border-black/10 p-4">
-      {/* <input id="file-input" type="file" accept="image/*" onChange={handleFileUpload} className="hidden" /> */}
+      <h4><strong>Login as {profile ? profile.email : "Unknown"}</strong></h4>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex-col sm:items-start items-center flex sm:flex-row gap-4 w-full">
@@ -137,16 +136,10 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               <Avatar className='w-[150px] h-[150px] mb-4'>
                 <AvatarImage src={currentImageUrl || ""} alt={profile?.firstName || 'Avatar'} />
                 <AvatarFallback className='text-5xl'>
-                  {profile.firstName[0].toUpperCase()}
-                  {profile.lastName[0].toUpperCase()}
-                </AvatarFallback>
+                {profile.firstName[0].toUpperCase()}
+                {profile.lastName[0].toUpperCase()}
+              </AvatarFallback>
               </Avatar>
-              {/* <div className="flex items-center gap-2">
-                <Button type={"button"} variant={"outline"} onClick={() => document.getElementById("file-input")?.click()} size={"sm"} disabled={isUploading}>
-                  <UploadCloudIcon className="mr-2 h-4 w-4" />
-                  {isUploading ? "Uploading..." : "Upload Image"}
-                </Button>
-              </div> */}
             </div>
             <div className='flex flex-col space-y-4 w-full'>
               <div className='flex flex-col md:flex-row gap-4 w-full'>
@@ -252,7 +245,6 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
           <Button type="submit" className="w-full" disabled={updating} data-cy="submit">
             {updating ? 'Updating...' : 'Submit'}
           </Button>
-          <span className='text-sm mt-4 text-muted-foreground'>You&apos;re login as {profile?.email}</span>
         </form>
       </Form>
     </div>
