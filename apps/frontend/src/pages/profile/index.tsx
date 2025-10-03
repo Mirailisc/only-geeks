@@ -5,6 +5,9 @@ import { useQuery } from '@apollo/client/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import UpdateProfileForm from '@/components/Profile/UpdateProfileForm'
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { TerminalIcon } from 'lucide-react'
 
 export interface Profile {
   id: string
@@ -38,11 +41,24 @@ export default function Profile() {
   if (loading || !user) return <div>Loading...</div>
 
   return (
-    <div>
+    <>
       <AuthNavbar />
-      <div>{JSON.stringify(profile, null, 2)}</div>
-      {user.isAdmin && <div>You are an admin</div>}
-      {profile && <UpdateProfileForm profile={profile} setProfile={setProfile} />}
-    </div>
+      <div className='container mx-auto'>
+        <div className="mb-8 mt-4">
+          <h1 className="text-3xl font-bold mb-2">My Profile</h1>
+          <p className="text-muted-foreground">Update your preference and profile info.</p>
+        </div>
+        {user.isAdmin && 
+          <Alert variant={"destructive"} className='justify-start'>
+            <TerminalIcon />
+            <AlertTitle>Heads up!</AlertTitle>
+            <AlertDescription>
+              Now you login as an Admin, So be careful with the changes you make.
+            </AlertDescription>
+          </Alert>
+        }
+        {profile && <UpdateProfileForm profile={profile} setProfile={setProfile} />}
+      </div>
+    </>
   )
 }

@@ -67,6 +67,7 @@ input UpdateUserInput {
   bio: String
   firstName: String
   lastName: String
+  username: String!
   location: String
   organization: String
 }

@@ -11,6 +11,9 @@ export class UpdateUserInput {
   @Field(() => String, { nullable: true })
   lastName?: string
 
+  @Field(() => String, { nullable: false })
+  username: string
+
   @Field(() => String, { nullable: true })
   location?: string
 

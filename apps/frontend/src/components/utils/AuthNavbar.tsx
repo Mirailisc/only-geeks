@@ -38,7 +38,7 @@ export default function AuthNavbar() {
   if (!user) return <></>
 
   return (
-    <div className="sticky left-0 right-0 top-0 z-50 flex flex-row items-center justify-between border-b border-black/10 bg-neutral-100 px-4 py-2">
+    <div className="sticky left-0 right-0 top-0 z-50 flex flex-row items-center justify-between border-b border-black/10 bg-neutral-100/90 backdrop-blur-md px-4 py-2">
       <div>
         <div className="text-xl font-bold">Only Geeks</div>
       </div>
