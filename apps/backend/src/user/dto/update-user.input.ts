@@ -15,6 +15,9 @@ export class UpdateUserInput {
   username: string
 
   @Field(() => String, { nullable: true })
+  image?: string
+
+  @Field(() => String, { nullable: true })
   location?: string
 
   @Field(() => String, { nullable: true })

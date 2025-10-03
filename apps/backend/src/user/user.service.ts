@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateUserInput } from './dto/create-user.input'
 import { UpdateUserInput } from './dto/update-user.input'
@@ -65,6 +65,16 @@ export class UserService {
   }
 
   async updateUserInfo(userId: string, input: UpdateUserInput) {
+    const user = await this.findUserById(userId)
+
+    if (user.username !== input.username) {
+      const existingUser = await this.findUserByUsername(input.username)
+
+      if (existingUser) {
+        throw new BadRequestException('Username already exists')
+      }
+    }
+
     return await this.prisma.user.update({
       where: { id: userId },
       data: input,
