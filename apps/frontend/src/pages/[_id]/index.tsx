@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Building2Icon, MailIcon, MapPinIcon, type LucideIcon } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProfileBlog from '@/components/Profile/ProfileBlog.tsx'
+import ProfileProjects from '@/components/Profile/ProfileProject.tsx'
 
 function DisplayWithIcon ({ icon, text }: { icon:LucideIcon, text: string }) {
   const Icon = icon
@@ -87,7 +88,7 @@ export default function UserProfile() {
             <TabsTrigger className='w-full' data-cy="blogs-tab" value="blogs">Blogs</TabsTrigger>
           </TabsList>
           <TabsContent value="portfolio">This is Portfolio tabs</TabsContent>
-          <TabsContent value="projects">This is Projects tabs</TabsContent>
+          <TabsContent value="projects"><ProfileProjects/></TabsContent>
           <TabsContent value="blogs"><ProfileBlog/></TabsContent>
         </Tabs>
       </div>
