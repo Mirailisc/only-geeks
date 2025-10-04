@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
-import { BASE_PATH, PROFILE_PATH } from '@/constants/routes'
+import { BASE_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
 import { LogOut, Settings, User } from 'lucide-react'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
@@ -63,9 +63,11 @@ export default function AuthNavbar() {
                 <User /> Profile
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem>
-              <Settings /> Settings
-            </DropdownMenuItem>
+            <Link to={SETTINGS_PATH}>
+              <DropdownMenuItem>
+                <Settings /> Settings
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem onClick={handleLogout} data-cy="logout">
               <LogOut /> Sign Out
             </DropdownMenuItem>

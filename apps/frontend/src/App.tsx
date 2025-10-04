@@ -1,11 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { BASE_PATH, PROFILE_PATH, USER_PROFILE_PATH } from './constants/routes'
+import { BASE_PATH, PROFILE_PATH, SETTINGS_PATH, USER_PROFILE_PATH } from './constants/routes'
 import Home from './pages/home'
 import { Toaster } from 'sonner'
 import Boot from './components/utils/Boot'
 import ProtectedRoute from './components/utils/ProtectedRoute'
 import Profile from './pages/profile'
 import UserProfile from './pages/[_id]'
+import Settings from './pages/settings'
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: SETTINGS_PATH,
+        element: (
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         ),
       },
