@@ -52,7 +52,7 @@ export default tseslint.config(
     rules: {
       'no-console': 'warn',
       'no-lonely-if': 'error',
-      'no-negated-condition': 'error',
+      'no-negated-condition': 'off',
       'no-nested-ternary': 'error',
       'no-useless-return': 'error',
       'no-warning-comments': 'warn',

@@ -14,10 +14,12 @@ export class AuthService {
     email,
     firstName,
     lastName,
+    picture,
   }: {
     email: string
     firstName: string
     lastName: string
+    picture: string
   }) {
     let user = await this.userService.findUserByEmail(email)
 
@@ -26,6 +28,7 @@ export class AuthService {
         email,
         firstName,
         lastName,
+        picture,
       })
     }
 
@@ -34,5 +37,11 @@ export class AuthService {
 
   async generateJwt(user: User) {
     return this.jwtService.sign({ email: user.email, sub: user.id })
+  }
+
+  async getUserFromToken(token: string) {
+    const payload = this.jwtService.verify(token)
+
+    return await this.userService.findUserById(payload.sub)
   }
 }

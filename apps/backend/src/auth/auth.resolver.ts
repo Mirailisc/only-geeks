@@ -7,6 +7,7 @@ import { UserService } from 'src/user/user.service'
 import { ConfigService } from '@nestjs/config'
 import { ACCESS_TOKEN } from 'src/constants/cookie'
 import { Response } from 'express'
+import { AuthUser } from './entities/auth-user.entity'
 
 @Resolver(() => User)
 export class AuthResolver {
@@ -34,10 +35,17 @@ export class AuthResolver {
     return `${rootUrl}?${qs}`
   }
 
-  @Query(() => User)
+  @Query(() => AuthUser)
   @UseGuards(GqlAuthGuard)
-  async me(@CurrentUser() user: any): Promise<User> {
-    return this.userService.findUserByEmail(user.email)
+  async me(@CurrentUser() user: any): Promise<AuthUser> {
+    const me = await this.userService.findUserByEmail(user.email)
+    return {
+      email: me.email,
+      firstName: me.firstName,
+      lastName: me.lastName,
+      isAdmin: me.isAdmin,
+      picture: me.picture,
+    }
   }
 
   @Mutation(() => Boolean)

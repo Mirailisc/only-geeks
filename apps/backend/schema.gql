@@ -8,9 +8,14 @@ type Health {
 
 type User {
   id: String!
-  firstName: String!
-  lastName: String!
+  username: String!
+  firstName: String
+  lastName: String
   email: String!
+  bio: String
+  picture: String
+  location: String
+  organization: String
   isAdmin: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -21,13 +26,59 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type AuthUser {
+  firstName: String
+  lastName: String
+  email: String!
+  isAdmin: Boolean!
+  picture: String
+}
+
+type Blog {
+  id: String!
+  title: String!
+  content: String
+  isPublish: Boolean!
+  userId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   getHealth: Health!
-  getAllUser: [User!]!
+  getMyProfile: User!
+  getProfileByUsername(username: String!): User!
   getGoogleOauthUrl: String!
-  me: User!
+  me: AuthUser!
+  getBlogs: [Blog!]!
+  getBlogBySlugAndUsername(slug: String!, username: String!): Blog!
+  getBlogsByUsername(username: String!): [Blog!]!
+  getMyBlogs: [Blog!]!
 }
 
 type Mutation {
+  updateProfileInfo(input: UpdateUserInput!): User!
   logout: Boolean!
+  createBlog(input: CreateBlogInput!): Blog!
+  updateBlog(id: String!, input: UpdateBlogInput!): Blog!
+}
+
+input UpdateUserInput {
+  bio: String
+  firstName: String
+  lastName: String
+  username: String!
+  picture: String
+  location: String
+  organization: String
+}
+
+input CreateBlogInput {
+  title: String!
+  content: String
+}
+
+input UpdateBlogInput {
+  title: String!
+  content: String
 }

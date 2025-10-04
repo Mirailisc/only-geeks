@@ -66,7 +66,7 @@ export class AuthController {
         },
       )
 
-      const { email, given_name, family_name } = userRes.data
+      const { email, given_name, family_name, picture } = userRes.data
       if (!email || !given_name || !family_name) {
         throw new UnauthorizedException(
           'Failed to retrieve user info from Google',
@@ -77,6 +77,7 @@ export class AuthController {
         email,
         firstName: given_name,
         lastName: family_name,
+        picture,
       })
 
       const token = await this.authService.generateJwt(user)
@@ -89,7 +90,9 @@ export class AuthController {
       })
 
       return res.redirect(
-        this.configService.get<string>('FRONTEND_URL') + '/profile',
+        process.env.NODE_ENV === 'production'
+          ? `${this.configService.get<string>('URL')}/profile`
+          : 'http://localhost:3000/profile',
       )
     } catch (err) {
       console.error(isAxiosError(err) ? err.response?.data || err.message : err)
@@ -111,6 +114,7 @@ export class AuthController {
       email,
       firstName: 'Test',
       lastName: 'User',
+      picture: '',
     })
 
     const token = await this.authService.generateJwt(user)

@@ -31,29 +31,36 @@ export default defineConfig({
 
       on('task', {
         async 'db:seed'() {
-          await prisma.user.create({
-            data: {
-              email: 'admin@test.com',
-              firstName: 'Admin',
-              lastName: 'User',
-              isAdmin: true,
-            },
-          })
-          await prisma.user.create({
-            data: {
-              email: 'user@test.com',
-              firstName: 'User',
-              lastName: 'User',
-              isAdmin: false,
-            },
+          await prisma.user.createMany({
+            data: [
+              {
+                email: 'admin@test.com',
+                username: 'adminu',
+                picture: 'https://i.pravatar.cc/300?img=5',
+                firstName: 'Admin',
+                lastName: 'User',
+                isAdmin: true,
+              },
+              {
+                email: 'user@test.com',
+                picture: 'https://i.pravatar.cc/300?img=3',
+                firstName: 'User',
+                username: 'useru',
+                lastName: 'User',
+                isAdmin: false,
+              },
+            ],
           })
           return null
         },
         async 'db:clean'() {
+          const users = await prisma.user.findMany({
+            where: { email: { in: ['admin@test.com', 'user@test.com'] } },
+            select: { id: true },
+          })
+          const userIds = users.map((u) => u.id)
           await prisma.user.deleteMany({
-            where: {
-              email: { in: ['admin@test.com', 'user@test.com'] },
-            },
+            where: { id: { in: userIds } },
           })
           return null
         },

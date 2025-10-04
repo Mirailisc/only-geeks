@@ -5,6 +5,7 @@ export interface User {
   firstName: string
   lastName: string
   isAdmin: boolean
+  picture: string
 }
 
 interface AuthState {

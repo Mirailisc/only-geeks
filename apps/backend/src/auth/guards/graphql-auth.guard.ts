@@ -4,25 +4,27 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
-import { JwtService } from '@nestjs/jwt'
+import { AuthService } from '../auth.service'
 
 @Injectable()
 export class GqlAuthGuard {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly authService: AuthService) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context).getContext()
-    const req = ctx.req
+    const token = ctx.req.cookies['access_token']
 
-    const token = req.cookies?.['access_token']
-    if (!token) throw new UnauthorizedException('No token found')
+    if (!token) {
+      throw new UnauthorizedException()
+    }
 
-    try {
-      const payload = this.jwtService.verify(token)
-      req.user = payload
-      return true
-    } catch {
+    const user = await this.authService.getUserFromToken(token)
+
+    if (!user) {
       throw new UnauthorizedException('Invalid or expired token')
     }
+
+    ctx.req.user = user
+    return true
   }
 }

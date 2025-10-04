@@ -1,0 +1,80 @@
+name: Deploy App
+
+on:
+    workflow_dispatch:
+
+jobs:
+    deploy-app:
+        name: Publish App Docker image to registry
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            security-events: write
+            actions: read
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Tailscale
+              uses: tailscale/github-action@v2
+              with:
+                  oauth-client-id: ${{ secrets.TAILSCALE_CLIENT_ID }}
+                  oauth-secret: ${{ secrets.TAILSCALE_CLIENT_SECRET }}
+                  tags: tag:ci
+
+            - name: Setup Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Login to Private registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ secrets.DOCKER_REGISTRY }}
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+
+            - name: Shorter SHA
+              shell: bash
+              run: |
+                  echo "sha_short=sha_$(git rev-parse --short "${{ github.sha }}")" >> "$GITHUB_ENV"
+
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  file: Dockerfile
+                  push: ${{ github.ref == 'refs/heads/main' }}
+                  tags: ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ env.sha_short }},${{ secrets.DOCKER_REGISTRY }}/${{ secrets.IMAGE_NAME }}:latest
+
+    update-manifest:
+        name: Update Kubernetes manifest
+        runs-on: ubuntu-latest
+        needs: [deploy-app]
+
+        permissions:
+            contents: write
+            actions: read
+            security-events: write
+
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  repository: KronosMoe/kronos-helm
+                  ref: "main"
+                  token: ${{ secrets.token }}
+
+            - name: Shorter SHA
+              shell: bash
+              run: |
+                  echo "sha_short=sha_$(git rev-parse --short "${{ github.sha }}")" >> "$GITHUB_ENV"
+
+            - name: Git config
+              run: |
+                  git config --global user.name "${{ github.actor }}"
+                  git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+                  sed -i "s#appVersion.*#appVersion: ${{ env.sha_short }}#g" ${{ secrets.IMAGE_NAME }}/Chart.yaml
+                  git add -A
+                  git commit -am "update ${{ secrets.IMAGE_NAME }} image to version ${{ env.sha_short }}"
+
+            - name: Push updates
+              run: git push origin main

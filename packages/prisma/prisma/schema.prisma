@@ -8,13 +8,64 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  firstName String?
-  lastName  String?
-  isAdmin   Boolean  @default(false)
+  id           String  @id @default(uuid())
+  email        String  @unique
+  username     String  @unique
+  firstName    String?
+  lastName     String?
+  bio          String?
+  picture      String?
+  location     String?
+  organization String?
+
+  isAdmin Boolean @default(false)
+
+  education  Education[]
+  blog       Blog[]
+  preference Preference?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([email])
+}
+
+model Education {
+  id           String    @id @default(uuid())
+  userId       String
+  school       String?
+  degree       String?
+  fieldOfStudy String?
+  startDate    DateTime?
+  endDate      DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  User User @relation(fields: [userId], references: [id])
+}
+
+model Preference {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  isDark    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Blog {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  content   String?
+  slug      String
+  isPublish Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, slug])
+  @@index([title])
 }
