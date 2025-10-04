@@ -30,17 +30,17 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-8">
         {/* Logo and Header */}
-        <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="bg-primary rounded-lg p-3">
+        <div className="space-y-2 text-center">
+          <div className="mb-4 flex items-center justify-center gap-2">
+            <div className="rounded-lg bg-primary p-3">
               <Code2Icon className="h-8 w-8 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-balance">OnlyGeeks</h1>
-          <p className="text-muted-foreground text-lg text-pretty">Share your projects, inspire the community</p>
+          <h1 className="text-balance text-4xl font-bold tracking-tight">OnlyGeeks</h1>
+          <p className="text-pretty text-lg text-muted-foreground">Share your projects, inspire the community</p>
         </div>
 
         {/* Login Card */}
@@ -54,7 +54,7 @@ export default function Home() {
           <CardContent className="space-y-4">
             <Button
               onClick={handleLogin}
-              className="w-full h-12 text-base font-medium bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="h-12 w-full bg-primary text-base font-medium text-primary-foreground hover:bg-primary/90"
               size="lg"
             >
               <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
@@ -80,13 +80,13 @@ export default function Home() {
 
             <Separator className="my-4" />
 
-            <p className="text-xs text-center text-muted-foreground text-pretty">
-              By continuing, you agree to our{" "}
-              <a href="#" className="underline hover:text-foreground transition-colors">
+            <p className="text-pretty text-center text-xs text-muted-foreground">
+              By continuing, you agree to our{' '}
+              <a href="#" className="underline transition-colors hover:text-foreground">
                 Terms of Service
-              </a>{" "}
-              and{" "}
-              <a href="#" className="underline hover:text-foreground transition-colors">
+              </a>{' '}
+              and{' '}
+              <a href="#" className="underline transition-colors hover:text-foreground">
                 Privacy Policy
               </a>
             </p>
@@ -94,8 +94,8 @@ export default function Home() {
         </Card>
 
         {/* Footer Info */}
-        <div className="text-center space-y-2">
-          <p className="text-sm text-muted-foreground text-pretty">
+        <div className="space-y-2 text-center">
+          <p className="text-pretty text-sm text-muted-foreground">
             New to OnlyGeeks? Join thousands of students sharing their journey
           </p>
           <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">

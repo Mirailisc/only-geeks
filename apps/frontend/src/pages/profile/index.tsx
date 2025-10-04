@@ -43,20 +43,18 @@ export default function Profile() {
   return (
     <>
       <AuthNavbar />
-      <div className='container mx-auto'>
+      <div className="container mx-auto">
         <div className="mb-8 mt-4">
-          <h1 className="text-3xl font-bold mb-2">My Profile</h1>
+          <h1 className="mb-2 text-3xl font-bold">My Profile</h1>
           <p className="text-muted-foreground">Update your preference and profile info.</p>
         </div>
-        {user.isAdmin && 
-          <Alert variant={"destructive"} className='justify-start'>
+        {user.isAdmin && (
+          <Alert variant={'destructive'} className="justify-start">
             <TerminalIcon />
             <AlertTitle>Heads up!</AlertTitle>
-            <AlertDescription>
-              Now you login as an Admin, So be careful with the changes you make.
-            </AlertDescription>
+            <AlertDescription>Now you login as an Admin, So be careful with the changes you make.</AlertDescription>
           </Alert>
-        }
+        )}
         {profile && <UpdateProfileForm profile={profile} setProfile={setProfile} />}
       </div>
     </>
