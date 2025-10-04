@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar } from 'lucide-react';
+import { Calendar, PencilIcon } from 'lucide-react';
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -90,7 +90,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             {/* Read more button */}
             <Button
               className="w-full bg-gray-100 text-gray-900 hover:bg-gray-200"
-              onClick={() => { console.log(`Reading post: ${post.title}`) }}
+              onClick={() => {  }}
             >
               Read more
             </Button>
@@ -106,25 +106,24 @@ const ProfileBlog: React.FC = () => {
   const [posts] = useState<Post[]>(MOCK_BLOG_POSTS);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="w-full">
-        
         {/* Blog Header and Action Button */}
-        <div className="flex justify-between items-center mb-8 pt-4 px-4 sm:px-8">
-          <h1 className="text-3xl font-extrabold text-gray-900">
-            Blog Posts
-          </h1>
-          {/* Write Posts Button*/}
+        <div className="flex justify-between items-center pt-4">
+          <h1 className="text-3xl text-gray-900 font-bold">Blog Posts</h1>
           <Button
-            className="py-6 bg-gray-900 text-white hover:bg-gray-700" 
-            onClick={() => { console.log("Opening post editor") }}
+            variant={"default"}
+            size={"sm"}
+            className="bg-gray-900 text-white hover:bg-gray-700" 
+            onClick={() => {  }}
           >
-            Write Posts
+            <PencilIcon className='w-4 h-4' />
+            Write blog
           </Button>
         </div>
 
         {/* List of Blog Posts */}
-        <div className="space-y-6 px-4 sm:px-8 py-4">
+        <div className="space-y-6 pt-4">
           {posts.map((post) => (
             <BlogPostCard key={post.id} post={post} />
           ))}

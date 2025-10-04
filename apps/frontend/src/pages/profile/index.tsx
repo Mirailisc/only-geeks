@@ -1,13 +1,10 @@
-import AuthNavbar from '@/components/utils/AuthNavbar'
 import { GET_MY_PROFILE_QUERY } from '@/graphql/profile'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import { useQuery } from '@apollo/client/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import UpdateProfileForm from '@/components/Profile/UpdateProfileForm'
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { TerminalIcon } from 'lucide-react'
+import { Loading } from '@/components/utils/loading'
+import ProfilePage from '@/components/Profile/ProfilePage'
 
 export interface Profile {
   id: string
@@ -38,27 +35,7 @@ export default function Profile() {
     }
   }, [data])
 
-  if (loading || !user) return <div>Loading...</div>
+  if (loading || !user) return <Loading />
 
-  return (
-    <>
-      <AuthNavbar />
-      <div className='container mx-auto'>
-        <div className="mb-8 mt-4">
-          <h1 className="text-3xl font-bold mb-2">My Profile</h1>
-          <p className="text-muted-foreground">Update your preference and profile info.</p>
-        </div>
-        {user.isAdmin && 
-          <Alert variant={"destructive"} className='justify-start'>
-            <TerminalIcon />
-            <AlertTitle>Heads up!</AlertTitle>
-            <AlertDescription>
-              Now you login as an Admin, So be careful with the changes you make.
-            </AlertDescription>
-          </Alert>
-        }
-        {profile && <UpdateProfileForm profile={profile} setProfile={setProfile} />}
-      </div>
-    </>
-  )
+  return <ProfilePage username={profile?.username} />
 }

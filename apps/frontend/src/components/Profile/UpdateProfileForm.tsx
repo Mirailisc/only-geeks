@@ -130,7 +130,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
   return (
     <div className="rounded-md border border-black/10 p-4">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex-col sm:items-start items-center flex sm:flex-row gap-4 w-full">
             <div className="text-center space-y-4 w-max flex flex-col items-center">
               <Label>Profile Image</Label>
@@ -250,10 +250,10 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               )}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={updating} data-cy="submit">
+          <Button type="submit" className="w-full mt-4" disabled={updating} data-cy="submit">
             {updating ? 'Updating...' : 'Submit'}
           </Button>
-          <span className='text-sm mt-4 text-muted-foreground'>You&apos;re login as {profile?.email}</span>
+          <h4 className='text-sm text-muted-foreground mt-2'>You&apos;re login as {profile?.email}</h4>
         </form>
       </Form>
     </div>

@@ -8,6 +8,10 @@ Then('I click logout button', () => {
   cy.get('[data-cy="logout"]').click()
 })
 
+Then('I click button named {string}', (btn_name: string) => {
+  cy.get(`[data-cy="${btn_name}"]`).click()
+})
+
 Then('I change input {string} value to {string}', (label: string, value: string) => {
   cy.get(`[data-cy="input-${label}"]`).clear().type(value)
 })
@@ -23,6 +27,10 @@ Then('I click dropdown menu', () => {
 Then('I should see {string}', (text: string) => {
   cy.contains(text, { timeout: 10000 }).should('be.visible')
 })
+
+Then('I should wait for {int} seconds', (seconds: number) => {
+  cy.wait(seconds * 1000);
+});
 
 BeforeAll(() => {
   cy.task('db:seed')

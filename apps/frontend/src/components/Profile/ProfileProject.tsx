@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Calendar, Code, Globe, Pencil, Trash2 } from 'lucide-react';
+import { Calendar, Code, Globe, Pencil, PlusIcon, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from '../ui/badge';
 
 // --- TYPE DEFINITIONS ---
 
@@ -66,11 +67,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     e.currentTarget.src = 'https://placehold.co/400x300/cccccc/333333?text=Project+Image';
   };
 
-  // Helper for Technology Tags
   const TechTag: React.FC<{ name: string }> = ({ name }) => (
-    <span className="inline-flex items-center rounded-full border bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700 shadow-sm">
-      {name}
-    </span>
+    <Badge variant="outline">{name}</Badge>
   );
 
   return (
@@ -147,28 +145,30 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 };
 
 // Main container component
-const ProfileProjects: React.FC = () => {
+export default function ProfileProjects () {
   const [projects] = useState<Project[]>(MOCK_PROJECTS);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="w-full">
         
         {/* Projects Header and Action Button */}
-        <div className="flex justify-between items-center mb-8 pt-6 px-4 sm:px-8">
-          <h1 className="text-3xl font-extrabold text-gray-900">
+        <div className="flex justify-between items-center pt-4">
+          <h1 className="text-3xl font-bold text-gray-900">
             Projects
           </h1>
           <Button
             className="bg-gray-900 text-white hover:bg-gray-700 rounded-lg shadow-md" 
-            onClick={() => { console.log("Opening add new project editor") }}
+            onClick={() => {  }}
+            variant={"default"}
+            size={"sm"}
           >
-            <span className="text-xl mr-2">+</span> Add new
+            <PlusIcon /> Add project
           </Button>
         </div>
 
         {/* List of Projects */}
-        <div className="space-y-6 px-4 sm:px-8 py-4">
+        <div className="space-y-6 pt-4">
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
@@ -176,6 +176,4 @@ const ProfileProjects: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default ProfileProjects;
+}
