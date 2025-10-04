@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Building2Icon, MailIcon, MapPinIcon, type LucideIcon } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import ProfileBlog from '@/components/Profile/ProfileBlog.tsx'
 
 function DisplayWithIcon ({ icon, text }: { icon:LucideIcon, text: string }) {
   const Icon = icon
@@ -87,7 +88,7 @@ export default function UserProfile() {
           </TabsList>
           <TabsContent value="portfolio">This is Portfolio tabs</TabsContent>
           <TabsContent value="projects">This is Projects tabs</TabsContent>
-          <TabsContent value="blogs">This is Blogs tabs</TabsContent>
+          <TabsContent value="blogs"><ProfileBlog/></TabsContent>
         </Tabs>
       </div>
     </div>
