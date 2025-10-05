@@ -1,5 +1,5 @@
-import StudentBlogCard from '@/components/search/StudentBlogCard'
-import StudentProfileCard from '@/components/search/StudentProfileCard'
+import StudentBlogCard from '@/components/Search/StudentBlogCard'
+import StudentProfileCard from '@/components/Search/StudentProfileCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AuthNavbar from '@/components/utils/AuthNavbar'
 import { SEARCH_QUERY, type Search } from '@/graphql/search'
