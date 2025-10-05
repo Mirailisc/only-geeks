@@ -3,9 +3,6 @@ import { Calendar } from 'lucide-react'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-// --- TYPE DEFINITIONS ---
-
-// 1. Type สำหรับข้อมูล Blog Post แต่ละรายการ
 interface Post {
   id: number
   title: string
@@ -14,12 +11,10 @@ interface Post {
   imageUrl: string
 }
 
-// 2. Type สำหรับ Props ของ BlogPostCard
 interface BlogPostCardProps {
   post: Post
 }
 
-// --- MOCK DATA ---
 const MOCK_BLOG_POSTS: Post[] = [
   {
     id: 1,
@@ -50,7 +45,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   return (
     <Card className="mb-6">
       <CardContent className="p-6 pb-1">
-        {/* items-stretch เพื่อให้คอลัมน์ซ้ายและขวามีความสูงเท่ากัน */}
         <div className="flex flex-col items-stretch gap-6 md:flex-row">
           {/* LEFT: Text Area  */}
           <div className="order-2 flex flex-1 flex-col justify-between md:order-1">
