@@ -9,7 +9,7 @@ import { AuthModule } from './auth/auth.module'
 import { AppController } from './app.controller'
 import { AuthController } from './auth/auth.controller'
 import { BlogModule } from './blog/blog.module'
-import { SearchModule } from './search/search.module';
+import { SearchModule } from './search/search.module'
 
 @Module({
   imports: [
