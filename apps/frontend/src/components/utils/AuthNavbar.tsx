@@ -9,7 +9,7 @@ import {
 } from '../ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
 import { BASE_PATH, PROFILE_PATH } from '@/constants/routes'
-import { LogOut, Settings, User } from 'lucide-react'
+import { LogOut, Settings, User, Search } from 'lucide-react'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
 import { clearUser } from '@/store/authSlice'
@@ -38,39 +38,69 @@ export default function AuthNavbar() {
   if (!user) return <></>
 
   return (
-    <div className="sticky left-0 right-0 top-0 z-50 flex flex-row items-center justify-between border-b border-black/10 bg-neutral-100/90 backdrop-blur-md px-4 py-2">
+    <div className="sticky left-0 right-0 top-0 z-50 flex flex-row items-center justify-between border-b border-black/10 bg-neutral-100/90 px-4 py-2 backdrop-blur-md">
       <div>
         <div className="text-xl font-bold">Only Geeks</div>
       </div>
+      {/* 2. Search Bar (New Addition) */}
+      <div className="hidden md:flex flex-grow max-w-xl mx-8">
+        <div className="relative w-full">
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
+          <input
+            type="search"
+            placeholder="Quick Search..."
+            className="w-full rounded-lg border border-gray-300 bg-white/80 py-2 pl-10 pr-4 text-sm transition-colors"
+          />
+        </div>
+      </div>
       <div>
-        <DropdownMenu>
-          <DropdownMenuTrigger data-cy="dropdown-menu">
-            <Avatar>
-              <AvatarImage src={user.picture} alt="avatar" />
-              <AvatarFallback className='bg-blue-300'>
-                {user.firstName[0].toUpperCase()}
-                {user.lastName[0].toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>
-              {user.firstName} {user.lastName}
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <Link to={PROFILE_PATH}>
+        {/* 3. User Menu and Navigation Links */}
+        <div className="flex flex-shrink-0 items-center space-x-6">
+          {/* Navigation Links Mocked */}
+          {/* EXPLORE: Changed from hidden lg:block to hidden sm:block */}
+          <a
+            href="#"
+            className="hidden text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 sm:block"
+          >
+            Explore
+          </a>
+          <a
+            href="#"
+            className="hidden text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 sm:block"
+          >
+            Blogs
+          </a>
+
+          {/* Dropdown Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger data-cy="dropdown-menu">
+              <Avatar>
+                <AvatarImage src={user.picture} alt="avatar" />
+                <AvatarFallback className="bg-blue-300">
+                  {user.firstName[0].toUpperCase()}
+                  {user.lastName[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>
+                {user.firstName} {user.lastName}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <Link to={PROFILE_PATH}>
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" /> Profile
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
-                <User /> Profile
+                <Settings className="mr-2 h-4 w-4" /> Settings
               </DropdownMenuItem>
-            </Link>
-            <DropdownMenuItem>
-              <Settings /> Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleLogout} data-cy="logout">
-              <LogOut /> Sign Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem onClick={handleLogout} data-cy="logout">
+                <LogOut className="mr-2 h-4 w-4" /> Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   )
