@@ -42,6 +42,6 @@ JWT_SECRET=""
 
 ## Testing
 
-To run tests, you need to open cypress app inside `apps/frontend` using `pnpm cypress:open`
+To run tests, Run `pnpm cypress:open` on the root of repository.
 
 To write tests, please refer to [Cypress E2E Documentation](https://docs.cypress.io/app/end-to-end-testing/testing-your-app)

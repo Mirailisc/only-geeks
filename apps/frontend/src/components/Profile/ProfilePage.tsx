@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client/react'
 import { toast } from 'sonner'
 import AuthNavbar from '@/components/utils/AuthNavbar'
-import { GET_PROFILE_BY_USERNAME_QUERY } from '@/graphql/profile'
+import { GET_PROFILE_BY_USERNAME_QUERY, type Profile } from '@/graphql/profile'
 import { Loading, NotFound } from '@/components/utils/loading'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -11,7 +11,6 @@ import { Building2Icon, MailIcon, MapPinIcon, type LucideIcon } from 'lucide-rea
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProfileBlog from '@/components/Profile/ProfileBlog.tsx'
 import ProfileProjects from '@/components/Profile/ProfileProject.tsx'
-import type { Profile } from '@/pages/profile'
 
 function DisplayWithIcon ({ icon, text }: { icon:LucideIcon, text: string }) {
   const Icon = icon
@@ -53,7 +52,7 @@ export default function ProfilePage({username}: ProfilePageProps) {
     <>
       <AuthNavbar />
       <div className='container mx-auto flex xl:flex-row flex-col gap-6 mt-4'>
-        <div className='xl:w-[400px] flex-shrink-0 h-max xl:sticky xl:top-20 self-start'>
+        <div className='w-full xl:w-[400px] flex-shrink-0 h-max xl:sticky xl:top-20 self-start'>
           <Card className='h-max'>
             <CardContent className='flex flex-row xl:flex-col'>
               <Avatar className='w-[240px] h-[240px] xl:w-[350px] xl:h-[350px] mb-4'>

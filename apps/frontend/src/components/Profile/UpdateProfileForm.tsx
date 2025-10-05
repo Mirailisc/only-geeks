@@ -1,10 +1,9 @@
-import type { Profile } from '@/pages/profile'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import React, { useEffect } from 'react'
 import { toast } from 'sonner'
 import { useMutation } from '@apollo/client/react'
-import { UPDATE_PROFILE_INFO_MUTATION } from '@/graphql/profile'
+import { UPDATE_PROFILE_INFO_MUTATION, type Profile } from '@/graphql/profile'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
@@ -130,8 +129,8 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
     <div className="rounded-md border border-black/10 p-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex-col sm:items-start items-center flex sm:flex-row gap-4 w-full">
-            <div className="text-center space-y-4 w-max flex flex-col items-center">
+          <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:items-start">
+            <div className="flex w-max flex-col items-center space-y-4 text-center">
               <Label>Profile Image</Label>
               <Avatar className="mb-4 h-[150px] w-[150px]">
                 <AvatarImage src={currentImageUrl || ''} alt={profile?.firstName || 'Avatar'} />
@@ -254,10 +253,10 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
               )}
             />
           </div>
-          <Button type="submit" className="w-full mt-4" disabled={updating} data-cy="submit">
+          <Button type="submit" className="mt-4 w-full" disabled={updating} data-cy="submit">
             {updating ? 'Updating...' : 'Submit'}
           </Button>
-          <h4 className='text-sm text-muted-foreground mt-2'>You&apos;re login as {profile?.email}</h4>
+          <h4 className="mt-2 text-sm text-muted-foreground">You&apos;re login as {profile?.email}</h4>
         </form>
       </Form>
     </div>
