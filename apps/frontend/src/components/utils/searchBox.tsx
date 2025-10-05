@@ -49,7 +49,7 @@ const SearchBox = () => {
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
       setIsPopoverOpen(false);
-      navigate(`/search/all/${searchQuery.trim()}`);
+      navigate(`/search/${searchQuery.trim()}`);
     }
   }
 
