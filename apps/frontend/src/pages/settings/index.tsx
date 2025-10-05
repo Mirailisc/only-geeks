@@ -1,5 +1,5 @@
 import AuthNavbar from '@/components/utils/AuthNavbar'
-import { GET_MY_PROFILE_QUERY } from '@/graphql/profile'
+import { GET_MY_PROFILE_QUERY, type Profile } from '@/graphql/profile'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import { useQuery } from '@apollo/client/react'
 import { useEffect, useState } from 'react'
@@ -10,19 +10,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { TerminalIcon } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { TabsContent } from '@radix-ui/react-tabs'
-
-export interface Profile {
-  id: string
-  email: string
-  username: string
-  firstName: string
-  lastName: string
-  bio: string
-  picture: string
-  location: string
-  organization: string
-  isAdmin: boolean
-}
 
 export default function Settings() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -45,34 +32,32 @@ export default function Settings() {
   return (
     <>
       <AuthNavbar />
-      <div className='container mx-auto'>
+      <div className="container mx-auto">
         <div className="mb-8 mt-4">
-          <h1 className="text-3xl font-bold mb-2">Settings</h1>
+          <h1 className="mb-2 text-3xl font-bold">Settings</h1>
           <p className="text-muted-foreground">Update your profile information and preferences.</p>
         </div>
-        {user.isAdmin && 
-          <Alert variant={"destructive"} className='justify-start mb-4'>
+        {user.isAdmin && (
+          <Alert variant={'destructive'} className="mb-4 justify-start">
             <TerminalIcon />
             <AlertTitle>Heads up!</AlertTitle>
-            <AlertDescription>
-              Now you login as an Admin, So be careful with the changes you make.
-            </AlertDescription>
+            <AlertDescription>Now you login as an Admin, So be careful with the changes you make.</AlertDescription>
           </Alert>
-        }
-        <Tabs defaultValue='profile'>
+        )}
+        <Tabs defaultValue="profile">
           <TabsList>
-            <TabsTrigger value='profile'>Profile</TabsTrigger>
-            <TabsTrigger value='appearance'>Appearance</TabsTrigger>
-            <TabsTrigger value='privacy'>Privacy</TabsTrigger>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="appearance">Appearance</TabsTrigger>
+            <TabsTrigger value="privacy">Privacy</TabsTrigger>
           </TabsList>
-          <TabsContent value='profile' className='mt-4'>
+          <TabsContent value="profile" className="mt-4">
             {profile && <UpdateProfileForm profile={profile} setProfile={setProfile} />}
           </TabsContent>
-          <TabsContent value='appearance' className='mt-4'>
-            <div className='text-muted-foreground'>Appearance settings will be available soon.</div>
+          <TabsContent value="appearance" className="mt-4">
+            <div className="text-muted-foreground">Appearance settings will be available soon.</div>
           </TabsContent>
-          <TabsContent value='privacy' className='mt-4'>
-            <div className='text-muted-foreground'>Privacy settings will be available soon.</div>
+          <TabsContent value="privacy" className="mt-4">
+            <div className="text-muted-foreground">Privacy settings will be available soon.</div>
           </TabsContent>
         </Tabs>
       </div>
