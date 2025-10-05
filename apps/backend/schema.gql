@@ -39,9 +39,16 @@ type Blog {
   title: String!
   content: String
   isPublish: Boolean!
+  slug: String!
   userId: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  user: User
+}
+
+type Search {
+  users: [User!]!
+  blogs: [Blog!]!
 }
 
 type Query {
@@ -54,6 +61,12 @@ type Query {
   getBlogBySlugAndUsername(slug: String!, username: String!): Blog!
   getBlogsByUsername(username: String!): [Blog!]!
   getMyBlogs: [Blog!]!
+  search(input: SearchInput!): Search!
+  searchSuggest(input: SearchInput!): Search!
+}
+
+input SearchInput {
+  input: String!
 }
 
 type Mutation {

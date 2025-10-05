@@ -5,19 +5,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Loading } from '@/components/utils/loading'
 import ProfilePage from '@/components/Profile/ProfilePage'
-
-export interface Profile {
-  id: string
-  email: string
-  username: string
-  firstName: string
-  lastName: string
-  bio: string
-  picture: string
-  location: string
-  organization: string
-  isAdmin: boolean
-}
+import type { Profile } from '../settings'
 
 export default function Profile() {
   const [profile, setProfile] = useState<Profile | null>(null)
