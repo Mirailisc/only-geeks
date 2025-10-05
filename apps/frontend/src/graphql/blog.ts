@@ -4,6 +4,7 @@ export interface Blog {
   id: string
   title: string
   content: string
+  slug: string
   isPublish: boolean
   userId: string
   createdAt: string

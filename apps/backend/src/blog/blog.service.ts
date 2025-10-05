@@ -16,12 +16,34 @@ export class BlogService {
       where: {
         isPublish: true,
       },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        isPublish: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
     })
   }
 
   async getMyBlogs(userId: string) {
     return await this.prisma.blog.findMany({
       where: { userId },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        isPublish: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
     })
   }
 
@@ -30,6 +52,17 @@ export class BlogService {
 
     return await this.prisma.blog.findMany({
       where: { userId: user.id, isPublish: true },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        isPublish: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
     })
   }
 
@@ -38,6 +71,17 @@ export class BlogService {
 
     return await this.prisma.blog.findUnique({
       where: { userId_slug: { userId: user.id, slug } },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        isPublish: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
     })
   }
 
@@ -50,6 +94,17 @@ export class BlogService {
         userId,
         slug,
       },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        isPublish: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
     })
   }
 
@@ -57,6 +112,17 @@ export class BlogService {
     return await this.prisma.blog.update({
       where: { id },
       data: input,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        isPublish: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
     })
   }
 }
