@@ -2,11 +2,13 @@ import { gql } from '@apollo/client'
 
 export interface Blog {
   id: string
-  title: string
-  content: string
-  slug: string
-  isPublish: boolean
   userId: string
+  slug: string
+  title: string
+  thumbnail: string | null
+  description: string | null
+  content: string | null
+  isPublished: boolean
   createdAt: string
   updatedAt: string
 }
@@ -17,7 +19,10 @@ export const GET_BLOGS_QUERY = gql`
       id
       title
       content
-      isPublish
+      slug
+      thumbnail
+      description
+      isPublished
       userId
       createdAt
       updatedAt
@@ -40,7 +45,10 @@ export const GET_BLOG_BY_SLUG_AND_USERNAME_QUERY = gql`
       id
       title
       content
-      isPublish
+      slug
+      thumbnail
+      description
+      isPublished
       userId
       createdAt
       updatedAt
@@ -61,7 +69,10 @@ export const GET_BLOGS_BY_USERNAME_QUERY = gql`
       id
       title
       content
-      isPublish
+      slug
+      thumbnail
+      description
+      isPublished
       userId
       createdAt
       updatedAt
@@ -75,7 +86,10 @@ export const GET_MY_BLOGS_QUERY = gql`
       id
       title
       content
-      isPublish
+      slug
+      thumbnail
+      description
+      isPublished
       userId
       createdAt
       updatedAt
@@ -89,6 +103,7 @@ export const GET_MY_BLOGS_QUERY = gql`
 //     input: {
 //       content: 'hello world',
 //       title: 'hello world',
+//       thumbnail: '',
 //     },
 //   },
 // }
@@ -99,7 +114,10 @@ export const CREATE_BLOG_MUTATION = gql`
       id
       title
       content
-      isPublish
+      slug
+      thumbnail
+      description
+      isPublished
       userId
       createdAt
       updatedAt
@@ -114,6 +132,7 @@ export const CREATE_BLOG_MUTATION = gql`
 //     input: {
 //       content: 'hello world',
 //       title: 'hello world',
+//       thumbnail: '',
 //     },
 //   },
 // }
@@ -124,7 +143,10 @@ export const UPDATE_BLOG_MUTATION = gql`
       id
       title
       content
-      isPublish
+      slug
+      thumbnail
+      description
+      isPublished
       userId
       createdAt
       updatedAt

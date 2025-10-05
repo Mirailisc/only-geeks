@@ -7,19 +7,25 @@ export class Blog {
   id: string
 
   @Field(() => String)
-  title: string
-
-  @Field(() => String, { nullable: true })
-  content?: string
-
-  @Field(() => Boolean)
-  isPublish: boolean
+  userId: string
 
   @Field(() => String)
   slug: string
 
   @Field(() => String)
-  userId: string
+  title: string
+
+  @Field(() => String, { nullable: true })
+  content?: string
+
+  @Field(() => String, { nullable: true })
+  description?: string
+
+  @Field(() => String, { nullable: true })
+  thumbnail?: string
+
+  @Field(() => Boolean)
+  isPublished: boolean
 
   @Field(() => Date)
   createdAt: Date
