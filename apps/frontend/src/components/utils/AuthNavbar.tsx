@@ -8,8 +8,8 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
-import { BASE_PATH, PROFILE_PATH } from '@/constants/routes'
-import { LogOut, Settings, User, Search } from 'lucide-react'
+import { BASE_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
+import { LogOut, Settings, User } from 'lucide-react'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
 import { clearUser } from '@/store/authSlice'
@@ -54,53 +54,36 @@ export default function AuthNavbar() {
         </div>
       </div>
       <div>
-        {/* 3. User Menu and Navigation Links */}
-        <div className="flex flex-shrink-0 items-center space-x-6">
-          {/* Navigation Links Mocked */}
-          {/* EXPLORE: Changed from hidden lg:block to hidden sm:block */}
-          <a
-            href="#"
-            className="hidden text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 sm:block"
-          >
-            Explore
-          </a>
-          <a
-            href="#"
-            className="hidden text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 sm:block"
-          >
-            Blogs
-          </a>
-
-          {/* Dropdown Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger data-cy="dropdown-menu">
-              <Avatar>
-                <AvatarImage src={user.picture} alt="avatar" />
-                <AvatarFallback className="bg-blue-300">
-                  {user.firstName[0].toUpperCase()}
-                  {user.lastName[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>
-                {user.firstName} {user.lastName}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <Link to={PROFILE_PATH}>
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" /> Profile
-                </DropdownMenuItem>
-              </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger data-cy="dropdown-menu">
+            <Avatar>
+              <AvatarImage src={user.picture} alt="avatar" />
+              <AvatarFallback className="bg-blue-300">
+                {user.firstName[0].toUpperCase()}
+                {user.lastName[0].toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>
+              {user.firstName} {user.lastName}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <Link to={PROFILE_PATH}>
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" /> Settings
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout} data-cy="logout">
-                <LogOut className="mr-2 h-4 w-4" /> Sign Out
+            </Link>
+            <Link to={SETTINGS_PATH}>
+              <DropdownMenuItem>
+                <Settings /> Settings
               </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+            </Link>
+            <DropdownMenuItem onClick={handleLogout} data-cy="logout">
+              <LogOut /> Sign Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )
