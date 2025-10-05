@@ -52,7 +52,7 @@ export default function ProfilePage({username}: ProfilePageProps) {
     <>
       <AuthNavbar />
       <div className='container mx-auto flex xl:flex-row flex-col gap-6 mt-4'>
-        <div className='xl:w-[400px] flex-shrink-0 h-max xl:sticky xl:top-20 self-start'>
+        <div className='w-full xl:w-[400px] flex-shrink-0 h-max xl:sticky xl:top-20 self-start'>
           <Card className='h-max'>
             <CardContent className='flex flex-row xl:flex-col'>
               <Avatar className='w-[240px] h-[240px] xl:w-[350px] xl:h-[350px] mb-4'>

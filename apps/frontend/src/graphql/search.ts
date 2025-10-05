@@ -4,7 +4,7 @@ import type { Profile } from './profile'
 
 export interface Search {
   blogs: Pick<Blog, 'id' | 'title' | 'slug' | 'createdAt' | 'updatedAt' | 'userId'>[]
-  users: Pick<Profile, 'id' | 'username' | 'firstName' | 'lastName' | 'picture'>[]
+  users: Pick<Profile, 'id' | 'username' | 'firstName' | 'lastName' | 'picture' | 'bio'>[]
 }
 
 // {
@@ -32,6 +32,7 @@ export const SEARCH_QUERY = gql`
         firstName
         lastName
         picture
+        bio
       }
     }
   }
