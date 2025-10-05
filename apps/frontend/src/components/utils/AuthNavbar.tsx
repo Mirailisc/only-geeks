@@ -9,7 +9,7 @@ import {
 } from '../ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
 import { BASE_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
-import { LogOut, Settings, User } from 'lucide-react'
+import { LogOut, Search, Settings, User } from 'lucide-react'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
 import { clearUser } from '@/store/authSlice'
@@ -43,7 +43,7 @@ export default function AuthNavbar() {
         <div className="text-xl font-bold">Only Geeks</div>
       </div>
       {/* 2. Search Bar (New Addition) */}
-      <div className="hidden md:flex flex-grow max-w-xl mx-8">
+      <div className="mx-8 hidden max-w-xl flex-grow md:flex">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
           <input
