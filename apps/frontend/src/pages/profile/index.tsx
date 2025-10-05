@@ -1,11 +1,10 @@
-import { GET_MY_PROFILE_QUERY } from '@/graphql/profile'
+import { GET_MY_PROFILE_QUERY, type Profile } from '@/graphql/profile'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import { useQuery } from '@apollo/client/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Loading } from '@/components/utils/loading'
 import ProfilePage from '@/components/Profile/ProfilePage'
-import type { Profile } from '../settings'
 
 export default function Profile() {
   const [profile, setProfile] = useState<Profile | null>(null)
