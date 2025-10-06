@@ -32,7 +32,7 @@ export class BlogResolver {
   @Query(() => [Blog])
   @UseGuards(GqlAuthGuard)
   async getMyBlogs(@CurrentUser() user: any) {
-    return await this.blogService.getMyBlogs(user.sub)
+    return await this.blogService.getMyBlogs(user.id)
   }
 
   @Mutation(() => Blog)
@@ -41,7 +41,7 @@ export class BlogResolver {
     @CurrentUser() user: any,
     @Args('input') input: CreateBlogInput,
   ) {
-    return await this.blogService.createBlog(user.sub, input)
+    return await this.blogService.createBlog(user.id, input)
   }
 
   @Mutation(() => Blog)
