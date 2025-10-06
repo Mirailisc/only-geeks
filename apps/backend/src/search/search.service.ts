@@ -12,13 +12,15 @@ export class SearchService {
       where: { username: { contains: input } },
     })
     const blogs = await this.prisma.blog.findMany({
-      where: { title: { contains: input } },
+      where: { title: { contains: input }, isPublished: true },
       select: {
         id: true,
         title: true,
         slug: true,
         content: true,
-        isPublish: true,
+        description: true,
+        thumbnail: true,
+        isPublished: true,
         userId: true,
         createdAt: true,
         updatedAt: true,
@@ -38,13 +40,15 @@ export class SearchService {
       take: 3,
     })
     const blogs = await this.prisma.blog.findMany({
-      where: { title: { contains: input.input } },
+      where: { title: { contains: input.input }, isPublished: true },
       select: {
         id: true,
         title: true,
         slug: true,
         content: true,
-        isPublish: true,
+        description: true,
+        thumbnail: true,
+        isPublished: true,
         userId: true,
         createdAt: true,
         updatedAt: true,

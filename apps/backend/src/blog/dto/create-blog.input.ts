@@ -7,4 +7,10 @@ export class CreateBlogInput {
 
   @Field(() => String, { nullable: true })
   content?: string
+
+  @Field(() => String, { nullable: true })
+  description?: string
+
+  @Field(() => String, { nullable: true })
+  thumbnail?: string
 }

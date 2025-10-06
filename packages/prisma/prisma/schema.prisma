@@ -55,14 +55,16 @@ model Preference {
 }
 
 model Blog {
-  id        String   @id @default(uuid())
-  userId    String
-  title     String
-  content   String?
-  slug      String
-  isPublish Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(uuid())
+  userId      String
+  slug        String
+  title       String
+  content     String?
+  description String?
+  thumbnail   String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   User User @relation(fields: [userId], references: [id])
 

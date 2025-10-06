@@ -36,11 +36,13 @@ type AuthUser {
 
 type Blog {
   id: String!
+  userId: String!
+  slug: String!
   title: String!
   content: String
-  isPublish: Boolean!
-  slug: String!
-  userId: String!
+  description: String
+  thumbnail: String
+  isPublished: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   user: User
@@ -89,9 +91,13 @@ input UpdateUserInput {
 input CreateBlogInput {
   title: String!
   content: String
+  description: String
+  thumbnail: String
 }
 
 input UpdateBlogInput {
   title: String!
   content: String
+  description: String
+  thumbnail: String
 }
