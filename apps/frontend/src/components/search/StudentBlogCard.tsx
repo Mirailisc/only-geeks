@@ -1,5 +1,5 @@
 import type { Search } from "@/graphql/search";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { CalendarIcon } from "lucide-react";
 
 export default function StudentBlogCard ({blog}: {

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import ProfilePage from '@/assets/profile/ProfilePage'
+import ProfilePage from '@/components/profile/ProfilePage'
 
 export default function UserProfile() {
 

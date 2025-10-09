@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Loading } from '@/components/utils/loading'
-import ProfilePage from '@/assets/profile/ProfilePage'
+import ProfilePage from '@/components/profile/ProfilePage'
 
 export default function Profile() {
   const [profile, setProfile] = useState<Profile | null>(null)
