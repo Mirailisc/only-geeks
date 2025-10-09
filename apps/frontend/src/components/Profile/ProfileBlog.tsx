@@ -79,7 +79,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             <Button
               className="w-full bg-gray-100 text-gray-900 hover:bg-gray-200"
               onClick={() => {
-                console.log(`Reading post: ${post.title}`)
+                // console.log(`Reading post: ${post.title}`)
               }}
             >
               Read more
@@ -105,7 +105,7 @@ const ProfileBlog: React.FC = () => {
           <Button
             className="bg-gray-900 py-6 text-white hover:bg-gray-700"
             onClick={() => {
-              console.log('Opening post editor')
+              // console.log('Opening post editor')
             }}
           >
             Write Posts

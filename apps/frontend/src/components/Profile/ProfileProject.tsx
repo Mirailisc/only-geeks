@@ -160,7 +160,7 @@ const ProfileProjects: React.FC = () => {
           <Button
             className="rounded-lg bg-gray-900 text-white shadow-md hover:bg-gray-700"
             onClick={() => {
-              console.log('Opening add new project editor')
+              // console.log('Opening add new project editor')
             }}
           >
             <span className="mr-2 text-xl">+</span> Add new
