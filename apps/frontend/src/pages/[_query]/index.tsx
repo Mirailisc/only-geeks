@@ -1,16 +1,19 @@
-import StudentBlogCard from '@/components/Search/StudentBlogCard'
-import StudentProfileCard from '@/components/Search/StudentProfileCard'
+import StudentBlogCard from '@/components/search/StudentBlogCard'
+import StudentProfileCard from '@/components/search/StudentProfileCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AuthNavbar from '@/components/utils/AuthNavbar'
 import { SEARCH_QUERY, type Search } from '@/graphql/search'
 import { cn } from '@/lib/utils'
 import { useQuery } from '@apollo/client/react'
 import { useParams, useSearchParams } from 'react-router-dom'
-type SearchType = 'all' | 'profiles' | 'blogs'
+
+export type SearchType = 'all' | 'profiles' | 'blogs'
+
 const convertToSearchType = (type: string): SearchType => {
   if (type === 'profiles' || type === 'blogs') return type
   return 'all'
 }
+
 export default function SearchQuery() {
   const { query } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -52,8 +55,6 @@ export default function SearchQuery() {
   return (
     <>
       <AuthNavbar />
-      {/* <p>Type: {type}</p>
-      <p>Query: {query}</p> */}
       <div className='container mx-auto mt-4'>
         <div className='text-xl font-semibold'>Found {(data?.search.blogs?.length ?? 0) + (data?.search.users?.length ?? 0)} results for &ldquo;{query}&rdquo;</div>
         <Tabs defaultValue={type}>
