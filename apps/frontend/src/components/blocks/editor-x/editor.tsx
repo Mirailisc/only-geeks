@@ -1,11 +1,9 @@
-"use client"
-
 import {
-  InitialConfigType,
+  type InitialConfigType,
   LexicalComposer,
 } from "@lexical/react/LexicalComposer"
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin"
-import { EditorState, SerializedEditorState } from "lexical"
+import { type EditorState, type SerializedEditorState } from "lexical"
 
 import { editorTheme } from "@/components/editor/themes/editor-theme"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -18,6 +16,7 @@ const editorConfig: InitialConfigType = {
   theme: editorTheme,
   nodes,
   onError: (error: Error) => {
+    // eslint-disable-next-line no-console
     console.error(error)
   },
 }
