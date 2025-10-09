@@ -10,7 +10,8 @@ export function InsertImage() {
   return (
     <SelectItem
       value="image"
-      onPointerUp={(e) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      onPointerUp={(_e) => {
         showModal("Insert Image", (onClose) => (
           <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />
         ))

@@ -56,7 +56,6 @@ export const uuid = Math.random()
   .replace(/[^a-z]+/g, "")
   .substring(0, 5)
 
-// TODO lookup should be custom
 function $search(selection: null | BaseSelection): [boolean, string] {
   if (!$isRangeSelection(selection) || !selection.isCollapsed()) {
     return [false, ""]
@@ -80,13 +79,12 @@ function $search(selection: null | BaseSelection): [boolean, string] {
   return [true, word.reverse().join("")]
 }
 
-// TODO query should be custom
 function useQuery(): (searchText: string) => SearchPromise {
   return useCallback((searchText: string) => {
     const server = new AutocompleteServer()
-    console.time("query")
+    // console.time("query")
     const response = server.query(searchText)
-    console.timeEnd("query")
+    // console.timeEnd("query")
     return response
   }, [])
 }
@@ -192,7 +190,8 @@ export function AutocompletePlugin(): JSX.Element | null {
           })
           .catch((e) => {
             if (e !== "Dismissed") {
-              console.error(e)
+              // // eslint-disable-next-line no-console
+              // console.error(e)
             }
           })
         lastMatch = match
@@ -293,7 +292,6 @@ class AutocompleteServer {
     const promise: Promise<null | string> = new Promise((resolve, reject) => {
       setTimeout(() => {
         if (isDismissed) {
-          // TODO cache result
           return reject("Dismissed")
         }
         const searchTextLength = searchText.length

@@ -14,8 +14,6 @@ export const HR: ElementTransformer = {
   regExp: /^(---|\*\*\*|___)\s?$/,
   replace: (parentNode, _1, _2, isImport) => {
     const line = $createHorizontalRuleNode()
-    // eslint-disable-next-line no-warning-comments
-    // TODO: Get rid of isImport flag
     if (isImport || parentNode.getNextSibling() != null) {
       parentNode.replace(line)
     } else {

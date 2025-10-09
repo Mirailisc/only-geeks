@@ -47,9 +47,10 @@ export function CopyButton({ editor, getCodeDOMNode }: Props) {
       await navigator.clipboard.writeText(content)
       setCopyCompleted(true)
       removeSuccessIcon()
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error("Failed to copy: ", err)
+      // // eslint-disable-next-line no-console
+      // console.error("Failed to copy: ", err)
     }
   }
 

@@ -82,8 +82,8 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
       setCurrentImageUrl(url)
       // console.log("Uploaded URL:", url)
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Upload error:', error)
+      // // eslint-disable-next-line no-console
+      // console.error('Upload error:', error)
       // alert("Failed to upload image")
       toast.error('Failed to upload image', {
         description: (error as Error).message,

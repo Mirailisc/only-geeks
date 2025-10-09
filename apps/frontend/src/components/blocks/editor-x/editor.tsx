@@ -15,9 +15,9 @@ const editorConfig: InitialConfigType = {
   namespace: "Editor",
   theme: editorTheme,
   nodes,
-  onError: (error: Error) => {
-    // eslint-disable-next-line no-console
-    console.error(error)
+  onError: () => {
+    // // eslint-disable-next-line no-console
+    // console.error(error)
   },
 }
 
