@@ -9,8 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Building2Icon, MailIcon, MapPinIcon, type LucideIcon } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import ProfileBlog from '@/components/profile/ProfileBlog'
-import ProfileProjects from '@/components/profile/ProfileProject'
+import ProfileBlog from '@/components/Profile/ProfileBlog'
+import ProfileProjects from '@/components/Profile/ProfileProject'
 
 function DisplayWithIcon ({ icon, text }: { icon:LucideIcon, text: string }) {
   const Icon = icon
