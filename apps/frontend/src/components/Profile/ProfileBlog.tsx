@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Calendar } from 'lucide-react'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
+import { CREATE_BLOG } from '@/constants/routes'
 
 interface Post {
   id: number
@@ -102,14 +104,11 @@ const ProfileBlog: React.FC = () => {
         <div className="mb-8 flex items-center justify-between px-4 pt-4 sm:px-8">
           <h1 className="text-3xl font-extrabold text-gray-900">Blog Posts</h1>
           {/* Write Posts Button*/}
-          <Button
-            className="bg-gray-900 py-6 text-white hover:bg-gray-700"
-            onClick={() => {
-              // console.log('Opening post editor')
-            }}
-          >
-            Write Posts
-          </Button>
+          <Link to={CREATE_BLOG}>
+            <Button className="bg-gray-900 py-6 text-white hover:bg-gray-700">
+              Write blog
+            </Button>
+          </Link>
         </div>
 
         {/* List of Blog Posts */}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Search, FileText, User, Clock, Calendar } from 'lucide-react'
+import { Search, FileText, Clock, Calendar } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -116,6 +116,7 @@ const BlogSearchResults: React.FC = () => {
           blog.title.toLowerCase().includes(searchKeyword.toLowerCase()),
         )
         setResults({ blogs: filtered })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message || 'Failed to fetch search results. Please try again.')
       } finally {

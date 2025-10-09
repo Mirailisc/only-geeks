@@ -105,6 +105,7 @@ const SearchResults: React.FC = () => {
         )
 
         setResults({ students: filtered })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message || 'Failed to fetch search results.')
       } finally {
