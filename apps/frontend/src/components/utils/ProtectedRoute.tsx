@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children }: { children: JSX.Element }) 
   const location = useLocation()
 
   if (!user) {
-    return <Navigate to={BASE_PATH} state={{ from: location }} replace />
+    return <Navigate to={BASE_PATH + "?redirect=" + location.pathname} state={{ from: location }} replace />
   }
 
   return children

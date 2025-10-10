@@ -9,10 +9,12 @@ import UserProfile from './pages/[_id]'
 import Settings from './pages/settings'
 import SearchQuery from './pages/[_query]'
 import CreateBlog from './pages/create/blog'
+import ErrorElement from './pages/error'
 
 const router = createBrowserRouter([
   {
     element: <Boot />,
+    errorElement: <ErrorElement />,
     children: [
       {
         path: PROFILE_PATH,

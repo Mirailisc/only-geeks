@@ -13,8 +13,8 @@ export const ME_QUERY = gql`
 `
 
 export const GET_GOOGLE_OAUTH_URL = gql`
-  query GetGoogleOauthUrl {
-    getGoogleOauthUrl
+  query ExampleQuery($state: String!) {
+    getGoogleOauthUrl(state: $state)
   }
 `
 

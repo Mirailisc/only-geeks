@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-// import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client/react'
 import { toast } from 'sonner'
 import AuthNavbar from '@/components/utils/AuthNavbar'
@@ -74,9 +73,9 @@ export default function ProfilePage({username}: ProfilePageProps) {
                 <div className='px-6'>
                   <p className='text-muted-foreground'>{profile?.bio}</p>
                 </div>
-                <DisplayWithIcon icon={MapPinIcon} text={profile?.location || "Unknown Location"} />
-                <DisplayWithIcon icon={Building2Icon} text={profile?.organization || "Unknown Organization"} />
-                <DisplayWithIcon icon={MailIcon} text={profile?.email || "Unknown Email"} />
+                {profile?.location && <DisplayWithIcon icon={MapPinIcon} text={profile.location} /> }
+                {profile?.organization && <DisplayWithIcon icon={Building2Icon} text={profile.organization} /> }
+                {profile?.email && <DisplayWithIcon icon={MailIcon} text={profile.email} /> }
               </div>
               
             </CardContent>

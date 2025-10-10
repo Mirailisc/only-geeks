@@ -9,11 +9,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
 import { Textarea } from '../ui/textarea'
 import { Button } from '../ui/button'
-// import { Switch } from '../ui/switch'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Label } from '../ui/label'
 import { UploadCloudIcon } from 'lucide-react'
-// import { UploadCloudIcon } from 'lucide-react'
 
 type Props = {
   profile: Profile

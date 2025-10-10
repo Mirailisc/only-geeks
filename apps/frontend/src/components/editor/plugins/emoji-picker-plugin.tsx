@@ -7,9 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-// import * as React from "react"
 import { useCallback, useEffect, useMemo, useState,lazy } from "react"
-// import dynamic from "next/dynamic"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import {
   MenuOption,

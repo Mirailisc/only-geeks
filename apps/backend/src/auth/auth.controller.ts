@@ -24,7 +24,7 @@ export class AuthController {
   @Get('google/callback')
   async googleCallback(@Req() req: Request, @Res() res: Response) {
     const code = req.query.code as string
-
+    // console.log('query-string: ', req.query)
     if (!code) {
       throw new BadRequestException('Code not found')
     }
@@ -91,8 +91,8 @@ export class AuthController {
 
       return res.redirect(
         process.env.NODE_ENV === 'production'
-          ? `${this.configService.get<string>('URL')}/profile`
-          : 'http://localhost:3000/profile',
+          ? `${this.configService.get<string>('URL')}${req.query.state || '/profile'}`
+          : `http://localhost:3000${req.query.state || '/profile'}`,
       )
     } catch (err) {
       console.error(isAxiosError(err) ? err.response?.data || err.message : err)

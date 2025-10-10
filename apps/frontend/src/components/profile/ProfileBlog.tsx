@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Calendar } from 'lucide-react'
+import { Calendar, PencilIcon } from 'lucide-react'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
@@ -98,15 +98,15 @@ const ProfileBlog: React.FC = () => {
   const [posts] = useState<Post[]>(MOCK_BLOG_POSTS)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="w-full">
         {/* Blog Header and Action Button */}
-        <div className="mb-8 flex items-center justify-between px-4 pt-4 sm:px-8">
+        <div className="mb-8 flex items-center justify-between px-4 pt-6 sm:px-8">
           <h1 className="text-3xl font-extrabold text-gray-900">Blog Posts</h1>
           {/* Write Posts Button*/}
           <Link to={CREATE_BLOG}>
-            <Button className="bg-gray-900 py-6 text-white hover:bg-gray-700">
-              Write blog
+            <Button className="bg-gray-900 text-white hover:bg-gray-700">
+              <PencilIcon /> Write blog
             </Button>
           </Link>
         </div>

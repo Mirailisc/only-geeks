@@ -1,7 +1,5 @@
-// import * as React from "react"
 import { type JSX, Suspense, useCallback, useEffect, useRef, useState } from "react"
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin"
-// import { useCollaborationContext } from "@lexical/react/LexicalCollaborationContext"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
@@ -36,7 +34,6 @@ import {
   TextNode,
 } from "lexical"
 
-// import brokenImage from '@/registry/new-york-v4/editor/images/image-broken.svg';
 import { ContentEditable } from "@/components/editor/editor-ui/content-editable"
 import { ImageResizer } from "@/components/editor/editor-ui/image-resizer"
 import { $isImageNode } from "@/components/editor/nodes/image-node"

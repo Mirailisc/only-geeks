@@ -57,7 +57,7 @@ type Query {
   getHealth: Health!
   getMyProfile: User!
   getProfileByUsername(username: String!): User!
-  getGoogleOauthUrl: String!
+  getGoogleOauthUrl(state: String!): String!
   me: AuthUser!
   getBlogs: [Blog!]!
   getBlogBySlugAndUsername(slug: String!, username: String!): Blog!

@@ -152,7 +152,7 @@ const ProfileProjects: React.FC = () => {
   const [projects] = useState<Project[]>(MOCK_PROJECTS)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="w-full">
         {/* Projects Header and Action Button */}
         <div className="mb-8 flex items-center justify-between px-4 pt-6 sm:px-8">

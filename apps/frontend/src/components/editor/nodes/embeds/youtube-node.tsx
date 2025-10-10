@@ -1,4 +1,3 @@
-// import * as React from "react"
 import { type JSX } from "react"
 import { BlockWithAlignableContents } from "@lexical/react/LexicalBlockWithAlignableContents"
 import {
