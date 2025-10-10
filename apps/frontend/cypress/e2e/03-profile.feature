@@ -21,7 +21,7 @@ Feature: Profile
         Then I view my profile
         Then I click button named "projects-tab"
         Then I should see "Projects"
-        Then I should see "Add project"
+        Then I should see "Add new"
         Then I click button named "blogs-tab"
         Then I should see "Blogs"
         Then I should see "Write blog"
