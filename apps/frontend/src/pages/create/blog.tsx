@@ -432,7 +432,7 @@ const CreateBlog = () => {
               <Save /> Save Draft
             </Button> */}
             <Button variant="default" onClick={() => setShowPublishDialog(true)}>
-              <Send /> Publish
+              <Send /> {currentBlog?.isPublished ? 'Update' : 'Publish'}
             </Button>
           </div>
         </div>
