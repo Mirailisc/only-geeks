@@ -28,6 +28,7 @@ scalar DateTime
 
 type AuthUser {
   firstName: String
+  username: String!
   lastName: String
   email: String!
   isAdmin: Boolean!

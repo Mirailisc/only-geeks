@@ -6,6 +6,7 @@ export interface User {
   lastName: string
   isAdmin: boolean
   picture: string
+  username: string
 }
 
 interface AuthState {

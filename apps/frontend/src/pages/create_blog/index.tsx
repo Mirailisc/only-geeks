@@ -21,7 +21,7 @@ import { YOUTUBE } from '@/components/editor/transformers/markdown-youtube-trans
 import { $convertToMarkdownString, CHECK_LIST, ELEMENT_TRANSFORMERS, MULTILINE_ELEMENT_TRANSFORMERS, TEXT_FORMAT_TRANSFORMERS, TEXT_MATCH_TRANSFORMERS } from '@lexical/markdown'
 import { $getRoot, type EditorState } from 'lexical'
 import { useMutation, useQuery } from '@apollo/client/react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { CREATE_BLOG_MUTATION, GET_MY_BLOGS_QUERY, UPDATE_BLOG_MUTATION, type Blog } from '@/graphql/blog'
 import { dateFormatter, extractMarkdownContent } from '@/lib/utils'
 import { Tabs, TabsContent, TabsTrigger } from '@/components/ui/tabs'
@@ -42,14 +42,17 @@ const CreateBlog = () => {
   const [isSaving, setIsSaving] = useState(false)
   const [blogToLoad, setBlogToLoad] = useState<Blog | null>(null) 
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
-  
+  const [isInitialLoad, setIsInitialLoad] = useState(true) // Track if this is the initial load
+  const [searchParams] = useSearchParams()
+  const editid = searchParams.get('editid')
   const debouncedEditorState = useDebounce(currentEditorState, 1000)
   // const debouncedTitle = useDebounce(blogTitle, 1000)
   const debouncedMarkdown = useDebounce(currentMarkdown, 1000)
   const debouncedSaveTrigger = useDebounce({
     markdown: currentMarkdown,
     title: blogTitle
-  }, 2000) // 5 seconds debounce
+  }, 2000) // 2 seconds debounce
+  
   // Extract thumbnail and description from markdown
   const { thumbnail, description } = useMemo(() => {
     if (!debouncedMarkdown) {
@@ -71,8 +74,26 @@ const CreateBlog = () => {
   })
   
   // Filter unpublished blogs
-  const unpublishedBlogs = data?.getMyBlogs?.filter(blog => !blog.isPublished) || []
-  const publishedBlogs = data?.getMyBlogs?.filter(blog => blog.isPublished) || []
+  const unpublishedBlogs = useMemo(
+    () => data?.getMyBlogs?.filter(blog => !blog.isPublished) || [],
+    [data]
+  )
+  const publishedBlogs = useMemo(
+    () => data?.getMyBlogs?.filter(blog => blog.isPublished) || [],
+    [data]
+  )
+  
+  // If editid is present in URL, we should load that blog directly
+  useEffect(() => {
+    if (editid && isInitialLoad) {
+      const toEdit = unpublishedBlogs.find(blog => blog.id === editid) || publishedBlogs.find(blog => blog.id === editid)
+      if(toEdit){
+        handleSelectBlog(toEdit)
+        setIsInitialLoad(false) // Mark that initial load is complete
+      }
+    }
+  }, [editid, unpublishedBlogs, publishedBlogs, isInitialLoad])
+  
   // Handle editor changes
   const onEditorChange = useCallback((editorState: EditorState) => {
     setCurrentEditorState(editorState)
@@ -102,8 +123,8 @@ const CreateBlog = () => {
   useEffect(() => {
     const { markdown: debouncedMarkdownForSave, title: debouncedTitleForSave } = debouncedSaveTrigger;
     
-    // Check if we have a blog to save to
-    if (!currentBlog) return
+    // Check if we have a blog to save to AND we're not in initial load state
+    if (!currentBlog || isInitialLoad) return
   
     const autoSave = async () => {
       if (!currentBlog) return;
@@ -151,7 +172,7 @@ const CreateBlog = () => {
       }
     };
     
-    // Trigger auto-save only when the 5s debounced values change
+    // Trigger auto-save only when the debounced values change
     autoSave();
     
   }, [
@@ -160,7 +181,8 @@ const CreateBlog = () => {
       updateBlog, 
       description, 
       thumbnail, 
-      setCurrentBlog // Include setter if updating state inside the effect
+      setCurrentBlog, // Include setter if updating state inside the effect
+      isInitialLoad // Add dependency
   ])
   
   // Handle creating new blog
@@ -183,6 +205,7 @@ const CreateBlog = () => {
         setBlogTitle('Untitled')
         setCurrentMarkdown('')
         setShowBlogListDialog(false)
+        setIsInitialLoad(false) // Mark that initial load is complete for new blogs too
       }
     } catch (error) {
       console.error('Error creating blog:', error)
@@ -200,6 +223,7 @@ const CreateBlog = () => {
     setBlogToLoad(blog); // <--- New: Signal to the child component to load this blog
     setShowBlogListDialog(false)
   }
+  
   // Handle publish
   const handlePublish = async () => {
     if (!currentBlog) return
@@ -316,7 +340,7 @@ const CreateBlog = () => {
                 
                 {!loading && !error && (
                   <div className="space-y-2">                    
-                    {/* Existing Drafts */}
+                    {/* Existing Published Blogs */}
                     {publishedBlogs.map((blog) => (
                       <Button
                         key={blog.id}
@@ -336,7 +360,7 @@ const CreateBlog = () => {
                     
                     {publishedBlogs.length === 0 && (
                       <div className="text-center py-8 text-muted-foreground">
-                        No draft blogs found. Create your first blog!
+                        No published blogs found. Publish your first blog!
                       </div>
                     )}
                   </div>

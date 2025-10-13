@@ -43,6 +43,7 @@ export class AuthResolver {
     const me = await this.userService.findUserByEmail(user.email)
     return {
       email: me.email,
+      username: me.username,
       firstName: me.firstName,
       lastName: me.lastName,
       isAdmin: me.isAdmin,

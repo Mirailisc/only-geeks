@@ -90,7 +90,7 @@ export default function ProfilePage({username}: ProfilePageProps) {
           </TabsList>
           <TabsContent value="portfolio">This is Portfolio tabs</TabsContent>
           <TabsContent value="projects"><ProfileProjects /></TabsContent>
-          <TabsContent value="blogs"><ProfileBlog myEmail={myUser?.email} viewEmail={profile?.email} /></TabsContent>
+          <TabsContent value="blogs"><ProfileBlog viewUsername={username} myUsername={myUser?.username} /></TabsContent>
         </Tabs>
       </div>
       <div className='h-48 w-full'></div>

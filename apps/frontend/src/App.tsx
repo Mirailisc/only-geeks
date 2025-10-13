@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { BASE_PATH, CREATE_BLOG, PROFILE_PATH, SEARCH_PATH, SETTINGS_PATH, USER_PROFILE_PATH } from './constants/routes'
+import { BASE_PATH, BLOG_READER_PATH, CREATE_BLOG_PATH, PROFILE_PATH, SEARCH_PATH, SETTINGS_PATH, USER_PROFILE_PATH } from './constants/routes'
 import Home from './pages/home'
 import { Toaster } from 'sonner'
 import Boot from './components/utils/Boot'
@@ -8,8 +8,9 @@ import Profile from './pages/profile'
 import UserProfile from './pages/[_id]'
 import Settings from './pages/settings'
 import SearchQuery from './pages/[_query]'
-import CreateBlog from './pages/create/blog'
 import ErrorElement from './pages/error'
+import CreateBlog from './pages/create_blog'
+import ReadBlog from './pages/read_blog'
 
 const router = createBrowserRouter([
   {
@@ -49,10 +50,18 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: CREATE_BLOG,
+        path: CREATE_BLOG_PATH,
         element: (
           <ProtectedRoute>
             <CreateBlog />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: BLOG_READER_PATH,
+        element: (
+          <ProtectedRoute>
+            <ReadBlog />
           </ProtectedRoute>
         )
       }
