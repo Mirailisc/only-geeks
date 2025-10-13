@@ -36,7 +36,7 @@ JWT_SECRET=""
 2. Run `docker compose up -d db` to start the database.
 3. Run `pnpm install` to install dependencies.
 4. Run `pnpm prisma:generate` to generate prisma client.
-5. Run `pnpm prisma:migrate` to apply schema changes to the database. (if you don't have schemas, run `pnpm prisma:push` instead)
+5. Run `pnpm prisma:migrate` to apply schema changes to the database.
 6. Run `pnpm prisma:build` to build prisma client.
 7. Run `pnpm dev` to start the server. (If you want to start specific app, run `pnpm dev:frontend` or `pnpm dev:backend`)
 
