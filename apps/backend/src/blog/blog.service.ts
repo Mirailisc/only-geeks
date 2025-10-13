@@ -51,6 +51,25 @@ export class BlogService {
     })
   }
 
+  async getBlogById(id: string) {
+    return await this.prisma.blog.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        thumbnail: true,
+        description: true,
+        isPublished: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
+    })
+  }
+
   async getBlogsByUsername(username: string) {
     const user = await this.userService.findUserByUsername(username)
 

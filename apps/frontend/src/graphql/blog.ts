@@ -170,3 +170,20 @@ export const DELETE_BLOG_MUTATION = gql`
     }
   }
 `
+
+export const GET_BLOG_BY_ID_MUTATION = gql`
+  query GetBlogById($blogId: String!) {
+    getBlogById(id: $blogId) {
+      id
+      title
+      content
+      slug
+      thumbnail
+      description
+      isPublished
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+`

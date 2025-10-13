@@ -63,6 +63,7 @@ type Query {
   getBlogBySlugAndUsername(slug: String!, username: String!): Blog!
   getBlogsByUsername(username: String!): [Blog!]!
   getMyBlogs: [Blog!]!
+  getBlogById(id: String!): Blog!
   search(input: SearchInput!): Search!
   searchSuggest(input: SearchInput!): Search!
 }

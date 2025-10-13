@@ -35,6 +35,11 @@ export class BlogResolver {
     return await this.blogService.getMyBlogs(user.id)
   }
 
+  @Query(() => Blog)
+  async getBlogById(@Args('id') id: string) {
+    return await this.blogService.getBlogById(id)
+  }
+
   @Mutation(() => Blog)
   @UseGuards(GqlAuthGuard)
   async createBlog(
