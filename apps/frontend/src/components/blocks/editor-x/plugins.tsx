@@ -88,7 +88,6 @@ import { IMAGE } from "@/components/editor/transformers/markdown-image-transform
 import { TABLE } from "@/components/editor/transformers/markdown-table-transformer"
 import { TWEET } from "@/components/editor/transformers/markdown-tweet-transformer"
 import { Separator } from "@/components/ui/separator"
-import { MarkdownTogglePlugin } from "@/components/editor/plugins/actions/markdown-toggle-plugin"
 import { YOUTUBE } from "@/components/editor/transformers/markdown-youtube-transformer"
 
 const placeholder = "Press / for commands..."
@@ -257,7 +256,7 @@ export function Plugins({}) {
             {/* <SpeechToTextPlugin /> */}
             {/* <ShareContentPlugin /> */}
             <ImportExportPlugin />
-            <MarkdownTogglePlugin
+            {/* <MarkdownTogglePlugin
               shouldPreserveNewLinesInMarkdown={true}
               transformers={[
                 TABLE,
@@ -272,7 +271,7 @@ export function Plugins({}) {
                 ...TEXT_FORMAT_TRANSFORMERS,
                 ...TEXT_MATCH_TRANSFORMERS,
               ]}
-            />
+            /> */}
             {/* <EditModeTogglePlugin /> */}
             <>
               <ClearEditorActionPlugin />

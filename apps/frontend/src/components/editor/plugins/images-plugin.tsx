@@ -108,19 +108,46 @@ export function InsertImageUploadedDialogBody({
 }) {
   const [src, setSrc] = useState("")
   const [altText, setAltText] = useState("")
+  const [isUploading, setIsUploading] = useState(false)
+  const [error, setError] = useState("")
 
-  const isDisabled = src === ""
+  const isDisabled = src === "" || isUploading
 
-  const loadImage = (files: FileList | null) => {
-    const reader = new FileReader()
-    reader.onload = function () {
-      if (typeof reader.result === "string") {
-        setSrc(reader.result)
-      }
-      return ""
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Check if it's an image
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file')
+      return
     }
-    if (files !== null) {
-      reader.readAsDataURL(files[0])
+
+    setError("")
+    setIsUploading(true)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('uploadType', '0')
+
+      const response = await fetch('https://up.m1r.ai/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Upload failed')
+      }
+
+      const data = await response.json()
+      const url = data.url
+
+      setSrc(url)
+    } catch (err) {
+      setError((err as Error).message || 'Failed to upload image')
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -131,10 +158,20 @@ export function InsertImageUploadedDialogBody({
         <Input
           id="image-upload"
           type="file"
-          onChange={(e) => loadImage(e.target.files)}
+          onChange={handleFileUpload}
           accept="image/*"
+          disabled={isUploading}
           data-test-id="image-modal-file-upload"
         />
+        {isUploading && (
+          <p className="text-sm text-muted-foreground">Uploading...</p>
+        )}
+        {error && (
+          <p className="text-sm text-destructive">{error}</p>
+        )}
+        {src && !isUploading && (
+          <p className="text-sm text-green-600">Image uploaded successfully</p>
+        )}
       </div>
       <div className="grid gap-2">
         <Label htmlFor="alt-text">Alt Text</Label>

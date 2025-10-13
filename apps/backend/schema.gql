@@ -100,4 +100,5 @@ input UpdateBlogInput {
   content: String
   description: String
   thumbnail: String
+  isPublished: Boolean
 }

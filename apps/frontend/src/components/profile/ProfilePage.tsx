@@ -10,6 +10,7 @@ import { Building2Icon, MailIcon, MapPinIcon, type LucideIcon } from 'lucide-rea
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProfileBlog from '@/components/profile/ProfileBlog'
 import ProfileProjects from '@/components/profile/ProfileProject'
+import { useAppSelector } from '@/hooks/useAppSelector'
 
 function DisplayWithIcon ({ icon, text }: { icon:LucideIcon, text: string }) {
   const Icon = icon
@@ -25,7 +26,7 @@ interface ProfilePageProps {
 }
 export default function ProfilePage({username}: ProfilePageProps) {
   const [profile, setProfile] = useState<Profile | null>(null)
-
+  const { user: myUser } = useAppSelector((state) => state.auth)
   const { data, loading, error } = useQuery<{ getProfileByUsername: Profile }>(GET_PROFILE_BY_USERNAME_QUERY, {
     variables: {
       username: username,
@@ -89,7 +90,7 @@ export default function ProfilePage({username}: ProfilePageProps) {
           </TabsList>
           <TabsContent value="portfolio">This is Portfolio tabs</TabsContent>
           <TabsContent value="projects"><ProfileProjects /></TabsContent>
-          <TabsContent value="blogs"><ProfileBlog /></TabsContent>
+          <TabsContent value="blogs"><ProfileBlog myEmail={myUser?.email} viewEmail={profile?.email} /></TabsContent>
         </Tabs>
       </div>
       <div className='h-48 w-full'></div>
