@@ -138,9 +138,11 @@ export class BlogService {
   }
 
   async updateBlog(id: string, input: UpdateBlogInput) {
+    const slug = input.title.toLowerCase().replace(/\s+/g, '-')
+
     return await this.prisma.blog.update({
       where: { id },
-      data: input,
+      data: { ...input, slug },
       select: {
         id: true,
         title: true,
