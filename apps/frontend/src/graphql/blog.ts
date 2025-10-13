@@ -153,3 +153,20 @@ export const UPDATE_BLOG_MUTATION = gql`
     }
   }
 `
+
+export const DELETE_BLOG_MUTATION = gql`
+  mutation DeleteBlog($blogId: String!) {
+    deleteBlog(id: $blogId) {
+      id
+      title
+      content
+      slug
+      thumbnail
+      description
+      isPublished
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+`

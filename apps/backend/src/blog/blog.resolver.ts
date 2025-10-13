@@ -52,4 +52,10 @@ export class BlogResolver {
   ) {
     return await this.blogService.updateBlog(id, input)
   }
+
+  @Mutation(() => Blog)
+  @UseGuards(GqlAuthGuard)
+  async deleteBlog(@Args('id') id: string) {
+    return await this.blogService.deleteBlog(id)
+  }
 }

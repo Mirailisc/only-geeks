@@ -137,4 +137,23 @@ export class BlogService {
       },
     })
   }
+
+  async deleteBlog(id: string) {
+    return await this.prisma.blog.delete({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        thumbnail: true,
+        description: true,
+        isPublished: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
+    })
+  }
 }
