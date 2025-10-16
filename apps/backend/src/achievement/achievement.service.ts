@@ -21,7 +21,9 @@ export class AchievementService {
   }
 
   async findOne(id: string) {
-    const achievement = await this.prisma.achievement.findUnique({ where: { id } })
+    const achievement = await this.prisma.achievement.findUnique({
+      where: { id },
+    })
     if (!achievement) throw new BadRequestException('Achievement not found')
     return achievement
   }
