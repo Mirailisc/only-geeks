@@ -60,13 +60,13 @@ export default function AuthNavbar() {
               <DropdownMenuLabel>Create New</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <Link to="/create/blog">
-                <DropdownMenuItem className='cursor-pointer'>
+                <DropdownMenuItem data-cy="create-blog-dropdown-item" className='cursor-pointer'>
                   <FileTextIcon className="mr-2 h-4 w-4" />
                   <span>Blog</span>
                 </DropdownMenuItem>
               </Link>
               <Link to="/create/project">
-                <DropdownMenuItem className='cursor-pointer'>
+                <DropdownMenuItem data-cy="create-project-dropdown-item" className='cursor-pointer'>
                   <CodeIcon className="mr-2 h-4 w-4" />
                   <span>Project</span>
                 </DropdownMenuItem>

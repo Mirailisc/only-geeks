@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { TerminalIcon } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { TabsContent } from '@radix-ui/react-tabs'
+import { Loading } from '@/components/utils/loading'
 
 export default function Settings() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -26,7 +27,7 @@ export default function Settings() {
     }
   }, [data])
 
-  if (loading || !user) return <div>Loading...</div>
+  if (loading || !user) return <Loading />
 
   return (
     <>

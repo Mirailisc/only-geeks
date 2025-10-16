@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import { Card, CardContent, CardTitle } from '../ui/card'
 import { dateFormatter } from '@/lib/utils'
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
+import { Badge } from '../ui/badge'
 
 // // Component for a single blog post card
 const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog, isMyProfile: boolean, username:string }) => {
@@ -39,8 +40,8 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog, isMyProfile
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Card className="mb-6">
-        <CardContent className="p-6 pb-1">
+      <Card className={`mb-6 ${post.isPublished ? '' : 'opacity-70'}`}>
+        <CardContent>
           <div className="flex flex-col items-stretch gap-6 md:flex-row">
             <div className="order-2 flex flex-1 flex-col justify-between md:order-1">
               <div>
@@ -48,11 +49,15 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog, isMyProfile
                 <p className="mb-4 text-base text-gray-600">{post.description}</p>
               </div>
 
-              {/* Bottom: Date */}
-              <p className="mt-4 flex items-center self-start text-sm text-gray-500">
+              <div className='flex flex-row gap-2 items-end'>
+              <div className="mt-4 flex items-center text-sm text-gray-500">
                 <CalendarIcon className="mr-1.5 h-4 w-4 text-blue-500" />
                 {dateFormatter(post.createdAt)}
-              </p>
+              </div>
+              {isMyProfile &&<div className=''>
+                <Badge variant={post.isPublished ? "default" : "destructive"} className='text-xs'> {post.isPublished ? 'Published' : 'Draft'} </Badge>
+              </div>}
+              </div>
             </div>
 
             <div className={
@@ -73,7 +78,7 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog, isMyProfile
               
               {
                 isMyProfile ? (
-                  <div className="flex flex-row gap-2">
+                  <div className="flex flex-row gap-2 justify-end">
                     <Button variant={"secondary"} disabled={loading} className="" onClick={() => {
                       navigator(`/create/blog/?editid=${post.id}`)
                     }}>
@@ -85,18 +90,28 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog, isMyProfile
                       <Trash2Icon className="h-4 w-4" />
                     </Button>
                     <Button className="" disabled={loading} onClick={() => {
-                      navigator(`/blog/${username}/${post.slug}`)
+                      if(post.isPublished){
+                        navigator(`/blog/${username}/${post.slug}`)
+                      }else{
+                        navigator(`/create/blog/?editid=${post.id}`)
+                      }
                     }}>
-                      Read more
+                      {post.isPublished ? 'Read More' : 'Edit Draft'}
                     </Button>
                   </div>
                 ) : 
                 (
-                  <Button className="" disabled={loading} onClick={() => {
-                    navigator(`/blog/${username}/${post.slug}`)
-                  }}>
-                    Read more
-                  </Button>
+                  <div className='flex flex-row gap-2 justify-end'>
+                    <Button className="" disabled={loading} onClick={() => {
+                      if(post.isPublished){
+                        navigator(`/blog/${username}/${post.slug}`)
+                      }else{
+                        navigator(`/create/blog/?editid=${post.id}`)
+                      }
+                    }}>
+                      {post.isPublished ? 'Read More' : 'Edit Draft'}
+                    </Button>
+                  </div>
                 )
               }
             </div>

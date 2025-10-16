@@ -46,7 +46,7 @@ type Blog {
   isPublished: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
-  user: User
+  User: User
 }
 
 type Search {

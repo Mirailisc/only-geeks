@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -22,18 +23,23 @@ import { $convertToMarkdownString, CHECK_LIST, ELEMENT_TRANSFORMERS, MULTILINE_E
 import { $getRoot, type EditorState } from 'lexical'
 import { useMutation, useQuery } from '@apollo/client/react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { CREATE_BLOG_MUTATION, GET_MY_BLOGS_QUERY, UPDATE_BLOG_MUTATION, type Blog } from '@/graphql/blog'
+import { CREATE_BLOG_MUTATION, GET_MY_BLOGS_QUERY_EDITED_MODE, UPDATE_BLOG_MUTATION, type Blog } from '@/graphql/blog'
 import { dateFormatter, extractMarkdownContent } from '@/lib/utils'
 import { Tabs, TabsContent, TabsTrigger } from '@/components/ui/tabs'
 import { TabsList } from '@radix-ui/react-tabs'
+import { useAppSelector } from '@/hooks/useAppSelector'
 
 const CreateBlog = () => {
   const isDesktop = useMediaQuery('(min-width: 768px)')
   const navigate = useNavigate()
+  const {user} = useAppSelector((state) => state.auth)
   
   // State management
   const [showBlogListDialog, setShowBlogListDialog] = useState(true)
   const [showPublishDialog, setShowPublishDialog] = useState(false)
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+  const [showErrorAlert, setShowErrorAlert] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const [currentBlog, setCurrentBlog] = useState<Blog | null>(null)
   const [blogTitle, setBlogTitle] = useState('Untitled')
   const [currentEditorState, setCurrentEditorState] = useState<EditorState | null>(null)
@@ -42,16 +48,16 @@ const CreateBlog = () => {
   const [isSaving, setIsSaving] = useState(false)
   const [blogToLoad, setBlogToLoad] = useState<Blog | null>(null) 
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
-  const [isInitialLoad, setIsInitialLoad] = useState(true) // Track if this is the initial load
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [searchParams] = useSearchParams()
   const editid = searchParams.get('editid')
+  
   const debouncedEditorState = useDebounce(currentEditorState, 1000)
-  // const debouncedTitle = useDebounce(blogTitle, 1000)
   const debouncedMarkdown = useDebounce(currentMarkdown, 1000)
   const debouncedSaveTrigger = useDebounce({
     markdown: currentMarkdown,
     title: blogTitle
-  }, 2000) // 2 seconds debounce
+  }, 2000)
   
   // Extract thumbnail and description from markdown
   const { thumbnail, description } = useMemo(() => {
@@ -67,10 +73,10 @@ const CreateBlog = () => {
   }, [debouncedMarkdown])
   
   // GraphQL queries and mutations
-  const { data, loading, error } = useQuery<{ getMyBlogs: Blog[] }>(GET_MY_BLOGS_QUERY)
+  const { data, loading, error } = useQuery<{ getMyBlogs: Blog[] }>(GET_MY_BLOGS_QUERY_EDITED_MODE)
   const [createBlog] = useMutation<{createBlog: Blog}>(CREATE_BLOG_MUTATION)
   const [updateBlog] = useMutation(UPDATE_BLOG_MUTATION, {
-    refetchQueries: [{ query: GET_MY_BLOGS_QUERY }]
+    refetchQueries: [{ query: GET_MY_BLOGS_QUERY_EDITED_MODE }],
   })
   
   // Filter unpublished blogs
@@ -89,7 +95,7 @@ const CreateBlog = () => {
       const toEdit = unpublishedBlogs.find(blog => blog.id === editid) || publishedBlogs.find(blog => blog.id === editid)
       if(toEdit){
         handleSelectBlog(toEdit)
-        setIsInitialLoad(false) // Mark that initial load is complete
+        setIsInitialLoad(false)
       }
     }
   }, [editid, unpublishedBlogs, publishedBlogs, isInitialLoad])
@@ -123,29 +129,22 @@ const CreateBlog = () => {
   useEffect(() => {
     const { markdown: debouncedMarkdownForSave, title: debouncedTitleForSave } = debouncedSaveTrigger;
     
-    // Check if we have a blog to save to AND we're not in initial load state
     if (!currentBlog || isInitialLoad) return
   
     const autoSave = async () => {
       if (!currentBlog) return;
-
-      // Check if the content has changed since the currentBlog state was set/updated
       const contentChanged = currentBlog.content !== debouncedMarkdownForSave;
       const titleChanged = currentBlog.title !== debouncedTitleForSave;
 
-      // Only save if either content or title has changed
-      // AND if the debounced content is not empty (to avoid saving empty content immediately)
-      if (contentChanged || titleChanged) {
+      if ((contentChanged || titleChanged) && debouncedMarkdownForSave.trim() !== '') {
           setIsSaving(true);
           try {
-              // Using the current title/markdown which are now the debounced values
               await updateBlog({
                   variables: {
                       blogId: currentBlog.id,
                       input: {
                           title: debouncedTitleForSave,
                           content: debouncedMarkdownForSave,
-                          // Using the derived values which are based on the 1s debounce, fine.
                           description: description,
                           thumbnail: thumbnail
                       }
@@ -153,8 +152,6 @@ const CreateBlog = () => {
               });
               setLastSaved(new Date());
               
-              // OPTIONAL BUT RECOMMENDED: Update currentBlog with the saved data
-              // This is crucial for the comparison logic above to work correctly on subsequent saves.
               setCurrentBlog(prev => prev ? { 
                   ...prev, 
                   title: debouncedTitleForSave, 
@@ -172,17 +169,17 @@ const CreateBlog = () => {
       }
     };
     
-    // Trigger auto-save only when the debounced values change
     autoSave();
     
+   
   }, [
       debouncedSaveTrigger, 
       currentBlog, 
       updateBlog, 
       description, 
       thumbnail, 
-      setCurrentBlog, // Include setter if updating state inside the effect
-      isInitialLoad // Add dependency
+      setCurrentBlog,
+      isInitialLoad
   ])
   
   // Handle creating new blog
@@ -197,7 +194,7 @@ const CreateBlog = () => {
             thumbnail: null
           }
         },
-        refetchQueries: [{ query: GET_MY_BLOGS_QUERY }]
+        refetchQueries: [{ query: GET_MY_BLOGS_QUERY_EDITED_MODE }]
       })
       console.log('Create blog response:', data)
       if (data?.createBlog) {
@@ -205,22 +202,19 @@ const CreateBlog = () => {
         setBlogTitle('Untitled')
         setCurrentMarkdown('')
         setShowBlogListDialog(false)
-        setIsInitialLoad(false) // Mark that initial load is complete for new blogs too
+        setIsInitialLoad(false)
       }
     } catch (error) {
       console.error('Error creating blog:', error)
     }
   }
   
-  // console.log('Current Editor State:', currentEditorState)
   // Handle selecting existing blog
   const handleSelectBlog = (blog: Blog) => {
     setCurrentBlog(blog)
     setBlogTitle(blog.title)
-    // We set the content in the parent state, and let the new child component handle
-    // loading it into the Lexical Editor instance.
     setCurrentMarkdown(blog.content || '') 
-    setBlogToLoad(blog); // <--- New: Signal to the child component to load this blog
+    setBlogToLoad(blog);
     setShowBlogListDialog(false)
   }
   
@@ -241,17 +235,30 @@ const CreateBlog = () => {
           }
         }
       })
-      setShowPublishDialog(false)
+      
       setCurrentBlog(prev => prev ? { ...prev, isPublished: publishVisibility } : null)
+      setShowPublishDialog(false)
+      setShowSuccessAlert(true)
+      
     } catch (error) {
       console.error('Publish failed:', error)
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to publish blog. Please try again.')
+      setShowErrorAlert(true)
     }
+  }
+  
+  // Handle success alert navigation
+  const handleSuccessNavigate = () => {
+    setShowSuccessAlert(false)
+    const titleToSlug = blogTitle.toLowerCase().replace(/\s+/g, '-')
+    navigate(`/blog/${user?.username}/${titleToSlug}`)
   }
   
   return (
     <>
       <AuthNavbar />
       
+      {/* Blog List Dialog */}
       <Dialog open={showBlogListDialog} onOpenChange={()=>{
         setShowBlogListDialog(false);
         navigate('/profile');
@@ -265,8 +272,8 @@ const CreateBlog = () => {
           </DialogHeader>
           <Tabs defaultValue="drafts" className='w-full mt-4'>
             <TabsList className='w-full mb-4'>
-              <TabsTrigger className='w-1/2' value="drafts">Drafts</TabsTrigger>
-              <TabsTrigger className='w-1/2' value="published">Published</TabsTrigger>
+              <TabsTrigger className='w-1/2' data-cy="crud-blog-drafts-tab" value="drafts">Drafts</TabsTrigger>
+              <TabsTrigger className='w-1/2' data-cy="crud-blog-published-tab" value="published">Published</TabsTrigger>
             </TabsList>
             <TabsContent value="drafts">
               <ScrollArea className="h-[400px] w-full rounded-md border p-4">
@@ -284,8 +291,8 @@ const CreateBlog = () => {
                 
                 {!loading && !error && (
                   <div className="space-y-2">
-                    {/* Create New Blog Button */}
                     <Button
+                      data-cy="create-new-blog-button"
                       variant="outline"
                       className="w-full justify-start h-auto py-4 border-2 border-dashed hover:border-primary"
                       onClick={handleCreateNewBlog}
@@ -297,7 +304,6 @@ const CreateBlog = () => {
                       </div>
                     </Button>
                     
-                    {/* Existing Drafts */}
                     {unpublishedBlogs.map((blog) => (
                       <Button
                         key={blog.id}
@@ -340,7 +346,6 @@ const CreateBlog = () => {
                 
                 {!loading && !error && (
                   <div className="space-y-2">                    
-                    {/* Existing Published Blogs */}
                     {publishedBlogs.map((blog) => (
                       <Button
                         key={blog.id}
@@ -385,14 +390,14 @@ const CreateBlog = () => {
             setPublishVisibility(value === 'true')
           }}>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="true" id="published" />
+              <RadioGroupItem data-cy="vis-published-mode" value="true" id="published" />
               <Label htmlFor="published" className="cursor-pointer">
                 <div className="font-semibold">Published</div>
                 <div className="text-sm text-muted-foreground">Make this blog visible to everyone</div>
               </Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="false" id="draft" />
+              <RadioGroupItem data-cy="vis-draft-mode" value="false" id="draft" />
               <Label htmlFor="draft" className="cursor-pointer">
                 <div className="font-semibold">Keep as Draft</div>
                 <div className="text-sm text-muted-foreground">Only you can see this blog</div>
@@ -404,12 +409,53 @@ const CreateBlog = () => {
             <Button variant="outline" onClick={() => setShowPublishDialog(false)}>
               Cancel
             </Button>
-            <Button onClick={handlePublish}>
+            <Button data-cy="blog-publish-button" onClick={handlePublish}>
               {publishVisibility ? 'Publish' : 'Save as Draft'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      {/* Success Alert Dialog */}
+      <AlertDialog open={showSuccessAlert} onOpenChange={setShowSuccessAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Success!</AlertDialogTitle>
+            <AlertDialogDescription>
+              Your blog has been {publishVisibility ? 'published' : 'saved as draft'} successfully.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex justify-end gap-2">
+            <AlertDialogCancel>Close</AlertDialogCancel>
+            <AlertDialogAction data-cy="view-blog-button" onClick={()=>{
+              if(publishVisibility){
+                handleSuccessNavigate()
+              }else{
+                setShowSuccessAlert(false)
+              }
+            }}>
+              View Blog
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+      {/* Error Alert Dialog */}
+      <AlertDialog open={showErrorAlert} onOpenChange={setShowErrorAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-destructive">Error</AlertDialogTitle>
+            <AlertDialogDescription>
+              {errorMessage}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex justify-end">
+            <AlertDialogAction onClick={() => setShowErrorAlert(false)}>
+              Try Again
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
       
       <div className="container mx-auto">
         <div className="flex flex-row gap-2 justify-between items-center mt-6">
@@ -418,6 +464,7 @@ const CreateBlog = () => {
             <Input
               variant="ghost-growth"
               inputSize="sm"
+              data-cy="input-blog-title"
               maxWidth={isDesktop ? 900 : 400}
               className="w-52"
               placeholder="Enter your blog title"
@@ -436,7 +483,6 @@ const CreateBlog = () => {
               </span>
             )}
             {
-              //publish status
               !isSaving && !currentBlog?.isPublished && (
                 <span className="text-sm text-yellow-500 font-medium">
                   Draft
@@ -452,10 +498,7 @@ const CreateBlog = () => {
             }
           </div>
           <div className="flex flex-row gap-2">
-            {/* <Button variant="secondary" onClick={saveDraft} disabled={isSaving}>
-              <Save /> Save Draft
-            </Button> */}
-            <Button variant="default" onClick={() => setShowPublishDialog(true)}>
+            <Button data-cy="blog-submit-button" variant="default" onClick={() => setShowPublishDialog(true)}>
               <Send /> {currentBlog?.isPublished ? 'Update' : 'Publish'}
             </Button>
           </div>

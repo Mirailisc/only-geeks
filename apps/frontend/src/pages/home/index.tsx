@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { GET_GOOGLE_OAUTH_URL } from '@/graphql/auth'
+import { useAppSelector } from '@/hooks/useAppSelector'
 import { useLazyQuery } from '@apollo/client/react'
 import { Code2Icon, TriangleAlertIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -14,15 +15,25 @@ interface GetGoogleOauthUrlData {
 function redirectURIAlertParser(url: string) {
   // If url is /profile return Profile
   if (url === '/profile') return 'Your Profile'
+  if (url === '/settings') return 'Settings'
+  if( url === '/create/blog') return 'Create Blog'
+  if (url === '/create/project') return 'Create Project'
   // If url starts with /user/ return the username after /user/
   if (url.startsWith('/user/')) return `@${url.replace('/user/', '')} Profile`
+  if (url.startsWith('/blog/')) return `Blog: ${url.split('/')[url.split('/').length - 1].replaceAll("-", " ")} by @${url.split('/blog/')[1].split('/')[0]}`
   // More cases can be added later
   return url
 }
 export default function Home() {
+  const { user } = useAppSelector((state) => state.auth)
   const [getUrl, { data, error }] = useLazyQuery<GetGoogleOauthUrlData>(GET_GOOGLE_OAUTH_URL)
   const [currentRedirectUrl, setCurrentRedirectUrl] = useState('') // Default redirect URL
   // get redirect URL from query string
+  useEffect(()=>{
+    if (user) {
+      window.location.href = '/profile'
+    }
+  }, [user])
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const redirect = params.get('redirect')

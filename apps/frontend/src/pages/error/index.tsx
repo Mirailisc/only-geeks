@@ -24,7 +24,7 @@ export default function ErrorElement() {
         </CardHeader>
         <CardContent className="flex justify-center">
           <Button variant="outline" asChild>
-            <a href="/">Go Home</a>
+            <a href="/profile">Go to my profile</a>
           </Button>
         </CardContent>
       </Card>

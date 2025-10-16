@@ -58,3 +58,10 @@ export function dateFormatter(dateString: string, includeTime: boolean = false):
   const formattedDate = new Date(dateString);
   return formattedDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) + (includeTime ? ` ${formattedDate.toLocaleTimeString()}` : '');
 }
+
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\u0E00-\u0E7F]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}

@@ -3,7 +3,7 @@ import type { Blog } from './blog'
 import type { Profile } from './profile'
 
 export interface Search {
-  blogs: Pick<Blog, 'id' | 'title' | 'slug' | 'createdAt' | 'updatedAt' | 'userId'>[]
+  blogs: (Pick<Blog, 'id' | 'title' | 'slug' | 'createdAt' | 'updatedAt' | 'userId'> & { User: Profile })[]
   users: Pick<Profile, 'id' | 'username' | 'firstName' | 'lastName' | 'picture' | 'bio'>[]
 }
 
@@ -56,6 +56,9 @@ export const SEARCH_SUGGEST_QUERY = gql`
         createdAt
         updatedAt
         slug
+        User {
+          username
+        }
       }
       users {
         id
