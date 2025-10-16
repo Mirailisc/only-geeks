@@ -10,6 +10,9 @@ import { AppController } from './app.controller'
 import { AuthController } from './auth/auth.controller'
 import { BlogModule } from './blog/blog.module'
 import { SearchModule } from './search/search.module'
+import { EducationModule } from './education/education.module';
+import { ProjectModule } from './project/project.module';
+import { AchievementModule } from './achievement/achievement.module';
 
 @Module({
   imports: [
@@ -29,6 +32,9 @@ import { SearchModule } from './search/search.module'
     AuthModule,
     BlogModule,
     SearchModule,
+    EducationModule,
+    ProjectModule,
+    AchievementModule,
   ],
   controllers: [
     AuthController,
