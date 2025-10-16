@@ -36,8 +36,8 @@ model User {
 model Education {
   id           String    @id @default(uuid())
   userId       String
-  school       String?
-  degree       String?
+  school       String
+  degree       String
   fieldOfStudy String?
   startDate    DateTime?
   endDate      DateTime?

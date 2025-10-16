@@ -55,8 +55,8 @@ type Search {
 
 type Education {
   id: ID!
-  school: String
-  degree: String
+  school: String!
+  degree: String!
   fieldOfStudy: String
   startDate: DateTime
   endDate: DateTime
@@ -145,8 +145,8 @@ input UpdateBlogInput {
 }
 
 input CreateEducationInput {
-  school: String
-  degree: String
+  school: String!
+  degree: String!
   fieldOfStudy: String
   startDate: DateTime
   endDate: DateTime
