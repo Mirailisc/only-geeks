@@ -17,6 +17,9 @@ export class Achievement {
   @Field({ nullable: true })
   date?: Date
 
+  @Field(() => [String], { nullable: true })
+  photos?: string[]
+
   @Field()
   createdAt: Date
 

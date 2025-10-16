@@ -13,4 +13,7 @@ export class CreateAchievementInput {
 
   @Field({ nullable: true })
   date?: Date
+
+  @Field(() => [String], { nullable: true })
+  photos?: string[]
 }

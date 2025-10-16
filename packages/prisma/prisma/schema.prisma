@@ -53,9 +53,10 @@ model Project {
   title       String
   description String?
   link        String?
+  photos      String[] @default([])
   startDate   DateTime?
   endDate     DateTime?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime   @default(now())
   updatedAt   DateTime @updatedAt
 
   User User @relation(fields: [userId], references: [id])
@@ -68,6 +69,7 @@ model Achievement {
   description String?
   issuer      String?
   date        DateTime?
+  photos      String[] @default([])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

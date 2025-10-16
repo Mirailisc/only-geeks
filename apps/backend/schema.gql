@@ -67,6 +67,7 @@ type Project {
   title: String!
   description: String
   link: String
+  photos: [String!]
   startDate: DateTime
   endDate: DateTime
 }
@@ -77,6 +78,7 @@ type Achievement {
   description: String
   issuer: String
   date: DateTime
+  photos: [String!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -164,6 +166,7 @@ input CreateProjectInput {
   link: String
   startDate: DateTime
   endDate: DateTime
+  photos: [String!]
 }
 
 input UpdateProjectInput {
@@ -172,6 +175,7 @@ input UpdateProjectInput {
   link: String
   startDate: DateTime
   endDate: DateTime
+  photos: [String!]
 }
 
 input CreateAchievementInput {
@@ -179,6 +183,7 @@ input CreateAchievementInput {
   description: String
   issuer: String
   date: DateTime
+  photos: [String!]
 }
 
 input UpdateAchievementInput {
@@ -186,4 +191,5 @@ input UpdateAchievementInput {
   description: String
   issuer: String
   date: DateTime
+  photos: [String!]
 }

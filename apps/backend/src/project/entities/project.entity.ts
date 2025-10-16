@@ -6,6 +6,7 @@ export class Project {
   @Field() title: string
   @Field({ nullable: true }) description?: string
   @Field({ nullable: true }) link?: string
+  @Field(() => [String], { nullable: true }) photos?: string[]
   @Field({ nullable: true }) startDate?: Date
   @Field({ nullable: true }) endDate?: Date
 }
