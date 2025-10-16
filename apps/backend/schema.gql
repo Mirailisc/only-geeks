@@ -54,6 +54,36 @@ type Search {
   blogs: [Blog!]!
 }
 
+type Education {
+  id: ID!
+  school: String!
+  degree: String!
+  fieldOfStudy: String
+  startDate: DateTime
+  endDate: DateTime
+}
+
+type Project {
+  id: ID!
+  title: String!
+  description: String
+  link: String
+  photos: [String!]
+  startDate: DateTime
+  endDate: DateTime
+}
+
+type Achievement {
+  id: ID!
+  title: String!
+  description: String
+  issuer: String
+  date: DateTime
+  photos: [String!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   getHealth: Health!
   getMyProfile: User!
@@ -67,6 +97,9 @@ type Query {
   getBlogById(id: String!): Blog!
   search(input: SearchInput!): Search!
   searchSuggest(input: SearchInput!): Search!
+  getMyEducations: [Education!]!
+  getMyProjects: [Project!]!
+  getMyAchievements: [Achievement!]!
 }
 
 input SearchInput {
@@ -79,6 +112,15 @@ type Mutation {
   createBlog(input: CreateBlogInput!): Blog!
   updateBlog(id: String!, input: UpdateBlogInput!): Blog!
   deleteBlog(id: String!): Blog!
+  addEducation(input: CreateEducationInput!): Education!
+  updateEducation(id: String!, input: UpdateEducationInput!): Education!
+  deleteEducation(id: String!): Boolean!
+  addProject(input: CreateProjectInput!): Project!
+  updateProject(id: String!, input: UpdateProjectInput!): Project!
+  deleteProject(id: String!): Boolean!
+  addAchievement(input: CreateAchievementInput!): Achievement!
+  updateAchievement(id: String!, input: UpdateAchievementInput!): Achievement!
+  deleteAchievement(id: String!): Boolean!
 }
 
 input UpdateUserInput {
@@ -104,4 +146,54 @@ input UpdateBlogInput {
   description: String
   thumbnail: String
   isPublished: Boolean
+}
+
+input CreateEducationInput {
+  school: String!
+  degree: String!
+  fieldOfStudy: String
+  startDate: DateTime
+  endDate: DateTime
+}
+
+input UpdateEducationInput {
+  school: String
+  degree: String
+  fieldOfStudy: String
+  startDate: DateTime
+  endDate: DateTime
+}
+
+input CreateProjectInput {
+  title: String!
+  description: String
+  link: String
+  startDate: DateTime
+  endDate: DateTime
+  photos: [String!]
+}
+
+input UpdateProjectInput {
+  title: String
+  description: String
+  link: String
+  startDate: DateTime
+  endDate: DateTime
+  photos: [String!]
+}
+
+input CreateAchievementInput {
+  title: String!
+  description: String
+  issuer: String
+  date: DateTime
+  photos: [String!]
+}
+
+input UpdateAchievementInput {
+  title: String
+  description: String
+  issuer: String
+  date: DateTime
+  photos: [String!]
 }
