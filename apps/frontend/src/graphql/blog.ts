@@ -29,6 +29,22 @@ export const GET_BLOGS_QUERY = gql`
     }
   }
 `
+export const GET_MY_BLOGS_QUERY_EDITED_MODE = gql`
+  query GetMyBlogs {
+    getMyBlogs {
+      id
+      title
+      content
+      slug
+      thumbnail
+      description
+      isPublished
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+`
 
 // Example Variable
 // {
@@ -44,12 +60,10 @@ export const GET_BLOG_BY_SLUG_AND_USERNAME_QUERY = gql`
     getBlogBySlugAndUsername(slug: $slug, username: $username) {
       id
       title
-      content
       slug
       thumbnail
       description
       isPublished
-      userId
       createdAt
       updatedAt
     }
@@ -68,12 +82,10 @@ export const GET_BLOGS_BY_USERNAME_QUERY = gql`
     getBlogsByUsername(username: $username) {
       id
       title
-      content
       slug
       thumbnail
       description
       isPublished
-      userId
       createdAt
       updatedAt
     }
@@ -85,12 +97,10 @@ export const GET_MY_BLOGS_QUERY = gql`
     getMyBlogs {
       id
       title
-      content
       slug
       thumbnail
       description
       isPublished
-      userId
       createdAt
       updatedAt
     }
@@ -150,6 +160,63 @@ export const UPDATE_BLOG_MUTATION = gql`
       userId
       createdAt
       updatedAt
+    }
+  }
+`
+
+export const DELETE_BLOG_MUTATION = gql`
+  mutation DeleteBlog($blogId: String!) {
+    deleteBlog(id: $blogId) {
+      id
+      title
+      content
+      slug
+      thumbnail
+      description
+      isPublished
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const GET_BLOG_BY_ID_MUTATION = gql`
+  query GetBlogById($blogId: String!) {
+    getBlogById(id: $blogId) {
+      id
+      title
+      content
+      slug
+      thumbnail
+      description
+      isPublished
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const BLOG_READ_QUERY = gql`
+  query GetBlogBySlugAndUsername($slug: String!, $username: String!) {
+    getBlogBySlugAndUsername(slug: $slug, username: $username) {
+      id
+      title
+      thumbnail
+      slug
+      updatedAt
+      description
+      content
+      isPublished
+      User {
+        bio
+        email
+        firstName
+        lastName
+        picture
+        username
+      }
     }
   }
 `

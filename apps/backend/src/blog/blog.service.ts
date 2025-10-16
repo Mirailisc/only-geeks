@@ -51,6 +51,25 @@ export class BlogService {
     })
   }
 
+  async getBlogById(id: string) {
+    return await this.prisma.blog.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        thumbnail: true,
+        description: true,
+        isPublished: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
+    })
+  }
+
   async getBlogsByUsername(username: string) {
     const user = await this.userService.findUserByUsername(username)
 
@@ -119,9 +138,30 @@ export class BlogService {
   }
 
   async updateBlog(id: string, input: UpdateBlogInput) {
+    const slug = input.title.toLowerCase().replace(/\s+/g, '-')
+
     return await this.prisma.blog.update({
       where: { id },
-      data: input,
+      data: { ...input, slug },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        thumbnail: true,
+        description: true,
+        isPublished: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+        User: true,
+      },
+    })
+  }
+
+  async deleteBlog(id: string) {
+    return await this.prisma.blog.delete({
+      where: { id },
       select: {
         id: true,
         title: true,

@@ -34,5 +34,5 @@ export class Blog {
   updatedAt: Date
 
   @Field(() => User, { nullable: true })
-  user?: User
+  User?: User
 }

@@ -5,6 +5,7 @@ import { ME_QUERY, LOGOUT_MUTATION } from '@/graphql/auth'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { setUser, clearUser, type User } from '../../store/authSlice'
 import { toast } from 'sonner'
+import { Loading } from './loading'
 
 export default function Boot() {
   const dispatch = useAppDispatch()
@@ -50,7 +51,7 @@ export default function Boot() {
     }
   }, [error, dispatch, logoutMutation])
 
-  if (queryLoading || loading) return <div>Loading...</div>
+  if (queryLoading || loading) return <Loading />
 
   return <Outlet />
 }

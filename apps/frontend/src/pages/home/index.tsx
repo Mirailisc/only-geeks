@@ -1,21 +1,51 @@
-// import Navbar from '@/components/Home/Navbar'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { GET_GOOGLE_OAUTH_URL } from '@/graphql/auth'
+import { useAppSelector } from '@/hooks/useAppSelector'
 import { useLazyQuery } from '@apollo/client/react'
-import { Code2Icon } from 'lucide-react'
-import { useEffect } from 'react'
+import { Code2Icon, TriangleAlertIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 interface GetGoogleOauthUrlData {
   getGoogleOauthUrl: string
 }
-
+function redirectURIAlertParser(url: string) {
+  // If url is /profile return Profile
+  if (url === '/profile') return 'Your Profile'
+  if (url === '/settings') return 'Settings'
+  if( url === '/create/blog') return 'Create Blog'
+  if (url === '/create/project') return 'Create Project'
+  // If url starts with /user/ return the username after /user/
+  if (url.startsWith('/user/')) return `@${url.replace('/user/', '')} Profile`
+  if (url.startsWith('/blog/')) return `Blog: ${url.split('/')[url.split('/').length - 1].replaceAll("-", " ")} by @${url.split('/blog/')[1].split('/')[0]}`
+  // More cases can be added later
+  return url
+}
 export default function Home() {
+  const { user } = useAppSelector((state) => state.auth)
   const [getUrl, { data, error }] = useLazyQuery<GetGoogleOauthUrlData>(GET_GOOGLE_OAUTH_URL)
+  const [currentRedirectUrl, setCurrentRedirectUrl] = useState('') // Default redirect URL
+  // get redirect URL from query string
+  useEffect(()=>{
+    if (user) {
+      window.location.href = '/profile'
+    }
+  }, [user])
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const redirect = params.get('redirect')
+    if (redirect) {
+      setCurrentRedirectUrl(redirect)
+    }else{
+      setCurrentRedirectUrl('/profile') // Default redirect URL
+    }
+  }, [])
 
   useEffect(() => {
+    
     if (error) toast.error(error.message)
   }, [error])
 
@@ -26,12 +56,12 @@ export default function Home() {
   }, [data])
 
   const handleLogin = async () => {
-    await getUrl()
+    await getUrl({ variables: { state: currentRedirectUrl } }) // You can change the state value as needed
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md space-y-8">
+      <div className="w-full max-w-md space-y-6">
         {/* Logo and Header */}
         <div className="space-y-2 text-center">
           <div className="mb-4 flex items-center justify-center gap-2">
@@ -41,6 +71,17 @@ export default function Home() {
           </div>
           <h1 className="text-balance text-4xl font-bold tracking-tight">OnlyGeeks</h1>
           <p className="text-pretty text-lg text-muted-foreground">Share your projects, inspire the community</p>
+          {
+            currentRedirectUrl && currentRedirectUrl !== '/profile' && (
+              <Alert className='text-left shadow-lg' variant={"destructive"}>
+                <TriangleAlertIcon size={16} />
+                <AlertTitle>Login required!</AlertTitle>
+                <AlertDescription>
+                  You will be redirected to <span className="font-medium">{redirectURIAlertParser(currentRedirectUrl)}</span> after login
+                </AlertDescription>
+              </Alert>
+            )
+          }
         </div>
 
         {/* Login Card */}

@@ -93,12 +93,12 @@ const SearchBox = () => {
               {blogs.map((blog) => (
                 <Link
                   key={blog.id}
-                  to={`/blog/${blog.id}`} 
+                  to={`/blog/${blog.User.username}/${blog.slug}`} 
                   onClick={handleSuggestionClick}
                   className="flex items-center space-x-2 rounded-md p-2 text-sm hover:bg-accent"
                 >
                   <span className="truncate">{blog.title}</span>
-                  <span className="text-xs text-muted-foreground ml-auto">{blog.id}</span>
+                  <span className="text-xs text-muted-foreground ml-auto">by @{blog.User?.username}</span>
                 </Link>
               ))}
             </div>

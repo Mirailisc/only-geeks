@@ -1,0 +1,127 @@
+ import type { Profile } from '@/graphql/profile';
+import { Link, useNavigate } from 'react-router-dom';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { CalendarIcon, ClockIcon, EditIcon, Trash2Icon } from 'lucide-react';
+import { Card, CardContent } from '../ui/card';
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog';
+import { useMutation } from '@apollo/client/react';
+import { DELETE_BLOG_MUTATION, GET_MY_BLOGS_QUERY, type Blog } from '@/graphql/blog';
+import { useState } from 'react';
+import { Separator } from '../ui/separator';
+import { Badge } from '../ui/badge';
+
+function getReadingTime(markdown: string, wordsPerMinute = 200): number {
+  // Remove code blocks, HTML tags, and markdown syntax before counting words
+  const text = markdown
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/<[^>]*>/g, "")
+    // eslint-disable-next-line no-useless-escape
+    .replace(/[#>*_`~\-\[\]\(\)!]/g, "")
+    .trim();
+
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
+  const minutes = Math.ceil(wordCount / wordsPerMinute);
+  return minutes;
+}
+
+const BlogCard = ({
+    user,
+    myUsername,
+    description,
+    title,
+    blogId,
+    updatedAt,
+    content,
+    isPublished
+}: {user: Partial<Profile>, myUsername:string, description: string, title: string, blogId:string, updatedAt: string, content: string, isPublished:boolean}) => {
+  const [deleteBlogById, { loading }] = useMutation<{ deleteBlogById: Blog }>(DELETE_BLOG_MUTATION, {
+    refetchQueries: [{ query: GET_MY_BLOGS_QUERY }],
+  })
+  const [promptMeDelete, setPromptMeDelete] = useState(false)
+  const navigator = useNavigate()
+  return (
+    <>
+      <Dialog open={promptMeDelete} onOpenChange={setPromptMeDelete}>
+        <DialogContent>
+          <DialogHeader>
+            <div className="flex flex-col gap-4 p-4">
+              <h2 className="text-lg font-medium text-gray-900">Are you sure you want to delete this blog post?</h2>
+              <p className="text-sm text-gray-500">This action cannot be undone.</p>
+            </div>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPromptMeDelete(false)} disabled={loading}>Cancel</Button>
+            <Button variant="destructive" onClick={() => {
+              deleteBlogById({ variables: { blogId: blogId } })
+              setPromptMeDelete(false)
+              navigator(`/user/${user.username}`)
+            }} disabled={loading}>
+              {loading ? 'Deleting...' : 'Delete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Card className='mt-4'>
+          <CardContent className='flex flex-col gap-4'>
+            <div className="flex items-start justify-between">
+              <div className='flex flex-col gap-2'>
+                  <div className='flex flex-row gap-2 items-center'>
+                    <div className="text-3xl font-bold text-balance leading-tight">{title}</div>
+                    {myUsername === user.username && <Badge variant={isPublished ? "default" : "destructive"} className='text-xs h-max mt-1'> {isPublished ? 'Published' : 'Draft'}</Badge>}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {description.length > 50 ? description.slice(0, 50) + '...' : description}
+                  </div>
+              </div>
+              {myUsername === user.username && (
+                <div className="flex gap-2">
+                  <Link to={`/create/blog/?editid=${blogId}`}>
+                    <Button variant="outline" size="sm">
+                      <EditIcon className="w-4 h-4 mr-1" />
+                      Edit
+                    </Button>
+                  </Link>
+                  <Button variant="destructive" size="sm" onClick={()=>{ setPromptMeDelete(true) }}>
+                    <Trash2Icon className="w-4 h-4 mr-1" />
+                    Delete
+                  </Button>
+                </div>
+              )}
+            </div>
+            <Separator />
+            <div className="flex items-center justify-between">
+              <Link
+                to={`/user/${user.username}`}
+                className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+              >
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={user.picture || "/placeholder.svg"} alt={user.firstName + `'s profile picture`} />
+                  <AvatarFallback>
+                    {(user.firstName?.[0]?.toUpperCase() ?? '') + (user.lastName?.[0]?.toUpperCase() ?? '') || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-semibold text-foreground">{user.firstName} {user.lastName}</p>
+                  <p className="text-sm text-muted-foreground">@{user.username}</p>
+                </div>
+              </Link>
+
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <CalendarIcon className="w-4 h-4" />
+                  {new Date(updatedAt).toLocaleDateString()}
+                </div>
+                <div className="flex items-center gap-1">
+                  <ClockIcon className="w-4 h-4" />
+                  {getReadingTime(content, 150)} min read
+                </div>
+              </div>
+            </div>
+          </CardContent>
+      </Card>
+    </>
+  )
+}
+
+export default BlogCard

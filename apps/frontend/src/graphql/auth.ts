@@ -4,6 +4,7 @@ export const ME_QUERY = gql`
   query Me {
     me {
       email
+      username
       firstName
       lastName
       isAdmin
@@ -13,8 +14,8 @@ export const ME_QUERY = gql`
 `
 
 export const GET_GOOGLE_OAUTH_URL = gql`
-  query GetGoogleOauthUrl {
-    getGoogleOauthUrl
+  query ExampleQuery($state: String!) {
+    getGoogleOauthUrl(state: $state)
   }
 `
 

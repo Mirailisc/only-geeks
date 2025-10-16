@@ -28,6 +28,7 @@ scalar DateTime
 
 type AuthUser {
   firstName: String
+  username: String!
   lastName: String
   email: String!
   isAdmin: Boolean!
@@ -45,7 +46,7 @@ type Blog {
   isPublished: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
-  user: User
+  User: User
 }
 
 type Search {
@@ -87,12 +88,13 @@ type Query {
   getHealth: Health!
   getMyProfile: User!
   getProfileByUsername(username: String!): User!
-  getGoogleOauthUrl: String!
+  getGoogleOauthUrl(state: String!): String!
   me: AuthUser!
   getBlogs: [Blog!]!
   getBlogBySlugAndUsername(slug: String!, username: String!): Blog!
   getBlogsByUsername(username: String!): [Blog!]!
   getMyBlogs: [Blog!]!
+  getBlogById(id: String!): Blog!
   search(input: SearchInput!): Search!
   searchSuggest(input: SearchInput!): Search!
   getMyEducations: [Education!]!
@@ -109,6 +111,7 @@ type Mutation {
   logout: Boolean!
   createBlog(input: CreateBlogInput!): Blog!
   updateBlog(id: String!, input: UpdateBlogInput!): Blog!
+  deleteBlog(id: String!): Blog!
   addEducation(input: CreateEducationInput!): Education!
   updateEducation(id: String!, input: UpdateEducationInput!): Education!
   deleteEducation(id: String!): Boolean!
@@ -142,6 +145,7 @@ input UpdateBlogInput {
   content: String
   description: String
   thumbnail: String
+  isPublished: Boolean
 }
 
 input CreateEducationInput {

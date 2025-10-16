@@ -15,6 +15,9 @@ Then('I click button named {string}', (btn_name: string) => {
 Then('I change input {string} value to {string}', (label: string, value: string) => {
   cy.get(`[data-cy="input-${label}"]`).clear().type(value)
 })
+Then('I change editor input {string} value to {string}', (label: string, value: string) => {
+  cy.get(`[data-cy="input-${label}"]`).click().focus().clear().type(value)
+})
 
 Then('I click submit button', () => {
   cy.get('[data-cy="submit"]').click()
@@ -26,6 +29,10 @@ Then('I click dropdown menu', () => {
 
 Then('I should see {string}', (text: string) => {
   cy.contains(text, { timeout: 10000 }).should('be.visible')
+})
+
+Then('I should see {string} in the {string} input', (text, name) => {
+  cy.get(`input[data-cy="input-${name}"]`).should('have.value', text)
 })
 
 Then('I should wait for {int} seconds', (seconds: number) => {

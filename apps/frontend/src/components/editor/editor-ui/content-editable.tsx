@@ -1,4 +1,4 @@
-import { JSX } from "react"
+import { type JSX } from "react"
 import { ContentEditable as LexicalContentEditable } from "@lexical/react/LexicalContentEditable"
 
 type Props = {
@@ -16,8 +16,9 @@ export function ContentEditable({
     <LexicalContentEditable
       className={
         className ??
-        `ContentEditable__root relative block min-h-72 min-h-full overflow-auto px-8 py-4 focus:outline-none`
+        `ContentEditable__root relative block min-h-full overflow-auto px-8 py-4 focus:outline-none`
       }
+      data-cy="input-editor-content-editable"
       aria-placeholder={placeholder}
       placeholder={
         <div

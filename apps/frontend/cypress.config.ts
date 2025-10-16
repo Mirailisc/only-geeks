@@ -59,6 +59,9 @@ export default defineConfig({
             select: { id: true },
           })
           const userIds = users.map((u) => u.id)
+          await prisma.blog.deleteMany({
+            where: { userId: { in: userIds } },
+          })
           await prisma.user.deleteMany({
             where: { id: { in: userIds } },
           })
