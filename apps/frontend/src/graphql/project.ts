@@ -38,6 +38,20 @@ export const GET_MY_PROJECTS_QUERY_EDITING = gql`
   }
 `
 
+export const GET_PROJECTS_BY_USERNAME_QUERY = gql`
+  query Query($username: String!) {
+    getProjectsByUsername(username: $username) {
+      id
+      title
+      description
+      link
+      photos
+      startDate
+      endDate
+    }
+  }
+`
+
 export const UPDATE_PROJECT_MUTATION = gql`
   mutation Mutation($updateProjectId: String!, $input: UpdateProjectInput!) {
     updateProject(id: $updateProjectId, input: $input) {

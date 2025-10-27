@@ -17,6 +17,12 @@ export class ProjectResolver {
     return await this.projectService.findAllByUser(user.id)
   }
 
+  @Query(() => [Project])
+  @UseGuards(GqlAuthGuard)
+  async getProjectsByUsername(@Args('username') username: string) {
+    return await this.projectService.findAllByUsername(username)
+  }
+
   @Mutation(() => Project)
   @UseGuards(GqlAuthGuard)
   async addProject(

@@ -99,6 +99,7 @@ type Query {
   searchSuggest(input: SearchInput!): Search!
   getMyEducations: [Education!]!
   getMyProjects: [Project!]!
+  getProjectsByUsername(username: String!): [Project!]!
   getMyAchievements: [Achievement!]!
 }
 
