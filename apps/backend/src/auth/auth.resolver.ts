@@ -8,13 +8,41 @@ import { ConfigService } from '@nestjs/config'
 import { ACCESS_TOKEN } from 'src/constants/cookie'
 import { Response } from 'express'
 import { AuthUser } from './entities/auth-user.entity'
+import { LoginInput } from './dto/login.input'
+import { AuthService } from './auth.service'
+import { RegisterInput } from './dto/register.input'
 
 @Resolver(() => User)
 export class AuthResolver {
   constructor(
     private readonly userService: UserService,
     private readonly configService: ConfigService,
+    private readonly authService: AuthService,
   ) {}
+
+  @Mutation(() => String)
+  async login(
+    @Args('input') input: LoginInput,
+    @Context() context: any,
+  ): Promise<string> {
+    const accessToken = await this.authService.login(input)
+
+    context.res.cookie(ACCESS_TOKEN, accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    })
+
+    return 'Logged in'
+  }
+
+  @Mutation(() => String)
+  async register(@Args('input') input: RegisterInput) {
+    await this.authService.register(input)
+
+    return 'Registered'
+  }
 
   @Query(() => String)
   async getGoogleOauthUrl(@Args('state') state: string): Promise<string> {

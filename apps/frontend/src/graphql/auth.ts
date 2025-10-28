@@ -24,3 +24,30 @@ export const LOGOUT_MUTATION = gql`
     logout
   }
 `
+
+// {
+//   "input": {
+//     "username": "",
+//     "password": ""
+//   }
+// }
+export const LOGIN_MUTATION = gql`
+  mutation Query($input: LoginInput!) {
+    login(input: $input)
+  }
+`
+
+// {
+//   "input": {
+//     "email": "",
+//     "firstName": "",
+//     "lastName": "",
+//     "password": "",
+//     "username": ""
+//   }
+// }
+export const REGISTER_MUTATION = gql`
+  mutation Register($input: RegisterInput!) {
+    register(input: $input)
+  }
+`
