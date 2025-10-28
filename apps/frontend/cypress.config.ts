@@ -40,6 +40,7 @@ export default defineConfig({
                 firstName: 'Admin',
                 lastName: 'User',
                 isAdmin: true,
+                type: 'local',
               },
               {
                 email: 'user@test.com',
@@ -48,14 +49,25 @@ export default defineConfig({
                 username: 'useru',
                 lastName: 'User',
                 isAdmin: false,
+                type: 'local',
               },
+              {
+                email: 'janedoe@gmail.com',
+                picture: 'https://i.pravatar.cc/300?img=8',
+                firstName: 'Jane',
+                lastName: 'Doe',
+                username: 'janedoe2',
+                isAdmin: false,
+                type: 'local',
+                password: '$2b$10$4F3aQi6PJkh25TwleeKeEe.G4WyXryaFiCkfJSivwYPk12Bzak0Ky'
+              }
             ],
           })
           return null
         },
         async 'db:clean'() {
           const users = await prisma.user.findMany({
-            where: { email: { in: ['admin@test.com', 'user@test.com'] } },
+            where: { email: { in: ['admin@test.com', 'user@test.com', 'janedoe@gmail.com', 'johndoe@gmail.com'] } },
             select: { id: true },
           })
           const userIds = users.map((u) => u.id)

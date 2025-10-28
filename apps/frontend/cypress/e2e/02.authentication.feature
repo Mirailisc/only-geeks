@@ -13,7 +13,38 @@ Feature: Authentication
   Scenario: Logout
     Given I am logged in as "user@test.com"
     Then I view my profile
-    Then I should wait for 5 seconds
+    Then I should wait for 3 seconds
+    Then I click dropdown menu
+    Then I click logout button
+    Then I should see "Welcome back"
+  
+  Scenario: Create an account
+    Given I visit the landing page
+    Then I click button named "tabs-register"
+    Then I change input "register-firstName" value to "John"
+    Then I change input "register-lastName" value to "Doe"
+    Then I change input "register-email" value to "johndoe@gmail.com"
+    Then I change input "register-username" value to "johndoe1"
+    Then I change input "register-password" value to "Johndoe@Password1"
+    Then I change input "register-confirmPassword" value to "Johndoe@Password1"
+    Then I click button named "button-register"
+    Then I should see "@johndoe1"
+    
+    Then I view my profile
+    Then I should wait for 3 seconds
+    Then I click dropdown menu
+    Then I click logout button
+    Then I should see "Welcome back"
+  
+  Scenario: Login to existed account
+    Given I visit the landing page
+    Then I change input "login-username" value to "janedoe2"
+    Then I change input "login-password" value to "Janedoe@Password2"
+    Then I click button named "button-login"
+    Then I should see "@janedoe2"
+
+    Then I view my profile
+    Then I should wait for 3 seconds
     Then I click dropdown menu
     Then I click logout button
     Then I should see "Welcome back"

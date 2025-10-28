@@ -14,7 +14,7 @@ import { toast } from 'sonner'
 import { useEffect } from 'react'
 import { clearUser } from '@/store/authSlice'
 import { useAppDispatch } from '@/hooks/useAppDispatch'
-import { useMutation } from '@apollo/client/react'
+import { useApolloClient, useMutation } from '@apollo/client/react'
 import { LOGOUT_MUTATION } from '@/graphql/auth'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import SearchBox from './searchBox'
@@ -23,12 +23,13 @@ import { Button } from '../ui/button'
 export default function AuthNavbar() {
   const { user } = useAppSelector((state) => state.auth)
   const [logoutMutation, { error }] = useMutation(LOGOUT_MUTATION)
-
+  const client = useApolloClient();
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
     await logoutMutation()
+    await client.clearStore();
     dispatch(clearUser())
     navigate(BASE_PATH, { replace: true })
   }
