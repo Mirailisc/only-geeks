@@ -2,6 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateUserInput } from './dto/create-user.input'
 import { UpdateUserInput } from './dto/update-user.input'
+import * as bcrypt from 'bcrypt'
+import * as crypto from 'crypto'
 
 @Injectable()
 export class UserService {
@@ -35,11 +37,34 @@ export class UserService {
     return `${baseUsername}_${nextNumber}`
   }
 
-  async createUser(input: CreateUserInput) {
+  async createOauthUser(input: CreateUserInput) {
     return await this.prisma.user.create({
       data: {
         ...input,
         username: await this.generateUsername(input.firstName, input.lastName),
+        type: 'oauth',
+      },
+    })
+  }
+
+  async createLocalUser(input: CreateUserInput) {
+    const hashedPassword = await bcrypt.hash(input.password, 10)
+
+    const emailHash = crypto
+      .createHash('md5')
+      .update(input.email.trim().toLowerCase())
+      .digest('hex')
+    const gravatarUrl = `https://www.gravatar.com/avatar/${emailHash}?d=identicon`
+
+    return await this.prisma.user.create({
+      data: {
+        username: input.username,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        email: input.email,
+        picture: gravatarUrl,
+        password: hashedPassword,
+        type: 'local',
       },
     })
   }

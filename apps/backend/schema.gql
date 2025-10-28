@@ -109,6 +109,8 @@ input SearchInput {
 
 type Mutation {
   updateProfileInfo(input: UpdateUserInput!): User!
+  login(input: LoginInput!): String!
+  register(input: RegisterInput!): String!
   logout: Boolean!
   createBlog(input: CreateBlogInput!): Blog!
   updateBlog(id: String!, input: UpdateBlogInput!): Blog!
@@ -132,6 +134,19 @@ input UpdateUserInput {
   picture: String
   location: String
   organization: String
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+}
+
+input RegisterInput {
+  username: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
 }
 
 input CreateBlogInput {
