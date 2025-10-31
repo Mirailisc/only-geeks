@@ -1,12 +1,12 @@
-import type { JSX } from "react"
-import { useMemo } from "react"
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
+import type { JSX } from 'react'
+import { useMemo } from 'react'
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import {
   NodeContextMenuOption,
   NodeContextMenuPlugin,
   NodeContextMenuSeparator,
-} from "@lexical/react/LexicalNodeContextMenuPlugin"
+} from '@lexical/react/LexicalNodeContextMenuPlugin'
 import {
   $getSelection,
   $isDecoratorNode,
@@ -16,15 +16,8 @@ import {
   CUT_COMMAND,
   PASTE_COMMAND,
   type LexicalNode,
-} from "lexical"
-import {
-  Clipboard,
-  ClipboardType,
-  Copy,
-  Link2Off,
-  Scissors,
-  Trash2,
-} from "lucide-react"
+} from 'lexical'
+import { Clipboard, ClipboardType, Copy, Link2Off, Scissors, Trash2 } from 'lucide-react'
 
 export function ContextMenuPlugin(): JSX.Element {
   const [editor] = useLexicalComposerContext()
@@ -67,10 +60,10 @@ export function ContextMenuPlugin(): JSX.Element {
 
             const permission = await navigator.permissions.query({
               // @ts-expect-error These types are incorrect.
-              name: "clipboard-read",
+              name: 'clipboard-read',
             })
-            if (permission.state === "denied") {
-              alert("Not allowed to paste from clipboard.")
+            if (permission.state === 'denied') {
+              alert('Not allowed to paste from clipboard.')
               return
             }
 
@@ -79,7 +72,7 @@ export function ContextMenuPlugin(): JSX.Element {
               data.setData(type, dataString)
             }
 
-            const event = new ClipboardEvent("paste", {
+            const event = new ClipboardEvent('paste', {
               clipboardData: data,
             })
 
@@ -95,19 +88,19 @@ export function ContextMenuPlugin(): JSX.Element {
           navigator.clipboard.read().then(async function (..._args) {
             const permission = await navigator.permissions.query({
               // @ts-expect-error These types are incorrect.
-              name: "clipboard-read",
+              name: 'clipboard-read',
             })
 
-            if (permission.state === "denied") {
-              alert("Not allowed to paste from clipboard.")
+            if (permission.state === 'denied') {
+              alert('Not allowed to paste from clipboard.')
               return
             }
 
             const data = new DataTransfer()
             const clipboardText = await navigator.clipboard.readText()
-            data.setData("text/plain", clipboardText)
+            data.setData('text/plain', clipboardText)
 
-            const event = new ClipboardEvent("paste", {
+            const event = new ClipboardEvent('paste', {
               clipboardData: data,
             })
             editor.dispatchCommand(PASTE_COMMAND, event)
@@ -142,7 +135,7 @@ export function ContextMenuPlugin(): JSX.Element {
 
   return (
     <NodeContextMenuPlugin
-      className="bg-popover text-popover-foreground !z-50 overflow-hidden rounded-md border shadow-md outline-none [&:has(*)]:!z-10"
+      className="!z-50 overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md outline-none [&:has(*)]:!z-10"
       itemClassName="relative w-full flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50"
       separatorClassName="bg-border -mx-1 h-px"
       items={items}

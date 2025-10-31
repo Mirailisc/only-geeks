@@ -7,7 +7,7 @@ import {
   MULTILINE_ELEMENT_TRANSFORMERS,
   TEXT_FORMAT_TRANSFORMERS,
   TEXT_MATCH_TRANSFORMERS,
-} from "@lexical/markdown"
+} from '@lexical/markdown'
 import {
   $createTableCellNode,
   $createTableNode,
@@ -19,14 +19,14 @@ import {
   TableCellNode,
   TableNode,
   TableRowNode,
-} from "@lexical/table"
-import { $isParagraphNode, $isTextNode, type LexicalNode } from "lexical"
+} from '@lexical/table'
+import { $isParagraphNode, $isTextNode, type LexicalNode } from 'lexical'
 
-import { EMOJI } from "@/components/editor/transformers/markdown-emoji-transformer"
-import { HR } from "@/components/editor/transformers/markdown-hr-transformer"
-import { IMAGE } from "@/components/editor/transformers/markdown-image-transformer"
-import { TWEET } from "@/components/editor/transformers/markdown-tweet-transformer"
-import { YOUTUBE } from "@/components/editor/transformers/markdown-youtube-transformer"
+import { EMOJI } from '@/components/editor/transformers/markdown-emoji-transformer'
+import { HR } from '@/components/editor/transformers/markdown-hr-transformer'
+import { IMAGE } from '@/components/editor/transformers/markdown-image-transformer'
+import { TWEET } from '@/components/editor/transformers/markdown-tweet-transformer'
+import { YOUTUBE } from '@/components/editor/transformers/markdown-youtube-transformer'
 
 // Very primitive table setup
 const TABLE_ROW_REG_EXP = /^(?:\|)(.+)(?:\|)\s?$/
@@ -64,26 +64,21 @@ export const TABLE: ElementTransformer = {
       for (const cell of row.getChildren()) {
         // It's TableCellNode so it's just to make flow happy
         if ($isTableCellNode(cell)) {
-          rowOutput.push(
-            $convertToMarkdownString(OTHER_MARKDOWN_TRANSFORMERS, cell).replace(
-              /\n/g,
-              "\\n"
-            )
-          )
+          rowOutput.push($convertToMarkdownString(OTHER_MARKDOWN_TRANSFORMERS, cell).replace(/\n/g, '\\n'))
           if (cell.__headerState === TableCellHeaderStates.ROW) {
             isHeaderRow = true
           }
         }
       }
 
-      output.push(`| ${rowOutput.join(" | ")} |`)
+      output.push(`| ${rowOutput.join(' | ')} |`)
       if (isHeaderRow) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        output.push(`| ${rowOutput.map((_) => "---").join(" | ")} |`)
+        output.push(`| ${rowOutput.map((_) => '---').join(' | ')} |`)
       }
     }
 
-    return output.join("\n")
+    return output.join('\n')
   },
   regExp: TABLE_ROW_REG_EXP,
   replace: (parentNode, _1, match) => {
@@ -105,10 +100,7 @@ export const TABLE: ElementTransformer = {
         if (!$isTableCellNode(cell)) {
           return
         }
-        cell.setHeaderStyles(
-          TableCellHeaderStates.ROW,
-          TableCellHeaderStates.ROW
-        )
+        cell.setHeaderStyles(TableCellHeaderStates.ROW, TableCellHeaderStates.ROW)
       })
 
       // Remove line
@@ -161,15 +153,12 @@ export const TABLE: ElementTransformer = {
       table.append(tableRow)
 
       for (let i = 0; i < maxCells; i++) {
-        tableRow.append(i < cells.length ? cells[i] : $createTableCell(""))
+        tableRow.append(i < cells.length ? cells[i] : $createTableCell(''))
       }
     }
 
     const previousSibling = parentNode.getPreviousSibling()
-    if (
-      $isTableNode(previousSibling) &&
-      getTableColumnsSize(previousSibling) === maxCells
-    ) {
+    if ($isTableNode(previousSibling) && getTableColumnsSize(previousSibling) === maxCells) {
       previousSibling.append(...table.getChildren())
       parentNode.remove()
     } else {
@@ -178,7 +167,7 @@ export const TABLE: ElementTransformer = {
 
     table.selectEnd()
   },
-  type: "element",
+  type: 'element',
 }
 
 function getTableColumnsSize(table: TableNode) {
@@ -187,7 +176,7 @@ function getTableColumnsSize(table: TableNode) {
 }
 
 const $createTableCell = (textContent: string): TableCellNode => {
-  textContent = textContent.replace(/\\n/g, "\n")
+  textContent = textContent.replace(/\\n/g, '\n')
   const cell = $createTableCellNode(TableCellHeaderStates.NO_STATUS)
   $convertFromMarkdownString(textContent, OTHER_MARKDOWN_TRANSFORMERS, cell)
   return cell
@@ -198,5 +187,5 @@ const mapToTableCells = (textContent: string): Array<TableCellNode> | null => {
   if (!match || !match[1]) {
     return null
   }
-  return match[1].split("|").map((text) => $createTableCell(text))
+  return match[1].split('|').map((text) => $createTableCell(text))
 }

@@ -59,8 +59,8 @@ export default defineConfig({
                 username: 'janedoe2',
                 isAdmin: false,
                 type: 'local',
-                password: '$2b$10$4F3aQi6PJkh25TwleeKeEe.G4WyXryaFiCkfJSivwYPk12Bzak0Ky'
-              }
+                password: '$2b$10$4F3aQi6PJkh25TwleeKeEe.G4WyXryaFiCkfJSivwYPk12Bzak0Ky',
+              },
             ],
           })
           return null

@@ -9,8 +9,8 @@ export function invariant(
   }
 
   throw new Error(
-    "Internal Lexical error: invariant() is meant to be replaced at compile " +
-      "time. There is no runtime version. Error: " +
-      message
+    'Internal Lexical error: invariant() is meant to be replaced at compile ' +
+      'time. There is no runtime version. Error: ' +
+      message,
   )
 }

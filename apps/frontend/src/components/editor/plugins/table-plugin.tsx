@@ -1,17 +1,6 @@
-import {
-  createContext,
-  type JSX,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import {
-  $createTableNodeWithDimensions,
-  INSERT_TABLE_COMMAND,
-  TableNode,
-} from "@lexical/table"
+import { createContext, type JSX, useContext, useEffect, useMemo, useState } from 'react'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { $createTableNodeWithDimensions, INSERT_TABLE_COMMAND, TableNode } from '@lexical/table'
 import {
   $insertNodes,
   COMMAND_PRIORITY_EDITOR,
@@ -21,13 +10,13 @@ import {
   type LexicalCommand,
   type LexicalEditor,
   type LexicalNode,
-} from "lexical"
+} from 'lexical'
 
-import { invariant } from "@/components/editor/shared/invariant"
-import { Button } from "@/components/ui/button"
-import { DialogFooter } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { invariant } from '@/components/editor/shared/invariant'
+import { Button } from '@/components/ui/button'
+import { DialogFooter } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 export type InsertTableCommandPayload = Readonly<{
   columns: string
@@ -38,10 +27,7 @@ export type InsertTableCommandPayload = Readonly<{
 export type CellContextShape = {
   cellEditorConfig: null | CellEditorConfig
   cellEditorPlugins: null | JSX.Element | Array<JSX.Element>
-  set: (
-    cellEditorConfig: null | CellEditorConfig,
-    cellEditorPlugins: null | JSX.Element | Array<JSX.Element>
-  ) => void
+  set: (cellEditorConfig: null | CellEditorConfig, cellEditorPlugins: null | JSX.Element | Array<JSX.Element>) => void
 }
 
 export type CellEditorConfig = Readonly<{
@@ -53,7 +39,7 @@ export type CellEditorConfig = Readonly<{
 }>
 
 export const INSERT_NEW_TABLE_COMMAND: LexicalCommand<InsertTableCommandPayload> =
-  createCommand("INSERT_NEW_TABLE_COMMAND")
+  createCommand('INSERT_NEW_TABLE_COMMAND')
 
 export const CellContext = createContext<CellContextShape>({
   cellEditorConfig: null,
@@ -81,7 +67,7 @@ export function TableContext({ children }: { children: JSX.Element }) {
             setContextValue({ cellEditorConfig, cellEditorPlugins })
           },
         }),
-        [contextValue.cellEditorConfig, contextValue.cellEditorPlugins]
+        [contextValue.cellEditorConfig, contextValue.cellEditorPlugins],
       )}
     >
       {children}
@@ -96,8 +82,8 @@ export function InsertTableDialog({
   activeEditor: LexicalEditor
   onClose: () => void
 }): JSX.Element {
-  const [rows, setRows] = useState("5")
-  const [columns, setColumns] = useState("5")
+  const [rows, setRows] = useState('5')
+  const [columns, setColumns] = useState('5')
   const [isDisabled, setIsDisabled] = useState(true)
 
   useEffect(() => {
@@ -126,7 +112,7 @@ export function InsertTableDialog({
           <Label htmlFor="rows">Number of rows</Label>
           <Input
             id="rows"
-            placeholder={"# of rows (1-500)"}
+            placeholder={'# of rows (1-500)'}
             onChange={(e) => setRows(e.target.value)}
             value={rows}
             data-test-id="table-modal-rows"
@@ -137,7 +123,7 @@ export function InsertTableDialog({
           <Label htmlFor="columns">Number of columns</Label>
           <Input
             id="columns"
-            placeholder={"# of columns (1-50)"}
+            placeholder={'# of columns (1-50)'}
             onChange={(e) => setColumns(e.target.value)}
             value={columns}
             data-test-id="table-modal-columns"
@@ -166,7 +152,7 @@ export function TablePlugin({
 
   useEffect(() => {
     if (!editor.hasNodes([TableNode])) {
-      invariant(false, "TablePlugin: TableNode is not registered on editor")
+      invariant(false, 'TablePlugin: TableNode is not registered on editor')
     }
 
     cellContext.set(cellEditorConfig, children)
@@ -174,15 +160,11 @@ export function TablePlugin({
     return editor.registerCommand<InsertTableCommandPayload>(
       INSERT_NEW_TABLE_COMMAND,
       ({ columns, rows, includeHeaders }) => {
-        const tableNode = $createTableNodeWithDimensions(
-          Number(rows),
-          Number(columns),
-          includeHeaders
-        )
+        const tableNode = $createTableNodeWithDimensions(Number(rows), Number(columns), includeHeaders)
         $insertNodes([tableNode])
         return true
       },
-      COMMAND_PRIORITY_EDITOR
+      COMMAND_PRIORITY_EDITOR,
     )
   }, [cellContext, cellEditorConfig, children, editor])
 
