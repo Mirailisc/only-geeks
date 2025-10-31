@@ -1,17 +1,13 @@
-"use client"
+'use client'
 
-import { useCallback } from "react"
-import { $createCodeNode, $isCodeNode } from "@lexical/code"
-import {
-  $convertFromMarkdownString,
-  $convertToMarkdownString,
-  type Transformer,
-} from "@lexical/markdown"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { $createTextNode, $getRoot } from "lexical"
-import { FileTextIcon } from "lucide-react"
+import { useCallback } from 'react'
+import { $createCodeNode, $isCodeNode } from '@lexical/code'
+import { $convertFromMarkdownString, $convertToMarkdownString, type Transformer } from '@lexical/markdown'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { $createTextNode, $getRoot } from 'lexical'
+import { FileTextIcon } from 'lucide-react'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 
 export function MarkdownTogglePlugin({
   shouldPreserveNewLinesInMarkdown,
@@ -26,20 +22,20 @@ export function MarkdownTogglePlugin({
     editor.update(() => {
       const root = $getRoot()
       const firstChild = root.getFirstChild()
-      if ($isCodeNode(firstChild) && firstChild.getLanguage() === "markdown") {
+      if ($isCodeNode(firstChild) && firstChild.getLanguage() === 'markdown') {
         $convertFromMarkdownString(
           firstChild.getTextContent(),
           transformers,
           undefined, // node
-          shouldPreserveNewLinesInMarkdown
+          shouldPreserveNewLinesInMarkdown,
         )
       } else {
         const markdown = $convertToMarkdownString(
           transformers,
           undefined, //node
-          shouldPreserveNewLinesInMarkdown
+          shouldPreserveNewLinesInMarkdown,
         )
-        const codeNode = $createCodeNode("markdown")
+        const codeNode = $createCodeNode('markdown')
         codeNode.append($createTextNode(markdown))
         root.clear().append(codeNode)
         if (markdown.length === 0) {
@@ -52,11 +48,11 @@ export function MarkdownTogglePlugin({
 
   return (
     <Button
-      variant={"ghost"}
+      variant={'ghost'}
       onClick={handleMarkdownToggle}
       title="Convert From Markdown"
       aria-label="Convert from markdown"
-      size={"sm"}
+      size={'sm'}
       className="p-2"
     >
       <FileTextIcon className="size-4" />

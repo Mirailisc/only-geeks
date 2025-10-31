@@ -1,10 +1,6 @@
-import type { ElementTransformer } from "@lexical/markdown"
+import type { ElementTransformer } from '@lexical/markdown'
 
-import {
-  $createYouTubeNode,
-  $isYouTubeNode,
-  YouTubeNode,
-} from "@/components/editor/nodes/embeds/youtube-node"
+import { $createYouTubeNode, $isYouTubeNode, YouTubeNode } from '@/components/editor/nodes/embeds/youtube-node'
 
 export const YOUTUBE: ElementTransformer = {
   dependencies: [YouTubeNode],
@@ -21,5 +17,5 @@ export const YOUTUBE: ElementTransformer = {
     const youtubeNode = $createYouTubeNode(id)
     textNode.replace(youtubeNode)
   },
-  type: "element",
+  type: 'element',
 }

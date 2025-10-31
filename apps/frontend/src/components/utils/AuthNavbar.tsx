@@ -23,13 +23,13 @@ import { Button } from '../ui/button'
 export default function AuthNavbar() {
   const { user } = useAppSelector((state) => state.auth)
   const [logoutMutation, { error }] = useMutation(LOGOUT_MUTATION)
-  const client = useApolloClient();
+  const client = useApolloClient()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
     await logoutMutation()
-    await client.clearStore();
+    await client.clearStore()
     dispatch(clearUser())
     navigate(BASE_PATH, { replace: true })
   }
@@ -42,9 +42,11 @@ export default function AuthNavbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center mx-auto justify-between px-4">
-        <div className="flex items-center gap-2 flex-row">
-          <div className='w-10 aspect-square bg-primary text-white rounded-lg flex flex-row justify-center items-center font-bold'>OG</div>
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="flex flex-row items-center gap-2">
+          <div className="flex aspect-square w-10 flex-row items-center justify-center rounded-lg bg-primary font-bold text-white">
+            OG
+          </div>
           <h1 className="text-xl font-bold">Only Geeks</h1>
         </div>
 
@@ -52,8 +54,8 @@ export default function AuthNavbar() {
 
         <div className="flex items-center space-x-2">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild data-cy="create-dropdown-menu" className="focus:outline-none mr-4">
-              <Button variant={"outline"} className='rounded-full px-0 mx-0 w-10 h-10 p-0 justify-center'>
+            <DropdownMenuTrigger asChild data-cy="create-dropdown-menu" className="mr-4 focus:outline-none">
+              <Button variant={'outline'} className="mx-0 h-10 w-10 justify-center rounded-full p-0 px-0">
                 <PlusIcon />
               </Button>
             </DropdownMenuTrigger>
@@ -61,13 +63,13 @@ export default function AuthNavbar() {
               <DropdownMenuLabel>Create New</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <Link to="/create/blog">
-                <DropdownMenuItem data-cy="create-blog-dropdown-item" className='cursor-pointer'>
+                <DropdownMenuItem data-cy="create-blog-dropdown-item" className="cursor-pointer">
                   <FileTextIcon className="mr-2 h-4 w-4" />
                   <span>Blog</span>
                 </DropdownMenuItem>
               </Link>
               <Link to="/create/project">
-                <DropdownMenuItem data-cy="create-project-dropdown-item" className='cursor-pointer'>
+                <DropdownMenuItem data-cy="create-project-dropdown-item" className="cursor-pointer">
                   <CodeIcon className="mr-2 h-4 w-4" />
                   <span>Project</span>
                 </DropdownMenuItem>
@@ -77,7 +79,7 @@ export default function AuthNavbar() {
           <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none" data-cy="dropdown-menu">
               <Avatar>
-                <AvatarImage src={user.picture || "/placeholder.svg"} alt="avatar" />
+                <AvatarImage src={user.picture || '/placeholder.svg'} alt="avatar" />
                 <AvatarFallback className="bg-primary/10">
                   {user.firstName[0].toUpperCase()}
                   {user.lastName[0].toUpperCase()}

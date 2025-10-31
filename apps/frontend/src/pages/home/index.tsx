@@ -18,7 +18,7 @@ interface GetGoogleOauthUrlData {
   getGoogleOauthUrl: string
 }
 
-interface RegisterOutput{
+interface RegisterOutput {
   register: string
 }
 
@@ -58,7 +58,8 @@ function redirectURIAlertParser(url: string) {
   if (url === '/create/blog') return 'Create Blog'
   if (url === '/create/project') return 'Create Project'
   if (url.startsWith('/user/')) return `@${url.replace('/user/', '')} Profile`
-  if (url.startsWith('/blog/')) return `Blog: ${url.split('/')[url.split('/').length - 1].replaceAll("-", " ")} by @${url.split('/blog/')[1].split('/')[0]}`
+  if (url.startsWith('/blog/'))
+    return `Blog: ${url.split('/')[url.split('/').length - 1].replaceAll('-', ' ')} by @${url.split('/blog/')[1].split('/')[0]}`
   return url
 }
 
@@ -72,19 +73,19 @@ export default function Home() {
   const [passwordFocused, setPasswordFocused] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const changeTab = (tab: string) => {
     //Clear form states when switching tabs
     setLoginForm({
       username: '',
-      password: ''
+      password: '',
     })
     setRegisterForm({
       email: '',
       firstName: '',
       lastName: '',
       password: '',
-      username: ''
+      username: '',
     })
     setConfirmPassword('')
     setActiveTab(tab)
@@ -92,7 +93,7 @@ export default function Home() {
   // Login form state
   const [loginForm, setLoginForm] = useState<LoginInput>({
     username: '',
-    password: ''
+    password: '',
   })
 
   // Register form state
@@ -101,7 +102,7 @@ export default function Home() {
     firstName: '',
     lastName: '',
     password: '',
-    username: ''
+    username: '',
   })
 
   useEffect(() => {
@@ -148,7 +149,7 @@ export default function Home() {
       uppercase: /[A-Z]/.test(password),
       lowercase: /[a-z]/.test(password),
       number: /[0-9]/.test(password),
-      special: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)
+      special: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password),
     }
 
     const passedChecks = Object.values(checks).filter(Boolean).length
@@ -172,31 +173,32 @@ export default function Home() {
   const handleLogin = async (e: React.FormEvent, loginData?: LoginInput) => {
     e.preventDefault()
     try {
-      const result = await login({ 
-        variables: { 
-          input: loginData || loginForm 
-        } 
+      const result = await login({
+        variables: {
+          input: loginData || loginForm,
+        },
       })
       if (result.data?.login) {
         toast.success('Login successful!')
         navigate(currentRedirectUrl || '/profile')
       }
-     
     } catch (err) {
       // Error handled by useEffect
     }
   }
   const isRegisterFormComplete = () => {
-    return registerForm.email !== '' &&
-           registerForm.firstName !== '' &&
-           registerForm.lastName !== '' &&
-           registerForm.username !== '' &&
-           registerForm.password !== ''
+    return (
+      registerForm.email !== '' &&
+      registerForm.firstName !== '' &&
+      registerForm.lastName !== '' &&
+      registerForm.username !== '' &&
+      registerForm.password !== ''
+    )
   }
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     // Validate password strength
     if (strength.score < 3) {
       toast.error('Please use a stronger password')
@@ -210,18 +212,17 @@ export default function Home() {
     }
 
     try {
-      const result = await register({ 
-        variables: { 
-          input: registerForm 
-        } 
+      const result = await register({
+        variables: {
+          input: registerForm,
+        },
       })
       if (result.data?.register) {
         toast.success('Registration successful!')
         setActiveTab('login')
-        setLoginForm({username: registerForm.username, password: registerForm.password})
+        setLoginForm({ username: registerForm.username, password: registerForm.password })
         handleLogin(e, { username: registerForm.username, password: registerForm.password })
       }
-     
     } catch (err) {
       // Error handled by useEffect
     }
@@ -240,11 +241,12 @@ export default function Home() {
           <h1 className="text-balance text-4xl font-bold tracking-tight">OnlyGeeks</h1>
           <p className="text-pretty text-lg text-muted-foreground">Share your projects, inspire the community</p>
           {currentRedirectUrl && currentRedirectUrl !== '/profile' && (
-            <Alert className='text-left shadow-lg' variant={"destructive"}>
+            <Alert className="text-left shadow-lg" variant={'destructive'}>
               <TriangleAlertIcon size={16} />
               <AlertTitle>Login required!</AlertTitle>
               <AlertDescription>
-                You will be redirected to <span className="font-medium">{redirectURIAlertParser(currentRedirectUrl)}</span> after login
+                You will be redirected to{' '}
+                <span className="font-medium">{redirectURIAlertParser(currentRedirectUrl)}</span> after login
               </AlertDescription>
             </Alert>
           )}
@@ -261,8 +263,12 @@ export default function Home() {
           <CardContent className="space-y-4">
             <Tabs value={activeTab} onValueChange={changeTab}>
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger data-cy="tabs-login" value="login">Login</TabsTrigger>
-                <TabsTrigger data-cy="tabs-register" value="register">Register</TabsTrigger>
+                <TabsTrigger data-cy="tabs-login" value="login">
+                  Login
+                </TabsTrigger>
+                <TabsTrigger data-cy="tabs-register" value="register">
+                  Register
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="login" className="space-y-4">
@@ -291,13 +297,7 @@ export default function Home() {
                       data-cy="input-login-password"
                     />
                   </div>
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    size="lg"
-                    disabled={loginLoading}
-                    data-cy="button-login"
-                  >
+                  <Button type="submit" className="w-full" size="lg" disabled={loginLoading} data-cy="button-login">
                     {loginLoading ? 'Logging in...' : 'Login'}
                   </Button>
                 </form>
@@ -319,7 +319,7 @@ export default function Home() {
                     <span className="bg-background px-2 text-muted-foreground">Or</span>
                   </div>
                 </div>
-              
+
                 <Button
                   onClick={handleGoogleLogin}
                   className="h-12 w-full bg-primary text-base font-medium text-primary-foreground hover:bg-primary/90"
@@ -417,9 +417,7 @@ export default function Home() {
                       <div className="space-y-2 rounded-md border border-border bg-muted/50 p-3">
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium">Password Strength:</span>
-                          <span className={`text-sm font-semibold ${strength.color}`}>
-                            {strength.label}
-                          </span>
+                          <span className={`text-sm font-semibold ${strength.color}`}>{strength.label}</span>
                         </div>
                         <div className="flex gap-1">
                           {[...Array(4)].map((_, i) => (
@@ -428,15 +426,15 @@ export default function Home() {
                               className={`h-1.5 flex-1 rounded-full ${
                                 // eslint-disable-next-line no-nested-ternary
                                 i < strength.score
-                                  // eslint-disable-next-line no-nested-ternary
-                                  ? strength.score === 4
+                                  ? // eslint-disable-next-line no-nested-ternary
+                                    strength.score === 4
                                     ? 'bg-green-600'
-                                    // eslint-disable-next-line no-nested-ternary
-                                    : strength.score === 3
-                                    ? 'bg-blue-600'
-                                    : strength.score === 2
-                                    ? 'bg-yellow-600'
-                                    : 'bg-orange-600'
+                                    : // eslint-disable-next-line no-nested-ternary
+                                      strength.score === 3
+                                      ? 'bg-blue-600'
+                                      : strength.score === 2
+                                        ? 'bg-yellow-600'
+                                        : 'bg-orange-600'
                                   : 'bg-muted'
                               }`}
                             />
@@ -512,7 +510,9 @@ export default function Home() {
                       data-cy="input-register-confirmPassword"
                     />
                     {confirmPasswordTouched && confirmPassword && (
-                      <div className={`flex items-center gap-2 text-sm ${passwordsMatch ? 'text-green-600' : 'text-red-600'}`}>
+                      <div
+                        className={`flex items-center gap-2 text-sm ${passwordsMatch ? 'text-green-600' : 'text-red-600'}`}
+                      >
                         {passwordsMatch ? (
                           <>
                             <CheckCircle2Icon className="h-4 w-4" />

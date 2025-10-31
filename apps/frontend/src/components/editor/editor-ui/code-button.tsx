@@ -1,14 +1,9 @@
-import { useState } from "react"
-import { $isCodeNode } from "@lexical/code"
-import {
-  $getNearestNodeFromDOMNode,
-  $getSelection,
-  $setSelection,
-  type LexicalEditor,
-} from "lexical"
-import { CircleCheckIcon, CopyIcon } from "lucide-react"
+import { useState } from 'react'
+import { $isCodeNode } from '@lexical/code'
+import { $getNearestNodeFromDOMNode, $getSelection, $setSelection, type LexicalEditor } from 'lexical'
+import { CircleCheckIcon, CopyIcon } from 'lucide-react'
 
-import { useDebounce } from "@/components/editor/editor-hooks/use-debounce"
+import { useDebounce } from '@/components/editor/editor-hooks/use-debounce'
 
 interface Props {
   editor: LexicalEditor
@@ -29,7 +24,7 @@ export function CopyButton({ editor, getCodeDOMNode }: Props) {
       return
     }
 
-    let content = ""
+    let content = ''
 
     editor.update(() => {
       const codeNode = $getNearestNodeFromDOMNode(codeDOMNode)
@@ -46,7 +41,7 @@ export function CopyButton({ editor, getCodeDOMNode }: Props) {
       await navigator.clipboard.writeText(content)
       setCopyCompleted(true)
       removeSuccessIcon()
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       // // eslint-disable-next-line no-console
       // console.error("Failed to copy: ", err)
@@ -55,15 +50,11 @@ export function CopyButton({ editor, getCodeDOMNode }: Props) {
 
   return (
     <button
-      className="text-foreground/50 flex shrink-0 cursor-pointer items-center rounded border border-transparent bg-none p-1 uppercase"
+      className="flex shrink-0 cursor-pointer items-center rounded border border-transparent bg-none p-1 uppercase text-foreground/50"
       onClick={handleClick}
       aria-label="copy"
     >
-      {isCopyCompleted ? (
-        <CircleCheckIcon className="size-4" />
-      ) : (
-        <CopyIcon className="size-4" />
-      )}
+      {isCopyCompleted ? <CircleCheckIcon className="size-4" /> : <CopyIcon className="size-4" />}
     </button>
   )
 }

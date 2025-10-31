@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
 import { Badge } from '../ui/badge'
 
 // // Component for a single blog post card
-const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog, isMyProfile: boolean, username:string }) => {
+const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog; isMyProfile: boolean; username: string }) => {
   const [deleteBlogById, { loading }] = useMutation<{ deleteBlogById: Blog }>(DELETE_BLOG_MUTATION, {
     refetchQueries: [{ query: GET_MY_BLOGS_QUERY }],
   })
@@ -30,11 +30,17 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog, isMyProfile
             </div>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setPromptMeDelete(false)} disabled={loading}>Cancel</Button>
-            <Button variant="destructive" onClick={() => {
-              deleteBlogById({ variables: { blogId: post.id } })
-              setPromptMeDelete(false)
-            }} disabled={loading}>
+            <Button variant="outline" onClick={() => setPromptMeDelete(false)} disabled={loading}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                deleteBlogById({ variables: { blogId: post.id } })
+                setPromptMeDelete(false)
+              }}
+              disabled={loading}
+            >
               {loading ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
@@ -49,71 +55,93 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog, isMyProfile
                 <p className="mb-4 text-base text-gray-600">{post.description}</p>
               </div>
 
-              <div className='flex flex-row gap-2 items-end'>
-              <div className="mt-4 flex items-center text-sm text-gray-500">
-                <CalendarIcon className="mr-1.5 h-4 w-4 text-blue-500" />
-                {dateFormatter(post.createdAt)}
-              </div>
-              {isMyProfile &&<div className=''>
-                <Badge variant={post.isPublished ? "default" : "destructive"} className='text-xs'> {post.isPublished ? 'Published' : 'Draft'} </Badge>
-              </div>}
+              <div className="flex flex-row items-end gap-2">
+                <div className="mt-4 flex items-center text-sm text-gray-500">
+                  <CalendarIcon className="mr-1.5 h-4 w-4 text-blue-500" />
+                  {dateFormatter(post.createdAt)}
+                </div>
+                {isMyProfile && (
+                  <div className="">
+                    <Badge variant={post.isPublished ? 'default' : 'destructive'} className="text-xs">
+                      {' '}
+                      {post.isPublished ? 'Published' : 'Draft'}{' '}
+                    </Badge>
+                  </div>
+                )}
               </div>
             </div>
 
-            <div className={
-              `order-1 flex w-full flex-shrink-0 flex-col ${post.thumbnail ? "justify-center" : "justify-end"} md:order-2 md:w-56`
-            }>
+            <div
+              className={`order-1 flex w-full flex-shrink-0 flex-col ${post.thumbnail ? 'justify-center' : 'justify-end'} md:order-2 md:w-56`}
+            >
               {/* Image */}
-              {post.thumbnail && <div className="mb-4 h-40 w-full overflow-hidden rounded-xl">
-                <img
-                  src={post.thumbnail}
-                  alt={`Image for ${post.title}`}
-                  className="h-full w-full object-cover"
-                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                    e.currentTarget.onerror = null
-                    e.currentTarget.src = post.thumbnail ?? ''
-                  }}
-                />
-              </div>}
-              
-              {
-                isMyProfile ? (
-                  <div className="flex flex-row gap-2 justify-end">
-                    <Button variant={"secondary"} disabled={loading} className="" onClick={() => {
+              {post.thumbnail && (
+                <div className="mb-4 h-40 w-full overflow-hidden rounded-xl">
+                  <img
+                    src={post.thumbnail}
+                    alt={`Image for ${post.title}`}
+                    className="h-full w-full object-cover"
+                    onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                      e.currentTarget.onerror = null
+                      e.currentTarget.src = post.thumbnail ?? ''
+                    }}
+                  />
+                </div>
+              )}
+
+              {isMyProfile ? (
+                <div className="flex flex-row justify-end gap-2">
+                  <Button
+                    variant={'secondary'}
+                    disabled={loading}
+                    className=""
+                    onClick={() => {
                       navigator(`/create/blog/?editid=${post.id}`)
-                    }}>
-                      <PencilIcon className="h-4 w-4" />
-                    </Button>
-                    <Button variant={"destructive"} disabled={loading} className="" onClick={() => { 
+                    }}
+                  >
+                    <PencilIcon className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={'destructive'}
+                    disabled={loading}
+                    className=""
+                    onClick={() => {
                       setPromptMeDelete(true)
-                    }}>
-                      <Trash2Icon className="h-4 w-4" />
-                    </Button>
-                    <Button className="" disabled={loading} onClick={() => {
-                      if(post.isPublished){
+                    }}
+                  >
+                    <Trash2Icon className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    className=""
+                    disabled={loading}
+                    onClick={() => {
+                      if (post.isPublished) {
                         navigator(`/blog/${username}/${post.slug}`)
-                      }else{
+                      } else {
                         navigator(`/create/blog/?editid=${post.id}`)
                       }
-                    }}>
-                      {post.isPublished ? 'Read More' : 'Edit Draft'}
-                    </Button>
-                  </div>
-                ) : 
-                (
-                  <div className='flex flex-row gap-2 justify-end'>
-                    <Button className="" disabled={loading} onClick={() => {
-                      if(post.isPublished){
+                    }}
+                  >
+                    {post.isPublished ? 'Read More' : 'Edit Draft'}
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-row justify-end gap-2">
+                  <Button
+                    className=""
+                    disabled={loading}
+                    onClick={() => {
+                      if (post.isPublished) {
                         navigator(`/blog/${username}/${post.slug}`)
-                      }else{
+                      } else {
                         navigator(`/create/blog/?editid=${post.id}`)
                       }
-                    }}>
-                      {post.isPublished ? 'Read More' : 'Edit Draft'}
-                    </Button>
-                  </div>
-                )
-              }
+                    }}
+                  >
+                    {post.isPublished ? 'Read More' : 'Edit Draft'}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
@@ -123,23 +151,32 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog, isMyProfile
 }
 
 // Main container component
-const ProfileBlog = ({ myUsername, viewUsername }: {myUsername: string | undefined, viewUsername: string | undefined}) => {
+const ProfileBlog = ({
+  myUsername,
+  viewUsername,
+}: {
+  myUsername: string | undefined
+  viewUsername: string | undefined
+}) => {
   const [BlogPosts, setBlogPosts] = useState<Blog[]>([])
-  const { data, error } = useQuery<{ getBlogsByUsername?: Blog[], getMyBlogs?: Blog[] }>(myUsername == viewUsername ? GET_MY_BLOGS_QUERY : GET_BLOGS_BY_USERNAME_QUERY, {
-    variables: {
-      username: viewUsername,
+  const { data, error } = useQuery<{ getBlogsByUsername?: Blog[]; getMyBlogs?: Blog[] }>(
+    myUsername == viewUsername ? GET_MY_BLOGS_QUERY : GET_BLOGS_BY_USERNAME_QUERY,
+    {
+      variables: {
+        username: viewUsername,
+      },
+      skip: !viewUsername || !myUsername,
     },
-    skip: !viewUsername || !myUsername,
-  })
+  )
 
   useEffect(() => {
-      if (!error && data) {
-        if (myUsername == viewUsername) setBlogPosts(data.getMyBlogs || [])
-        else setBlogPosts(data.getBlogsByUsername || [])
-      }
+    if (!error && data) {
+      if (myUsername == viewUsername) setBlogPosts(data.getMyBlogs || [])
+      else setBlogPosts(data.getBlogsByUsername || [])
+    }
   }, [data, error, myUsername, viewUsername])
 
-  if(!myUsername || !viewUsername) return null;
+  if (!myUsername || !viewUsername) return null
 
   return (
     <div className="min-h-screen">

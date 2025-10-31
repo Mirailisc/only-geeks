@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AchievementResolver } from './achievement.resolver';
+import { Test, TestingModule } from '@nestjs/testing'
+import { AchievementResolver } from './achievement.resolver'
 
 describe('AchievementResolver', () => {
-  let resolver: AchievementResolver;
+  let resolver: AchievementResolver
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [AchievementResolver],
-    }).compile();
+    }).compile()
 
-    resolver = module.get<AchievementResolver>(AchievementResolver);
-  });
+    resolver = module.get<AchievementResolver>(AchievementResolver)
+  })
 
   it('should be defined', () => {
-    expect(resolver).toBeDefined();
-  });
-});
+    expect(resolver).toBeDefined()
+  })
+})

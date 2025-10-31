@@ -116,7 +116,7 @@ const BlogSearchResults: React.FC = () => {
           blog.title.toLowerCase().includes(searchKeyword.toLowerCase()),
         )
         setResults({ blogs: filtered })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message || 'Failed to fetch search results. Please try again.')
       } finally {
@@ -185,7 +185,7 @@ const BlogSearchResults: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 ">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-extrabold text-gray-900">OnlyGeeks - Blog Search</h1>
@@ -202,7 +202,7 @@ const BlogSearchResults: React.FC = () => {
               placeholder="Search blogs..."
               className="flex-1 px-4 py-3 text-lg text-gray-700 focus:outline-none"
               value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)} 
+              onChange={(e) => setSearchKeyword(e.target.value)}
             />
             <Button className="h-auto rounded-l-none bg-gray-900 px-6 py-3 font-semibold text-white transition-all hover:bg-gray-800">
               Search

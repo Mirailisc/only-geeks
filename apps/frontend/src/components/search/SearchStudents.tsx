@@ -95,7 +95,7 @@ const SearchResults: React.FC = () => {
 
     const timer = setTimeout(() => {
       try {
-        // Filter mock data 
+        // Filter mock data
         const filtered = MOCK_RESULTS.students.filter(
           (s) =>
             s.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
@@ -105,7 +105,7 @@ const SearchResults: React.FC = () => {
         )
 
         setResults({ students: filtered })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message || 'Failed to fetch search results.')
       } finally {

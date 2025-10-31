@@ -36,8 +36,8 @@ Then('I should see {string} in the {string} input', (text, name) => {
 })
 
 Then('I should wait for {int} seconds', (seconds: number) => {
-  cy.wait(seconds * 1000);
-});
+  cy.wait(seconds * 1000)
+})
 
 BeforeAll(() => {
   cy.task('db:seed')
