@@ -17,6 +17,12 @@ export class EducationResolver {
     return await this.educationService.findAllByUser(user.id)
   }
 
+  @Query(() => [Education])
+  @UseGuards(GqlAuthGuard)
+  async getEducationsByUsername(@Args('username') username: string) {
+    return await this.educationService.findAllByUsername(username)
+  }
+
   @Mutation(() => Education)
   @UseGuards(GqlAuthGuard)
   async addEducation(

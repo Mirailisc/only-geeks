@@ -15,6 +15,7 @@ Then('I click button named {string}', (btn_name: string) => {
 Then('I change input {string} value to {string}', (label: string, value: string) => {
   cy.get(`[data-cy="input-${label}"]`).clear().type(value)
 })
+
 Then('I change editor input {string} value to {string}', (label: string, value: string) => {
   cy.get(`[data-cy="input-${label}"]`).click().focus().clear().type(value)
 })
@@ -35,8 +36,28 @@ Then('I should see {string} in the {string} input', (text, name) => {
   cy.get(`input[data-cy="input-${name}"]`).should('have.value', text)
 })
 
+Then('I should see {string} in the {string} textarea', (text, name) => {
+  cy.get(`textarea[data-cy="input-${name}"]`).should('have.value', text)
+})
+
+Then('I should see button named {string}', (btn_name) => {
+  cy.get(`button[data-cy="${btn_name}"]`).should('be.visible')
+})
+
+Then('I should see button named {string} disabled', (btn_name) => {
+  cy.get(`button[data-cy="${btn_name}"]`).should('be.disabled')
+})
+
+Then('I should see button named {string} enabled', (btn_name) => {
+  cy.get(`button[data-cy="${btn_name}"]`).should('be.enabled')
+})
+
 Then('I should wait for {int} seconds', (seconds: number) => {
   cy.wait(seconds * 1000)
+})
+
+Then('I should not see {string}', (text: string) => {
+  cy.contains(text).should('not.exist')
 })
 
 BeforeAll(() => {

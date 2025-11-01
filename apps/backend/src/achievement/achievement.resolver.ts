@@ -17,6 +17,12 @@ export class AchievementResolver {
     return await this.achievementService.findAllByUser(user.id)
   }
 
+  @Query(() => [Achievement])
+  @UseGuards(GqlAuthGuard)
+  async getAchievementsByUsername(@Args('username') username: string) {
+    return await this.achievementService.findAllByUsername(username)
+  }
+
   @Mutation(() => Achievement)
   @UseGuards(GqlAuthGuard)
   async addAchievement(

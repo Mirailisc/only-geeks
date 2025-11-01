@@ -3,9 +3,10 @@ import { EducationService } from './education.service'
 import { EducationResolver } from './education.resolver'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { AuthModule } from 'src/auth/auth.module'
+import { UserModule } from 'src/user/user.module'
 
 @Module({
-  imports: [forwardRef(() => AuthModule)],
+  imports: [forwardRef(() => AuthModule), UserModule],
   providers: [EducationResolver, EducationService, PrismaService],
   exports: [EducationService],
 })

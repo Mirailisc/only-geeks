@@ -2,10 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateAchievementInput } from './dto/create-achievement.input'
 import { UpdateAchievementInput } from './dto/update-achievement.input'
+import { UserService } from 'src/user/user.service'
 
 @Injectable()
 export class AchievementService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UserService,
+  ) {}
 
   async create(userId: string, input: CreateAchievementInput) {
     return await this.prisma.achievement.create({
@@ -16,6 +20,15 @@ export class AchievementService {
   async findAllByUser(userId: string) {
     return await this.prisma.achievement.findMany({
       where: { userId },
+      orderBy: { date: 'desc' },
+    })
+  }
+
+  async findAllByUsername(username: string) {
+    const user = await this.userService.findUserByUsername(username)
+    if (!user) throw new BadRequestException('User not found')
+    return await this.prisma.achievement.findMany({
+      where: { userId: user.id },
       orderBy: { date: 'desc' },
     })
   }
