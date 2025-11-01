@@ -58,8 +58,8 @@ function EducationForm({ education, onSubmit, loading }: EducationFormProps) {
       school: values.school,
       degree: values.degree,
       fieldOfStudy: values.fieldOfStudy,
-      startDate: values.startDate ? new Date(values.startDate) : undefined,
-      endDate: values.endDate ? new Date(values.endDate) : undefined,
+      startDate: values.startDate ? new Date(values.startDate).toISOString() : undefined,
+      endDate: values.endDate ? new Date(values.endDate).toISOString() : undefined,
     })
   }
 

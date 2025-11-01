@@ -89,7 +89,7 @@ function AchievementForm({ achievement, onSubmit, loading }: AchievementFormProp
       title: values.title,
       issuer: values.issuer,
       description: values.description,
-      date: values.date ? new Date(values.date) : null,
+      date: values.date ? new Date(values.date).toISOString() : undefined,
       photos: thumbnail ? [thumbnail] : [],
     })
   }

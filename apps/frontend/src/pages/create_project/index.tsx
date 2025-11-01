@@ -95,8 +95,8 @@ function ProjectForm({ project, onSubmit, loading }: ProjectFormProps) {
       description: values.description,
       link: values.link,
       photos: thumbnail ? [thumbnail] : [],
-      startDate: values.startDate ? new Date(values.startDate) : null,
-      endDate: values.endDate ? new Date(values.endDate) : null,
+      startDate: values.startDate ? new Date(values.startDate).toISOString() : undefined,
+      endDate: values.endDate ? new Date(values.endDate).toISOString() : undefined,
     })
   }
 

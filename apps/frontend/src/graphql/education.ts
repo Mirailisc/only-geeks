@@ -4,9 +4,9 @@ export interface Education {
   id: string
   school: string
   degree: string
-  fieldOfStudy?: string | null
-  startDate?: Date | null
-  endDate?: Date | null
+  fieldOfStudy?: string
+  startDate?: string
+  endDate?: string
 }
 
 export const GET_MY_EDUCATION_QUERY = gql`
