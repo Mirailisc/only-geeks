@@ -49,13 +49,14 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
                 setPromptMeDelete(false)
               }}
               disabled={loading}
+              data-cy="confirm-delete-project-button"
             >
               {loading ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Card className="mb-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl">
+      <Card className="mb-6 rounded-xl">
         <CardContent className="p-6 pb-0 pt-0">
           <div className="flex h-full flex-col items-stretch gap-6 md:flex-row">
             {/* LEFT: Project Details */}
@@ -75,6 +76,7 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
                       size="sm"
                       className="rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100"
                       disabled={!project.link}
+                      data-cy="project-link-button"
                     >
                       <Globe className="mr-2 h-4 w-4" /> Link
                     </Button>
@@ -117,6 +119,7 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
                     onClick={() => {
                       navigator(`/create/project/?editid=${project.id}`)
                     }}
+                    data-cy="edit-project-button"
                   >
                     <Pencil className="mr-1 h-4 w-4" /> Edit
                   </Button>
@@ -128,6 +131,7 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
                     onClick={() => {
                       setPromptMeDelete(true)
                     }}
+                    data-cy="delete-project-button"
                   >
                     <Trash2 className="mr-1 h-4 w-4" /> Delete
                   </Button>
@@ -184,9 +188,6 @@ const ProfileProjects = ({
 
         {/* List of Projects */}
         <div className="space-y-6 px-4 py-4 sm:px-8">
-          {/* {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))} */}
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} isMyProfile={myUsername === viewUsername} />
           ))}

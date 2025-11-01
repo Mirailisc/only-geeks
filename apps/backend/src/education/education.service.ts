@@ -2,10 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateEducationInput } from './dto/create-education.input'
 import { UpdateEducationInput } from './dto/update-education.input'
+import { UserService } from 'src/user/user.service'
 
 @Injectable()
 export class EducationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UserService
+  ) {}
 
   async create(userId: string, input: CreateEducationInput) {
     return await this.prisma.education.create({
@@ -16,6 +20,15 @@ export class EducationService {
   async findAllByUser(userId: string) {
     return await this.prisma.education.findMany({
       where: { userId },
+      orderBy: { startDate: 'desc' },
+    })
+  }
+
+  async findAllByUsername(username: string) {
+    const user = await this.userService.findUserByUsername(username)
+    if (!user) throw new BadRequestException('User not found')
+    return await this.prisma.education.findMany({
+      where: { userId: user.id },
       orderBy: { startDate: 'desc' },
     })
   }
