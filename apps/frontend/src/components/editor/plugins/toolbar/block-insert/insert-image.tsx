@@ -1,8 +1,8 @@
-import { ImageIcon } from "lucide-react"
+import { ImageIcon } from 'lucide-react'
 
-import { useToolbarContext } from "@/components/editor/context/toolbar-context"
-import { InsertImageDialog } from "@/components/editor/plugins/images-plugin"
-import { SelectItem } from "@/components/ui/select"
+import { useToolbarContext } from '@/components/editor/context/toolbar-context'
+import { InsertImageDialog } from '@/components/editor/plugins/images-plugin'
+import { SelectItem } from '@/components/ui/select'
 
 export function InsertImage() {
   const { activeEditor, showModal } = useToolbarContext()
@@ -12,9 +12,7 @@ export function InsertImage() {
       value="image"
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onPointerUp={(_e) => {
-        showModal("Insert Image", (onClose) => (
-          <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />
-        ))
+        showModal('Insert Image', (onClose) => <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />)
       }}
       className=""
     >

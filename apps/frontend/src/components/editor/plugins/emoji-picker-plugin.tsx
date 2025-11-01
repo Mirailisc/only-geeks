@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -7,30 +7,17 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { useCallback, useEffect, useMemo, useState,lazy } from "react"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import {
-  MenuOption,
-  useBasicTypeaheadTriggerMatch,
-} from "@lexical/react/LexicalTypeaheadMenuPlugin"
-import {
-  $createTextNode,
-  $getSelection,
-  $isRangeSelection,
-  TextNode,
-} from "lexical"
-import { createPortal } from "react-dom"
+import { useCallback, useEffect, useMemo, useState, lazy } from 'react'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { MenuOption, useBasicTypeaheadTriggerMatch } from '@lexical/react/LexicalTypeaheadMenuPlugin'
+import { $createTextNode, $getSelection, $isRangeSelection, TextNode } from 'lexical'
+import { createPortal } from 'react-dom'
 
-import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
+import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
 
 const LexicalTypeaheadMenuPlugin = lazy(async () => {
-    const mod = await import ("@lexical/react/LexicalTypeaheadMenuPlugin")
-    return { default: mod.LexicalTypeaheadMenuPlugin<EmojiOption> }
+  const mod = await import('@lexical/react/LexicalTypeaheadMenuPlugin')
+  return { default: mod.LexicalTypeaheadMenuPlugin<EmojiOption> }
 })
 
 class EmojiOption extends MenuOption {
@@ -43,7 +30,7 @@ class EmojiOption extends MenuOption {
     emoji: string,
     options: {
       keywords?: Array<string>
-    }
+    },
   ) {
     super(title)
     this.title = title
@@ -72,7 +59,7 @@ export function EmojiPickerPlugin() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_isOpen, setIsOpen] = useState(false)
   useEffect(() => {
-    import("../utils/emoji-list").then((file) => setEmojis(file.default))
+    import('../utils/emoji-list').then((file) => setEmojis(file.default))
   }, [])
 
   const emojiOptions = useMemo(
@@ -82,13 +69,13 @@ export function EmojiPickerPlugin() {
             ({ emoji, aliases, tags }) =>
               new EmojiOption(aliases[0], emoji, {
                 keywords: [...aliases, ...tags],
-              })
+              }),
           )
         : [],
-    [emojis]
+    [emojis],
   )
 
-  const checkForTriggerMatch = useBasicTypeaheadTriggerMatch(":", {
+  const checkForTriggerMatch = useBasicTypeaheadTriggerMatch(':', {
     minLength: 0,
   })
 
@@ -97,11 +84,8 @@ export function EmojiPickerPlugin() {
       .filter((option: EmojiOption) => {
         // eslint-disable-next-line no-nested-ternary
         return queryString != null
-          ? new RegExp(queryString, "gi").exec(option.title) ||
-            option.keywords != null
-            ? option.keywords.some((keyword: string) =>
-                new RegExp(queryString, "gi").exec(keyword)
-              )
+          ? new RegExp(queryString, 'gi').exec(option.title) || option.keywords != null
+            ? option.keywords.some((keyword: string) => new RegExp(queryString, 'gi').exec(keyword))
             : false
           : emojiOptions
       })
@@ -109,11 +93,7 @@ export function EmojiPickerPlugin() {
   }, [emojiOptions, queryString])
 
   const onSelectOption = useCallback(
-    (
-      selectedOption: EmojiOption,
-      nodeToRemove: TextNode | null,
-      closeMenu: () => void
-    ) => {
+    (selectedOption: EmojiOption, nodeToRemove: TextNode | null, closeMenu: () => void) => {
       editor.update(() => {
         const selection = $getSelection()
 
@@ -130,7 +110,7 @@ export function EmojiPickerPlugin() {
         closeMenu()
       })
     },
-    [editor]
+    [editor],
   )
 
   return (
@@ -145,30 +125,22 @@ export function EmojiPickerPlugin() {
       onClose={() => {
         setIsOpen(false)
       }}
-      menuRenderFn={(
-        anchorElementRef,
-        { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
-      ) => {
+      menuRenderFn={(anchorElementRef, { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }) => {
         return anchorElementRef.current && options.length
           ? createPortal(
               <div className="fixed z-10 w-[200px] rounded-md shadow-md">
                 <Command
                   onKeyDown={(e) => {
-                    if (e.key === "ArrowUp") {
+                    if (e.key === 'ArrowUp') {
                       e.preventDefault()
                       setHighlightedIndex(
                         selectedIndex !== null
-                          ? (selectedIndex - 1 + options.length) %
-                              options.length
-                          : options.length - 1
+                          ? (selectedIndex - 1 + options.length) % options.length
+                          : options.length - 1,
                       )
-                    } else if (e.key === "ArrowDown") {
+                    } else if (e.key === 'ArrowDown') {
                       e.preventDefault()
-                      setHighlightedIndex(
-                        selectedIndex !== null
-                          ? (selectedIndex + 1) % options.length
-                          : 0
-                      )
+                      setHighlightedIndex(selectedIndex !== null ? (selectedIndex + 1) % options.length : 0)
                     }
                   }}
                 >
@@ -182,9 +154,7 @@ export function EmojiPickerPlugin() {
                             selectOptionAndCleanUp(option)
                           }}
                           className={`flex items-center gap-2 ${
-                            selectedIndex === index
-                              ? "bg-accent"
-                              : "!bg-transparent"
+                            selectedIndex === index ? 'bg-accent' : '!bg-transparent'
                           }`}
                         >
                           {option.emoji} {option.title}
@@ -194,7 +164,7 @@ export function EmojiPickerPlugin() {
                   </CommandList>
                 </Command>
               </div>,
-              anchorElementRef.current
+              anchorElementRef.current,
             )
           : null
       }}

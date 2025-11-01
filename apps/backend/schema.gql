@@ -71,6 +71,7 @@ type Project {
   photos: [String!]
   startDate: DateTime
   endDate: DateTime
+  User: User
 }
 
 type Achievement {
@@ -82,6 +83,54 @@ type Achievement {
   photos: [String!]
   createdAt: DateTime!
   updatedAt: DateTime!
+  User: User
+}
+
+type FeedResponse {
+  items: [FeedItem!]!
+  nextCursor: String
+}
+
+union FeedItem = BlogFeed | ProjectFeed | AchievementFeed
+
+type BlogFeed {
+  id: String!
+  userId: String!
+  slug: String!
+  title: String!
+  content: String
+  description: String
+  thumbnail: String
+  isPublished: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  User: User
+  contentType: String!
+}
+
+type ProjectFeed {
+  id: ID!
+  title: String!
+  description: String
+  link: String
+  photos: [String!]
+  startDate: DateTime
+  endDate: DateTime
+  User: User
+  contentType: String!
+}
+
+type AchievementFeed {
+  id: ID!
+  title: String!
+  description: String
+  issuer: String
+  date: DateTime
+  photos: [String!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  User: User
+  contentType: String!
 }
 
 type Query {
@@ -103,10 +152,24 @@ type Query {
   getProjectsByUsername(username: String!): [Project!]!
   getMyAchievements: [Achievement!]!
   getAchievementsByUsername(username: String!): [Achievement!]!
+  feed(input: FeedInput!): FeedResponse!
 }
 
 input SearchInput {
   input: String!
+}
+
+input FeedInput {
+  type: FeedType! = ALL
+  cursor: String
+  limit: Float! = 10
+}
+
+enum FeedType {
+  BLOG
+  PROJECT
+  AWARD
+  ALL
 }
 
 type Mutation {

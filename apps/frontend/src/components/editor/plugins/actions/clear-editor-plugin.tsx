@@ -1,10 +1,10 @@
-"use client"
+'use client'
 
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { CLEAR_EDITOR_COMMAND } from "lexical"
-import { Trash2Icon } from "lucide-react"
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { CLEAR_EDITOR_COMMAND } from 'lexical'
+import { Trash2Icon } from 'lucide-react'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -14,12 +14,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from '@/components/ui/dialog'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 export function ClearEditorActionPlugin() {
   const [editor] = useLexicalComposerContext()
@@ -29,7 +25,7 @@ export function ClearEditorActionPlugin() {
       <Tooltip disableHoverableContent>
         <TooltipTrigger asChild>
           <DialogTrigger asChild>
-            <Button size={"sm"} variant={"ghost"} className="p-2">
+            <Button size={'sm'} variant={'ghost'} className="p-2">
               <Trash2Icon className="h-4 w-4" />
             </Button>
           </DialogTrigger>
@@ -40,9 +36,7 @@ export function ClearEditorActionPlugin() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Clear Editor</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to clear the editor?
-          </DialogDescription>
+          <DialogDescription>Are you sure you want to clear the editor?</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>

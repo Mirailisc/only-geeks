@@ -1,15 +1,21 @@
 import { gql } from '@apollo/client'
+// import { gql } from "@apollo/client"
+import type { Profile } from "./profile"
 
 export interface Achievement {
-  id: string
-  title: string
-  description?: string
-  issuer?: string | null
-  date?: Date | null
-  photos?: string[] | null
-  createdAt: Date
-  updatedAt: Date
+    User: Profile
+    contentType: string
+    createdAt: string
+    date: string
+    description: string
+    id: string
+    issuer: string
+    photos: string[]
+    title: string
+    updatedAt: string
 }
+
+//export const findMyAchievement = gql``
 
 export const GET_MY_ACHIEVEMENTS_QUERY = gql`
   query GetMyAchievements {
@@ -80,8 +86,6 @@ export const UPDATE_ACHIEVEMENT_MUTATION = gql`
       issuer
       date
       photos
-      createdAt
-      updatedAt
       createdAt
       updatedAt
     }

@@ -1,14 +1,20 @@
 import { gql } from '@apollo/client'
+// import { gql } from "@apollo/client"
+import type { Profile } from "./profile"
 
 export interface Project {
-  id: string
-  title: string
-  description: string | null
-  link: string | null
-  photos: string[] | null
-  startDate: Date | null
-  endDate: Date | null
+    User: Profile
+    contentType: string
+    description: string
+    endDate: string
+    id: string
+    link: string
+    photos: string[]
+    startDate: string
+    title: string
 }
+
+//export const findmyproject = gql``
 
 export const GET_MY_PROJECTS_QUERY = gql`
   query GetMyProjects {

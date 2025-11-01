@@ -1,25 +1,20 @@
-import { useCallback, useState } from "react"
-import {
-  $getSelectionStyleValueForProperty,
-  $patchStyleText,
-} from "@lexical/selection"
-import { $getSelection, $isRangeSelection, type BaseSelection } from "lexical"
-import { BaselineIcon } from "lucide-react"
+import { useCallback, useState } from 'react'
+import { $getSelectionStyleValueForProperty, $patchStyleText } from '@lexical/selection'
+import { $getSelection, $isRangeSelection, type BaseSelection } from 'lexical'
+import { BaselineIcon } from 'lucide-react'
 
-import { useToolbarContext } from "@/components/editor/context/toolbar-context"
-import { useUpdateToolbarHandler } from "@/components/editor/editor-hooks/use-update-toolbar"
-import ColorPicker from "@/components/editor/editor-ui/colorpicker"
+import { useToolbarContext } from '@/components/editor/context/toolbar-context'
+import { useUpdateToolbarHandler } from '@/components/editor/editor-hooks/use-update-toolbar'
+import ColorPicker from '@/components/editor/editor-ui/colorpicker'
 
 export function FontColorToolbarPlugin() {
   const { activeEditor } = useToolbarContext()
 
-  const [fontColor, setFontColor] = useState("#000")
+  const [fontColor, setFontColor] = useState('#000')
 
   const $updateToolbar = (selection: BaseSelection) => {
     if ($isRangeSelection(selection)) {
-      setFontColor(
-        $getSelectionStyleValueForProperty(selection, "color", "#000")
-      )
+      setFontColor($getSelectionStyleValueForProperty(selection, 'color', '#000'))
     }
   }
 
@@ -34,17 +29,17 @@ export function FontColorToolbarPlugin() {
             $patchStyleText(selection, styles)
           }
         },
-        skipHistoryStack ? { tag: "historic" } : {}
+        skipHistoryStack ? { tag: 'historic' } : {},
       )
     },
-    [activeEditor]
+    [activeEditor],
   )
 
   const onFontColorSelect = useCallback(
     (value: string, skipHistoryStack: boolean) => {
       applyStyleText({ color: value }, skipHistoryStack)
     },
-    [applyStyleText]
+    [applyStyleText],
   )
 
   return (

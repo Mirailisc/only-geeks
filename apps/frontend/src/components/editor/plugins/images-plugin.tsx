@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -7,9 +7,9 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { type JSX, useEffect, useRef, useState } from "react"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { $wrapNodeInElement, mergeRegister } from "@lexical/utils"
+import { type JSX, useEffect, useRef, useState } from 'react'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { $wrapNodeInElement, mergeRegister } from '@lexical/utils'
 import {
   $createParagraphNode,
   $createRangeSelection,
@@ -27,43 +27,28 @@ import {
   DROP_COMMAND,
   type LexicalCommand,
   type LexicalEditor,
-} from "lexical"
+} from 'lexical'
 
-import {
-  $createImageNode,
-  $isImageNode,
-  ImageNode,
-  type ImagePayload,
-} from "@/components/editor/nodes/image-node"
-import { CAN_USE_DOM } from "@/components/editor/shared/can-use-dom"
-import { Button } from "@/components/ui/button"
-import { DialogFooter } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+import { $createImageNode, $isImageNode, ImageNode, type ImagePayload } from '@/components/editor/nodes/image-node'
+import { CAN_USE_DOM } from '@/components/editor/shared/can-use-dom'
+import { Button } from '@/components/ui/button'
+import { DialogFooter } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export type InsertImagePayload = Readonly<ImagePayload>
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null
 
-export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> =
-  createCommand("INSERT_IMAGE_COMMAND")
+export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> = createCommand('INSERT_IMAGE_COMMAND')
 
-export function InsertImageUriDialogBody({
-  onClick,
-}: {
-  onClick: (payload: InsertImagePayload) => void
-}) {
-  const [src, setSrc] = useState("")
-  const [altText, setAltText] = useState("")
+export function InsertImageUriDialogBody({ onClick }: { onClick: (payload: InsertImagePayload) => void }) {
+  const [src, setSrc] = useState('')
+  const [altText, setAltText] = useState('')
 
-  const isDisabled = src === ""
+  const isDisabled = src === ''
 
   return (
     <div className="grid gap-4 py-4">
@@ -101,17 +86,13 @@ export function InsertImageUriDialogBody({
   )
 }
 
-export function InsertImageUploadedDialogBody({
-  onClick,
-}: {
-  onClick: (payload: InsertImagePayload) => void
-}) {
-  const [src, setSrc] = useState("")
-  const [altText, setAltText] = useState("")
+export function InsertImageUploadedDialogBody({ onClick }: { onClick: (payload: InsertImagePayload) => void }) {
+  const [src, setSrc] = useState('')
+  const [altText, setAltText] = useState('')
   const [isUploading, setIsUploading] = useState(false)
-  const [error, setError] = useState("")
+  const [error, setError] = useState('')
 
-  const isDisabled = src === "" || isUploading
+  const isDisabled = src === '' || isUploading
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -123,7 +104,7 @@ export function InsertImageUploadedDialogBody({
       return
     }
 
-    setError("")
+    setError('')
     setIsUploading(true)
 
     try {
@@ -163,15 +144,9 @@ export function InsertImageUploadedDialogBody({
           disabled={isUploading}
           data-test-id="image-modal-file-upload"
         />
-        {isUploading && (
-          <p className="text-sm text-muted-foreground">Uploading...</p>
-        )}
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
-        {src && !isUploading && (
-          <p className="text-sm text-green-600">Image uploaded successfully</p>
-        )}
+        {isUploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+        {error && <p className="text-sm text-destructive">{error}</p>}
+        {src && !isUploading && <p className="text-sm text-green-600">Image uploaded successfully</p>}
       </div>
       <div className="grid gap-2">
         <Label htmlFor="alt-text">Alt Text</Label>
@@ -209,9 +184,9 @@ export function InsertImageDialog({
     const handler = (e: KeyboardEvent) => {
       hasModifier.current = e.altKey
     }
-    document.addEventListener("keydown", handler)
+    document.addEventListener('keydown', handler)
     return () => {
-      document.removeEventListener("keydown", handler)
+      document.removeEventListener('keydown', handler)
     }
   }, [activeEditor])
 
@@ -240,16 +215,12 @@ export function InsertImageDialog({
   )
 }
 
-export function ImagesPlugin({
-  captionsEnabled,
-}: {
-  captionsEnabled?: boolean
-}): JSX.Element | null {
+export function ImagesPlugin({ captionsEnabled }: { captionsEnabled?: boolean }): JSX.Element | null {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
-      throw new Error("ImagesPlugin: ImageNode not registered on editor")
+      throw new Error('ImagesPlugin: ImageNode not registered on editor')
     }
 
     return mergeRegister(
@@ -264,29 +235,29 @@ export function ImagesPlugin({
 
           return true
         },
-        COMMAND_PRIORITY_EDITOR
+        COMMAND_PRIORITY_EDITOR,
       ),
       editor.registerCommand<DragEvent>(
         DRAGSTART_COMMAND,
         (event) => {
           return $onDragStart(event)
         },
-        COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_HIGH,
       ),
       editor.registerCommand<DragEvent>(
         DRAGOVER_COMMAND,
         (event) => {
           return $onDragover(event)
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand<DragEvent>(
         DROP_COMMAND,
         (event) => {
           return $onDrop(event, editor)
         },
-        COMMAND_PRIORITY_HIGH
-      )
+        COMMAND_PRIORITY_HIGH,
+      ),
     )
   }, [captionsEnabled, editor])
 
@@ -302,14 +273,13 @@ function $onDragStart(event: DragEvent): boolean {
   if (!dataTransfer) {
     return false
   }
-  const TRANSPARENT_IMAGE =
-    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-  const img = document.createElement("img")
+  const TRANSPARENT_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+  const img = document.createElement('img')
   img.src = TRANSPARENT_IMAGE
-  dataTransfer.setData("text/plain", "_")
+  dataTransfer.setData('text/plain', '_')
   dataTransfer.setDragImage(img, 0, 0)
   dataTransfer.setData(
-    "application/x-lexical-drag",
+    'application/x-lexical-drag',
     JSON.stringify({
       data: {
         altText: node.__altText,
@@ -321,8 +291,8 @@ function $onDragStart(event: DragEvent): boolean {
         src: node.__src,
         width: node.__width,
       },
-      type: "image",
-    })
+      type: 'image',
+    }),
   )
 
   return true
@@ -373,12 +343,12 @@ function $getImageNodeInSelection(): ImageNode | null {
 }
 
 function getDragImageData(event: DragEvent): null | InsertImagePayload {
-  const dragData = event.dataTransfer?.getData("application/x-lexical-drag")
+  const dragData = event.dataTransfer?.getData('application/x-lexical-drag')
   if (!dragData) {
     return null
   }
   const { type, data } = JSON.parse(dragData)
-  if (type !== "image") {
+  if (type !== 'image') {
     return null
   }
 
@@ -397,9 +367,9 @@ function canDropImage(event: DragEvent): boolean {
   return !!(
     target &&
     target instanceof HTMLElement &&
-    !target.closest("code, span.editor-image") &&
+    !target.closest('code, span.editor-image') &&
     target.parentElement &&
-    target.parentElement.closest("div.ContentEditable__root")
+    target.parentElement.closest('div.ContentEditable__root')
   )
 }
 
