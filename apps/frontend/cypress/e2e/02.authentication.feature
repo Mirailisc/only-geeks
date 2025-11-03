@@ -28,10 +28,11 @@ Feature: Authentication
     Then I change input "register-password" value to "Johndoe@Password1"
     Then I change input "register-confirmPassword" value to "Johndoe@Password1"
     Then I click button named "button-register"
-    Then I should see "@johndoe1"
-    
+    Then I should wait for 2 seconds
     Then I view my profile
-    Then I should wait for 3 seconds
+    Then I should see "@johndoe1"
+
+    Then I should wait for 2 seconds
     Then I click dropdown menu
     Then I click logout button
     Then I should see "Welcome back"
@@ -41,10 +42,11 @@ Feature: Authentication
     Then I change input "login-username" value to "janedoe2"
     Then I change input "login-password" value to "Janedoe@Password2"
     Then I click button named "button-login"
+    Then I should wait for 2 seconds
+    Then I view my profile
     Then I should see "@janedoe2"
 
-    Then I view my profile
-    Then I should wait for 3 seconds
+    Then I should wait for 2 seconds
     Then I click dropdown menu
     Then I click logout button
     Then I should see "Welcome back"
