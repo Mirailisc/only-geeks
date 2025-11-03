@@ -97,7 +97,34 @@ export class FeedService {
       items,
       nextCursor,
     }
-    console.log(returnItem)
     return returnItem
+  }
+  async getCountNewItems(since: Date) {
+    const blogCount = await this.prisma.blog.count({
+      where: {
+        isPublished: true,
+        createdAt: {
+          gt: since,
+        },
+      },
+    })
+
+    const projectCount = await this.prisma.project.count({
+      where: {
+        createdAt: {
+          gt: since,
+        },
+      },
+    })
+
+    const achievementCount = await this.prisma.achievement.count({
+      where: {
+        createdAt: {
+          gt: since,
+        },
+      },
+    })
+
+    return blogCount + projectCount + achievementCount
   }
 }

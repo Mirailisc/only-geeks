@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
-import { LOGIN_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
+import { FEED_PATH, LOGIN_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
 import { CodeIcon, FileTextIcon, LogOut, PlusIcon, Settings, User } from 'lucide-react'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
@@ -43,12 +43,14 @@ export default function AuthNavbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex flex-row items-center gap-2">
-          <div className="flex aspect-square w-10 flex-row items-center justify-center rounded-lg bg-primary font-bold text-white">
-            OG
+        <Link to={FEED_PATH}>
+          <div className="flex flex-row items-center gap-2">
+            <div className="flex aspect-square w-10 flex-row items-center justify-center rounded-lg bg-primary font-bold text-white">
+              OG
+            </div>
+            <h1 className="text-xl font-bold">Only Geeks</h1>
           </div>
-          <h1 className="text-xl font-bold">Only Geeks</h1>
-        </div>
+        </Link>
 
         <SearchBox />
 

@@ -20,3 +20,9 @@ export class FeedInput {
   @Field(() => Number, { defaultValue: 10 })
   limit: number
 }
+
+@InputType()
+export class NewFeedCountInput {
+  @Field(() => String)
+  since: string
+}

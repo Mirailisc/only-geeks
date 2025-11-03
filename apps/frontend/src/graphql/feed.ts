@@ -23,66 +23,76 @@ export interface FeedResponse {
 // }
 
 export const FEED_QUERY = gql`
-  query Feed($input: FeedInput!) {
-    feed(input: $input) {
-      items {
-        ... on BlogFeed {
+query Feed($input: FeedInput!) {
+  feed(input: $input) {
+    items {
+      ... on BlogFeed {
+        User {
+          email
+          firstName
           id
-          title
-          description
-          thumbnail
-          slug
-          User {
-            email
-            firstName
-            id
-            picture
-            username
-            lastName
-          }
-          createdAt
-          updatedAt
-          contentType
+          picture
+          username
+          lastName
         }
-        ... on ProjectFeed {
-          id
-          title
-          photos
-          startDate
-          endDate
-          link
-          description
-          User {
-            email
-            firstName
-            id
-            picture
-            username
-            lastName
-          }
-          contentType
-        }
-        ... on AchievementFeed {
-          id
-          title
-          photos
-          description
-          date
-          issuer
-          User {
-            email
-            firstName
-            id
-            picture
-            username
-            lastName
-          }
-          createdAt
-          updatedAt
-          contentType
-        }
+        description
+        title
+        thumbnail
+        slug
+        createdAt
+        updatedAt
+        contentType
       }
-      nextCursor
+      ... on ProjectFeed {
+        photos
+        startDate
+        title
+        endDate
+        link
+        id
+        description
+        User {
+          email
+          firstName
+          id
+          picture
+          username
+          lastName
+        }
+        contentType
+      }
+      ... on AchievementFeed {
+        updatedAt
+        title
+        photos
+        description
+        createdAt
+        date
+        issuer
+        User {
+          email
+          firstName
+          id
+          picture
+          username
+          lastName
+        }
+        contentType
+      }
     }
+    nextCursor
+  }
+}
+`
+
+// Example input variable:
+// {
+//   "input": {
+//     "since": "2025-11-03"
+//   }
+// }
+export const FEED_NEW_COUNT_QUERY = gql`
+  query Query($input: NewFeedCountInput!) {
+    getNewFeedCount(input: $input)
   }
 `

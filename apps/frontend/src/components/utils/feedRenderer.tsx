@@ -17,7 +17,8 @@ export const formatDate = (dateString: string) => {
   if (diff < 60) return 'Just now';
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`; // up to 7 days
+  if (diff < 2419200) return `${Math.floor(diff / 604800)}w ago`; // up to 4 weeks
   
   return date.toLocaleDateString('en-US', {
     month: 'short',
