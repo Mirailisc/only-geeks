@@ -4,8 +4,13 @@ import type { Profile } from "./profile";
 import type { Project } from "./project";
 import type { Achievement } from "./achievement";
 
-export interface FeedItem{
-  items: Array<Partial<Blog> & { User: Partial<Profile> } | Partial<Project> & { User: Partial<Profile> } | Partial<Achievement> & { User: Partial<Profile> }>;
+export type FeedBlogType = Partial<Blog> & { User: Partial<Profile>, contentType: string };
+export type FeedProjectType = Partial<Project> & { User: Partial<Profile>, contentType: string };
+export type FeedAchievementType = Partial<Achievement> & { User: Partial<Profile>, contentType: string };
+export type FeedItemType = FeedBlogType | FeedProjectType | FeedAchievementType;
+
+export interface FeedResponse {
+  items: FeedItemType[];
   nextCursor?: string
 }
 

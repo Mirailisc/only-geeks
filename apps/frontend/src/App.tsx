@@ -1,14 +1,15 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import {
-  BASE_PATH,
+  LOGIN_PATH,
   BLOG_READER_PATH,
   CREATE_BLOG_PATH,
   PROFILE_PATH,
   SEARCH_PATH,
   SETTINGS_PATH,
   USER_PROFILE_PATH,
+  FEED_PATH,
 } from './constants/routes'
-import Home from './pages/home'
+import Login from './pages/login'
 import { Toaster } from 'sonner'
 import Boot from './components/utils/Boot'
 import ProtectedRoute from './components/utils/ProtectedRoute'
@@ -19,6 +20,7 @@ import SearchQuery from './pages/[_query]'
 import ErrorElement from './pages/error'
 import CreateBlog from './pages/create_blog'
 import ReadBlog from './pages/read_blog'
+import FeedHome from './pages/home'
 
 const router = createBrowserRouter([
   {
@@ -73,11 +75,19 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: FEED_PATH,
+        element: (
+          <ProtectedRoute>
+            <FeedHome />
+          </ProtectedRoute>
+        )
+      }
     ],
   },
   {
-    path: BASE_PATH,
-    element: <Home />,
+    path: LOGIN_PATH,
+    element: <Login />,
   },
 ])
 

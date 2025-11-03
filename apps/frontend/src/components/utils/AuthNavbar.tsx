@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
-import { BASE_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
+import { LOGIN_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
 import { CodeIcon, FileTextIcon, LogOut, PlusIcon, Settings, User } from 'lucide-react'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
@@ -31,7 +31,7 @@ export default function AuthNavbar() {
     await logoutMutation()
     await client.clearStore()
     dispatch(clearUser())
-    navigate(BASE_PATH, { replace: true })
+    navigate(LOGIN_PATH, { replace: true })
   }
 
   useEffect(() => {
