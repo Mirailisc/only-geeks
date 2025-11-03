@@ -2,10 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateProjectInput } from './dto/create-project.input'
 import { UpdateProjectInput } from './dto/update-project.input'
+import { UserService } from 'src/user/user.service'
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UserService,
+  ) {}
 
   async create(userId: string, input: CreateProjectInput) {
     return await this.prisma.project.create({
@@ -16,6 +20,15 @@ export class ProjectService {
   async findAllByUser(userId: string) {
     return await this.prisma.project.findMany({
       where: { userId },
+      orderBy: { startDate: 'desc' },
+    })
+  }
+
+  async findAllByUsername(username: string) {
+    const user = await this.userService.findUserByUsername(username)
+    if (!user) throw new BadRequestException('User not found')
+    return await this.prisma.project.findMany({
+      where: { userId: user.id },
       orderBy: { startDate: 'desc' },
     })
   }

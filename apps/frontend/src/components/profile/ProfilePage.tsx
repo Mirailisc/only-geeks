@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProfileBlog from '@/components/profile/ProfileBlog'
 import ProfileProjects from '@/components/profile/ProfileProject'
 import { useAppSelector } from '@/hooks/useAppSelector'
+import ProfilePortfolio from './ProfilePortfolio'
 
 function DisplayWithIcon({ icon, text }: { icon: LucideIcon; text: string }) {
   const Icon = icon
@@ -101,9 +102,11 @@ export default function ProfilePage({ username }: ProfilePageProps) {
               Blogs
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="portfolio">This is Portfolio tabs</TabsContent>
+          <TabsContent value="portfolio">
+            <ProfilePortfolio viewUsername={username} myUsername={myUser?.username} />
+          </TabsContent>
           <TabsContent value="projects">
-            <ProfileProjects />
+            <ProfileProjects viewUsername={username} myUsername={myUser?.username} />
           </TabsContent>
           <TabsContent value="blogs">
             <ProfileBlog viewUsername={username} myUsername={myUser?.username} />

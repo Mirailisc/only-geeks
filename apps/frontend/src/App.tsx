@@ -2,7 +2,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import {
   LOGIN_PATH,
   BLOG_READER_PATH,
+  CREATE_ACHIEVEMENT_PATH,
   CREATE_BLOG_PATH,
+  CREATE_EDUCATION_PATH,
+  CREATE_PROJECT_PATH,
   PROFILE_PATH,
   SEARCH_PATH,
   SETTINGS_PATH,
@@ -21,6 +24,9 @@ import ErrorElement from './pages/error'
 import CreateBlog from './pages/create_blog'
 import ReadBlog from './pages/read_blog'
 import FeedHome from './pages/home'
+import CreateProject from './pages/create_project'
+import CreateAchievement from './pages/create_achievements'
+import CreateEducation from './pages/create_education'
 
 const router = createBrowserRouter([
   {
@@ -82,7 +88,31 @@ const router = createBrowserRouter([
             <FeedHome />
           </ProtectedRoute>
         )
-      }
+      },
+      {
+        path: CREATE_PROJECT_PATH,
+        element: (
+          <ProtectedRoute>
+            <CreateProject />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: CREATE_EDUCATION_PATH,
+        element: (
+          <ProtectedRoute>
+            <CreateEducation />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: CREATE_ACHIEVEMENT_PATH,
+        element: (
+          <ProtectedRoute>
+            <CreateAchievement />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
   {

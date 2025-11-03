@@ -25,3 +25,8 @@ Feature: Profile
         Then I click button named "blogs-tab"
         Then I should see "Blogs"
         Then I should see "Write blog"
+        Then I click button named "portfolio-tab"
+        Then I should see "Education"
+        Then I should see "Achievements"
+        Then I should see button named "add-education-button"
+        Then I should see button named "add-achievement-button"
