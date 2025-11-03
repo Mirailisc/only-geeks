@@ -91,16 +91,18 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog; isMyProfile
 
               {isMyProfile ? (
                 <div className="flex flex-row justify-end gap-2">
-                  <Button
-                    variant={'secondary'}
-                    disabled={loading}
-                    className=""
-                    onClick={() => {
-                      navigator(`/create/blog/?editid=${post.id}`)
-                    }}
-                  >
-                    <PencilIcon className="h-4 w-4" />
-                  </Button>
+                  {post.isPublished && (
+                    <Button
+                      variant={'secondary'}
+                      disabled={loading}
+                      className=""
+                      onClick={() => {
+                        navigator(`/create/blog/?editid=${post.id}`)
+                      }}
+                    >
+                      <PencilIcon className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button
                     variant={'destructive'}
                     disabled={loading}

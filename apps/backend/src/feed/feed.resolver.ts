@@ -1,9 +1,10 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { FeedService } from './feed.service'
-import { FeedInput, NewFeedCountInput } from './dto/feed.input'
+import { FeedInput } from './dto/feed.input'
 import { FeedResponse } from './entities/feed.entity'
 import { UseGuards } from '@nestjs/common'
 import { GqlAuthGuard } from 'src/auth/guards/graphql-auth.guard'
+import { NewFeedCountInput } from './dto/newfeed.input'
 
 @Resolver()
 export class FeedResolver {

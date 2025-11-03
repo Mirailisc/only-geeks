@@ -4,6 +4,7 @@ import { CreateUserInput } from './dto/create-user.input'
 import { UpdateUserInput } from './dto/update-user.input'
 import * as bcrypt from 'bcrypt'
 import * as crypto from 'crypto'
+import { User } from './entities/user.entity'
 
 @Injectable()
 export class UserService {
@@ -37,13 +38,17 @@ export class UserService {
     return `${baseUsername}_${nextNumber}`
   }
 
-  async createOauthUser(input: CreateUserInput) {
+  async createOauthUser(input: CreateUserInput): Promise<User> {
     return await this.prisma.user.create({
       data: {
         ...input,
         username: await this.generateUsername(input.firstName, input.lastName),
         type: 'oauth',
+        preference: {
+          create: {}, // will use defaults from model
+        },
       },
+      include: { preference: true },
     })
   }
 
@@ -65,6 +70,9 @@ export class UserService {
         picture: gravatarUrl,
         password: hashedPassword,
         type: 'local',
+        preference: {
+          create: {}, // will use defaults from model
+        },
       },
     })
   }
@@ -77,16 +85,45 @@ export class UserService {
     return await this.prisma.user.findUnique({ where: { id } })
   }
 
-  async findUserByEmail(email: string) {
-    return await this.prisma.user.findUnique({
+  async findUserByEmail(email: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({
       where: { email },
+      include: { preference: true },
     })
+    return user
   }
 
-  async findUserByUsername(username: string) {
+  async findUserByUsername(
+    username: string,
+  ): Promise<User & { password?: string }> {
     return await this.prisma.user.findUnique({
       where: { username },
+      include: { preference: true },
     })
+  }
+  async getUserProfileByUsername(
+    username: string,
+    currentUserId: string | null,
+  ): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: { username },
+      include: { preference: true },
+    })
+    console.log('Fetched user:', user)
+    if (!user) throw new BadRequestException('USER_NOT_FOUND')
+    if (user.id === currentUserId) {
+      if (user.password) {
+        delete user.password
+      }
+      return user
+    } else if (user.preference.isPublicProfile) {
+      if (user.password) {
+        delete user.password
+      }
+      return user
+    } else {
+      throw new BadRequestException('USER_NOT_FOUND')
+    }
   }
 
   async updateUserInfo(userId: string, input: UpdateUserInput) {

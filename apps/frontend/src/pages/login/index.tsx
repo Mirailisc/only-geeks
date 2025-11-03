@@ -323,9 +323,9 @@ export default function Login() {
 
                 <Button
                   onClick={handleGoogleLogin}
-                  className="h-12 w-full bg-primary text-base font-medium text-primary-foreground hover:bg-primary/90"
+                  className="h-12 w-full text-base font-medium"
                   size="lg"
-                  variant="outline"
+                  variant="default"
                 >
                   <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
                     <path

@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+import { PreferenceEntity } from 'src/preference/entities/preference.entity'
 
 @ObjectType()
 export class User {
@@ -31,6 +32,9 @@ export class User {
 
   @Field(() => Boolean)
   isAdmin: boolean
+
+  @Field(() => PreferenceEntity)
+  preference: PreferenceEntity
 
   @Field(() => Date)
   createdAt: Date

@@ -46,7 +46,7 @@ export class AuthResolver {
 
   @Query(() => String)
   async getGoogleOauthUrl(@Args('state') state: string): Promise<string> {
-    console.log('Generating Google OAuth URL with state:', state)
+    // console.log('Generating Google OAuth URL with state:', state)
     const rootUrl = 'https://accounts.google.com/o/oauth2/v2/auth'
     const options = {
       redirect_uri: `${this.configService.get<string>('BACKEND_URL')}/auth/google/callback`,

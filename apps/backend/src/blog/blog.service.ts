@@ -94,7 +94,7 @@ export class BlogService {
   async getBlogBySlugAndUsername(slug: string, username: string) {
     const user = await this.userService.findUserByUsername(username)
 
-    return await this.prisma.blog.findUnique({
+    const result = await this.prisma.blog.findUnique({
       where: { userId_slug: { userId: user.id, slug } },
       select: {
         id: true,
@@ -110,6 +110,10 @@ export class BlogService {
         User: true,
       },
     })
+    if (!result || (result && !result.isPublished)) {
+      throw new Error('BLOG_NOT_FOUND')
+    }
+    return result
   }
 
   async createBlog(userId: string, input: CreateBlogInput) {

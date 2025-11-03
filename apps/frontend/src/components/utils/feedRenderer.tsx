@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { AwardIcon, CalendarIcon, ExternalLinkIcon, FileTextIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 export const getInitialName = (firstName: string, lastName: string) => {
   return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
@@ -166,10 +167,10 @@ export const renderFeedProject = (item: FeedProjectType) => {
           )}
           {item.slug && (
             <Button variant="link" className="p-0 h-auto" asChild>
-            <a href={`/blog/${item.slug}`}>
+            <Link to={`/blog/${item.User.username}/${item.slug}`}>
               Read more
               <ExternalLinkIcon className="h-3 w-3 ml-1" />
-            </a>
+            </Link>
             </Button>
           )}
         </div>

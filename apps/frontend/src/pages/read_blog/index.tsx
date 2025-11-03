@@ -1,12 +1,16 @@
 import BlogCard from '@/components/blog/blogCard'
 import MarkdownViewer from '@/components/blog/markdownViewer'
+import { Button } from '@/components/ui/button'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import AuthNavbar from '@/components/utils/AuthNavbar'
 import { Loading } from '@/components/utils/loading'
+import { CREATE_BLOG_PATH, FEED_PATH } from '@/constants/routes'
 import { BLOG_READ_QUERY, type Blog } from '@/graphql/blog'
 import type { Profile } from '@/graphql/profile'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import { useQuery } from '@apollo/client/react'
-import { useParams } from 'react-router-dom'
+import { HomeIcon, PencilIcon, TriangleAlertIcon } from 'lucide-react'
+import { Link, useParams } from 'react-router-dom'
 
 const ReadBlog = () => {
   const { username, slug: blogSlug } = useParams()
@@ -22,7 +26,36 @@ const ReadBlog = () => {
     },
   )
   if (loading) return <Loading />
-  if (error) return <div>Error: {error.message}</div>
+  if (error){
+    if(error.message === 'BLOG_NOT_FOUND'){
+      return (
+        <>
+          <AuthNavbar />
+          <div className="w-full flex flex-row items-center justify-center h-[80vh]">
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <TriangleAlertIcon className='text-destructive' />
+                </EmptyMedia>
+                <EmptyTitle className='text-destructive'>Blog Not Found</EmptyTitle>
+                <EmptyDescription>
+                  The blog you are looking for does not exist or is not published.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <div className="flex gap-2">
+                  <Link to={CREATE_BLOG_PATH}><Button variant={"default"}><PencilIcon /> Write new blog</Button></Link>
+                  <Link to={FEED_PATH}><Button variant="outline"><HomeIcon /> Go to home</Button></Link>
+                </div>
+              </EmptyContent>
+            </Empty>
+          </div>
+        </>
+      )
+    }
+    return <div>Error: {error.message}</div>
+  } 
+    
   return (
     <>
       <AuthNavbar />
