@@ -153,6 +153,7 @@ type Query {
   getMyAchievements: [Achievement!]!
   getAchievementsByUsername(username: String!): [Achievement!]!
   feed(input: FeedInput!): FeedResponse!
+  getNewFeedCount(input: NewFeedCountInput!): Float!
 }
 
 input SearchInput {
@@ -170,6 +171,10 @@ enum FeedType {
   PROJECT
   AWARD
   ALL
+}
+
+input NewFeedCountInput {
+  since: String!
 }
 
 type Mutation {
