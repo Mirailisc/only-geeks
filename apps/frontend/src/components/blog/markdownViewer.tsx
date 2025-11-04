@@ -165,7 +165,7 @@ export default function MarkdownViewer({ content = '', className }: Props) {
   }
 
   return (
-    <div ref={containerRef} className={className ?? 'prose prose-no-backticks prose-no-m w-full !max-w-full px-6'}>
+    <div ref={containerRef} className={className ?? 'prose dark:text-white prose-no-backticks prose-no-m w-full !max-w-full px-6'}>
       <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={components}>
         {md}
       </ReactMarkdown>
