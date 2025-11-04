@@ -76,6 +76,7 @@ export class AuthResolver {
       lastName: me.lastName,
       isAdmin: me.isAdmin,
       picture: me.picture,
+      preferences: me.preference,
     }
   }
 

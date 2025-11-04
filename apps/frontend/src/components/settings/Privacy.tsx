@@ -41,6 +41,29 @@ const PrivacySettings = ({profile}: PrivacySettingsProps) => {
           <Switch id="profile-visibility" disabled={updating} checked={profile.preference.isPublicProfile} onCheckedChange={updatePrivacySetting} />
           <Label htmlFor="profile-visibility">{profile.preference.isPublicProfile ? "Your profile is public to everyone." : "Your profile is private."}</Label>
         </div>
+        {profile.preference.isPublicProfile ?
+          <Alert variant={"destructive"} className='mt-4 w-max'>
+            <TriangleAlertIcon />
+            <AlertTitle className='ml-4 flex items-center gap-2'>
+              Important Notice
+            </AlertTitle>
+            <AlertDescription className='ml-4'>
+              Your profile is visible to all users. <br />
+              Please be cautious about the personal information you choose to share publicly.
+            </AlertDescription>
+          </Alert>
+        :
+          <Alert variant={"destructive"} className='mt-4 w-max'>
+            <TriangleAlertIcon />
+            <AlertTitle className='ml-4 flex items-center gap-2'>
+              Important Notice
+            </AlertTitle>
+            <AlertDescription className='ml-4'>
+              Setting your profile to private will hide your profile information from other users. <br /> 
+              However, certain data may still be accessible to administrators for moderation and compliance purposes.
+            </AlertDescription>
+          </Alert>
+        }
       </CardContent>
     </Card>
   )

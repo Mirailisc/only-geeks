@@ -109,7 +109,6 @@ export class UserService {
       where: { username },
       include: { preference: true },
     })
-    console.log('Fetched user:', user)
     if (!user) throw new BadRequestException('USER_NOT_FOUND')
     if (user.id === currentUserId) {
       if (user.password) {

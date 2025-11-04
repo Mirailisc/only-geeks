@@ -113,8 +113,8 @@ function AchievementForm({ achievement, onSubmit, loading }: AchievementFormProp
         </Button>
       </div>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="rounded-md border border-black/10 p-4">
-        <h2 className="font-bold">Show off what you do</h2>
-        <p className="mb-6 text-muted-foreground">Share, show off what you do on the past.</p>
+        <h2 className="font-bold">Achievement</h2>
+        <p className="mb-6 text-muted-foreground">Share your achievement with others.</p>
         <div className="flex flex-col items-start gap-8 md:flex-row">
           <div className="flex flex-col items-center gap-4">
             <FormLabel>Certificate</FormLabel>

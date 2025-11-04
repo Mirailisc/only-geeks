@@ -7,6 +7,10 @@ export interface User {
   isAdmin: boolean
   picture: string
   username: string
+  preferences: {
+    currentTheme: 'LIGHT' | 'DARK' | 'SYSTEM'
+    isPublicProfile: boolean
+  }
 }
 
 interface AuthState {

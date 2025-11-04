@@ -43,6 +43,7 @@ type AuthUser {
   email: String!
   isAdmin: Boolean!
   picture: String
+  preferences: PreferenceEntity
 }
 
 type Blog {

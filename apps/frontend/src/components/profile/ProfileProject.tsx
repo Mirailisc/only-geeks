@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Calendar, Globe, Pencil, Trash2 } from 'lucide-react'
+import { Calendar, CodeIcon, Globe, Pencil, PlusIcon, Trash2 } from 'lucide-react'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useMutation, useQuery } from '@apollo/client/react'
@@ -12,6 +12,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom'
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
 import { CREATE_PROJECT_PATH } from '@/constants/routes'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../ui/empty'
 
 // Component for a single project card
 const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: boolean }) => {
@@ -178,19 +179,46 @@ const ProfileProjects = ({
       <div className="w-full">
         {/* Projects Header and Action Button */}
         <div className="mb-8 flex items-center justify-between px-4 pt-6 sm:px-8">
-          <h1 className="text-3xl font-extrabold text-gray-900">Projects</h1>
-          <Link to={CREATE_PROJECT_PATH}>
-            <Button className="rounded-lg bg-gray-900 text-white shadow-md hover:bg-gray-700">
-              <span className="mr-2 text-xl">+</span> Add new
-            </Button>
-          </Link>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Projects</h1>
+          {
+            myUsername === viewUsername && (
+            <Link to={CREATE_PROJECT_PATH}>
+              <Button variant={"default"}>
+                <PlusIcon /> Add new
+              </Button>
+            </Link>
+            )
+          }
         </div>
 
         {/* List of Projects */}
         <div className="space-y-6 px-4 py-4 sm:px-8">
-          {projects.map((project) => (
+          {projects.length > 0 ? projects.map((project) => (
             <ProjectCard key={project.id} project={project} isMyProfile={myUsername === viewUsername} />
-          ))}
+          )) : (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <CodeIcon />
+                </EmptyMedia>
+                <EmptyTitle>No Projects yet</EmptyTitle>
+                <EmptyDescription>
+                  {
+                    myUsername === viewUsername
+                      ? 'You have not created any projects yet. Start sharing your knowledge and experiences with the world!'
+                      : 'This user has not created any projects yet.'
+                  }
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                {myUsername === viewUsername &&
+                  <div className="flex gap-2">
+                    <Button variant={"default"}><PlusIcon /> Add new project</Button>
+                  </div>
+                }
+              </EmptyContent>
+            </Empty>
+          )}
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import { MonitorIcon, MoonIcon, SunIcon, TriangleAlertIcon } from 'lucide-react'
 import { Label } from '../ui/label'
 import { useMutation } from '@apollo/client/react'
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
+import { useTheme } from 'next-themes'
 
 interface AppearanceSettingsProps {
   profile: Profile
@@ -16,7 +17,9 @@ const AppearanceSettings = ({profile}: AppearanceSettingsProps) => {
   const [updateAppearance, { loading: updating, error: updateError }] = useMutation<{ updatePreference: Preference }>(
     UPDATE_PREFERENCE_MUTATION,
   )
+  const { setTheme } = useTheme()
 	const updateAppearanceSetting = (theme: "LIGHT" | "DARK" | "SYSTEM") => {
+    setTheme(theme.toLowerCase() as 'light' | 'dark' | 'system')
 		updateAppearance({
 			variables: { input: { currentTheme: theme } },
 			refetchQueries: [GET_MY_PROFILE_QUERY],

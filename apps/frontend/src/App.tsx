@@ -27,6 +27,7 @@ import FeedHome from './pages/home'
 import CreateProject from './pages/create_project'
 import CreateAchievement from './pages/create_achievements'
 import CreateEducation from './pages/create_education'
+import { ThemeProvider } from 'next-themes'
 
 const router = createBrowserRouter([
   {
@@ -123,10 +124,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div>
-      <Toaster richColors position="bottom-right" />
-      <RouterProvider router={router} />
-    </div>
+    <ThemeProvider defaultTheme="light" attribute="class" storageKey="onlygeek-theme">
+      <div>
+        <Toaster richColors position="bottom-right" />
+        <RouterProvider router={router} />
+      </div>
+    </ThemeProvider>
   )
 }
 

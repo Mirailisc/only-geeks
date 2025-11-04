@@ -69,7 +69,7 @@ const EducationCard = ({ myUsername, viewUsername }: { myUsername?: string; view
                   variant="outline"
                   size="sm"
                   data-cy="add-education-button"
-                  className="mt-4 rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100"
+                  className="mt-4 rounded-lg border-gray-300 hover:bg-gray-100"
                 >
                   <span className="mr-2 text-xl">+</span> Add education
                 </Button>
@@ -210,7 +210,7 @@ const AchievementsCard = ({ myUsername, viewUsername }: { myUsername?: string; v
                   variant="outline"
                   size="sm"
                   data-cy="add-achievement-button"
-                  className="mt-4 rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100"
+                  className="mt-4 rounded-lg border-gray-300"
                 >
                   <span className="mr-2 text-xl">+</span> Add achievement
                 </Button>
@@ -258,7 +258,7 @@ const AchievementsCard = ({ myUsername, viewUsername }: { myUsername?: string; v
             <h1 className="text-2xl font-bold leading-snug">Achievements</h1>
             {isMyProfile && (
               <Link to={CREATE_ACHIEVEMENT_PATH}>
-                <Button className="ml-4 rounded-lg bg-gray-900 text-white shadow-md hover:bg-gray-700">
+                <Button className="ml-4 rounded-lg shadow-md">
                   <span className="mr-2 text-xl">+</span> Add new
                 </Button>
               </Link>
