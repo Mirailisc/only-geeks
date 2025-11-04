@@ -17,7 +17,7 @@ const inputVariants = cva(
         'default-growth': 'border-input dark:bg-input/30 border bg-transparent shadow-xs w-auto',
         'outline-growth': 'border-input dark:bg-background dark:border-input border-2 bg-background w-auto',
         'filled-growth': 'border-input bg-muted dark:bg-input/50 border focus-visible:bg-background w-auto',
-        'ghost-growth': 'border-transparent bg-transparent hover:bg-accent focus-visible:bg-accent w-auto',
+        'ghost-growth': 'border-transparent bg-transparent hover:bg-accent/10 ring-[1px] ring-blue-500 focus-visible:bg-accent/10 w-auto focus-visible:ring-[1px] focus-visible:ring-blue-500',
       },
       inputSize: {
         sm: 'h-8 px-2.5 py-1 text-sm',
@@ -55,16 +55,30 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         setInputValue(props.value as string)
       }
     }, [props.value])
-
+    const getPaddingBuffer = (size: VariantProps<typeof inputVariants>['inputSize']) => {
+      switch (size) {
+        case 'sm':
+          return 8 // 20px (px-2.5) + 8px (cursor/buffer)
+        case 'default':
+          return 12 // 24px (px-3) + 8px (cursor/buffer)
+        case 'lg':
+          return 16 // 32px (px-4) + 8px (cursor/buffer)
+        default:
+          return 12 // Fallback to default
+      }
+    }
     // Update width whenever inputValue changes
     React.useLayoutEffect(() => {
       if (!isGrowthVariant || !spanRef.current) return
 
       const contentWidth = spanRef.current.offsetWidth
-      const calculatedWidth = contentWidth // Add 1rem (16px)
+      // Add the horizontal padding/border/cursor space to the measured text width
+      const paddingAndCursorBuffer = getPaddingBuffer(inputSize)
+      const calculatedWidth = contentWidth + paddingAndCursorBuffer
+      
       const finalWidth = maxWidth ? Math.min(calculatedWidth, maxWidth) : calculatedWidth
       setWidth(finalWidth)
-    }, [isGrowthVariant, inputValue, maxWidth])
+    }, [isGrowthVariant, inputValue, maxWidth, inputSize])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value

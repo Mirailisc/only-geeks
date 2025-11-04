@@ -93,7 +93,7 @@ const CreateBlog = () => {
     const { firstImage, plainText } = extractMarkdownContent(debouncedMarkdown)
     return {
       thumbnail: firstImage,
-      description: plainText || null,
+      description: plainText.substring(0, 160) || null,
     }
   }, [debouncedMarkdown])
 

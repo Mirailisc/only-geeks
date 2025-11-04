@@ -1,7 +1,7 @@
 import type { Profile } from '@/graphql/profile'
 import { Link, useNavigate } from 'react-router-dom'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { CalendarIcon, ClockIcon, EditIcon, Trash2Icon } from 'lucide-react'
+import { CalendarIcon, ClockIcon, EditIcon, ShareIcon, Trash2Icon } from 'lucide-react'
 import { Card, CardContent } from '../ui/card'
 import { Button } from '../ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
@@ -10,6 +10,7 @@ import { DELETE_BLOG_MUTATION, GET_MY_BLOGS_QUERY, type Blog } from '@/graphql/b
 import { useState } from 'react'
 import { Separator } from '../ui/separator'
 import { Badge } from '../ui/badge'
+import { toast } from 'sonner'
 
 function getReadingTime(markdown: string, wordsPerMinute = 200): number {
   // Remove code blocks, HTML tags, and markdown syntax before counting words
@@ -48,7 +49,7 @@ const BlogCard = ({
     refetchQueries: [{ query: GET_MY_BLOGS_QUERY }],
   })
   const [promptMeDelete, setPromptMeDelete] = useState(false)
-  const navigator = useNavigate()
+  const navigation = useNavigate()
   return (
     <>
       <Dialog open={promptMeDelete} onOpenChange={setPromptMeDelete}>
@@ -68,7 +69,7 @@ const BlogCard = ({
               onClick={() => {
                 deleteBlogById({ variables: { blogId: blogId } })
                 setPromptMeDelete(false)
-                navigator(`/user/${user.username}`)
+                navigation(`/user/${user.username}`)
               }}
               disabled={loading}
             >
@@ -94,26 +95,35 @@ const BlogCard = ({
                 {description.length > 50 ? description.slice(0, 50) + '...' : description}
               </div>
             </div>
-            {myUsername === user.username && (
               <div className="flex gap-2">
-                <Link to={`/create/blog/?editid=${blogId}`}>
-                  <Button variant="outline" size="sm">
-                    <EditIcon className="mr-1 h-4 w-4" />
-                    Edit
-                  </Button>
-                </Link>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => {
-                    setPromptMeDelete(true)
-                  }}
-                >
-                  <Trash2Icon className="mr-1 h-4 w-4" />
-                  Delete
+                <Button variant="outline" size="sm" onClick={()=>{
+                  const profileUrl = `${window.location.href}`;
+                  navigator.clipboard.writeText(profileUrl);
+                  toast.success('Blog URL copied to clipboard!');
+                }}>
+                  <ShareIcon /> Share this Blog
                 </Button>
+                {myUsername === user.username && (
+                  <Link to={`/create/blog/?editid=${blogId}`}>
+                    <Button variant="outline" size="sm">
+                      <EditIcon className="mr-1 h-4 w-4" />
+                      Edit
+                    </Button>
+                  </Link>
+                )}
+                {myUsername === user.username && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      setPromptMeDelete(true)
+                    }}
+                  >
+                    <Trash2Icon className="mr-1 h-4 w-4" />
+                    Delete
+                  </Button>
+                )}
               </div>
-            )}
           </div>
           <Separator />
           <div className="flex items-center justify-between">

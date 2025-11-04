@@ -1,9 +1,11 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { FeedService } from './feed.service'
-import { FeedInput, NewFeedCountInput } from './dto/feed.input'
+import { FeedInput } from './dto/feed.input'
 import { FeedResponse } from './entities/feed.entity'
 import { UseGuards } from '@nestjs/common'
 import { GqlAuthGuard } from 'src/auth/guards/graphql-auth.guard'
+import { NewFeedCountInput } from './dto/newfeed.input'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 
 @Resolver()
 export class FeedResolver {
@@ -11,14 +13,18 @@ export class FeedResolver {
 
   @Query(() => FeedResponse)
   @UseGuards(GqlAuthGuard)
-  async feed(@Args('input') input: FeedInput): Promise<FeedResponse> {
-    return this.feedService.search(input)
+  async feed(
+    @Args('input') input: FeedInput,
+    @CurrentUser() user: any,
+  ): Promise<FeedResponse> {
+    return this.feedService.search(input, user?.id)
   }
   @Query(() => Number)
   @UseGuards(GqlAuthGuard)
   async getNewFeedCount(
     @Args('input') input: NewFeedCountInput,
+    @CurrentUser() user: any,
   ): Promise<number> {
-    return this.feedService.getCountNewItems(new Date(input.since))
+    return this.feedService.getCountNewItems(new Date(input.since), user?.id)
   }
 }

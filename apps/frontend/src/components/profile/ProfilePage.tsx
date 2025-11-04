@@ -6,12 +6,13 @@ import { GET_PROFILE_BY_USERNAME_QUERY, type Profile } from '@/graphql/profile'
 import { Loading, NotFound } from '@/components/utils/loading'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Building2Icon, MailIcon, MapPinIcon, type LucideIcon } from 'lucide-react'
+import { Building2Icon, MailIcon, MapPinIcon, ShareIcon, type LucideIcon } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProfileBlog from '@/components/profile/ProfileBlog'
 import ProfileProjects from '@/components/profile/ProfileProject'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import ProfilePortfolio from './ProfilePortfolio'
+import { Button } from '../ui/button'
 
 function DisplayWithIcon({ icon, text }: { icon: LucideIcon; text: string }) {
   const Icon = icon
@@ -86,6 +87,13 @@ export default function ProfilePage({ username }: ProfilePageProps) {
                 {profile?.location && <DisplayWithIcon icon={MapPinIcon} text={profile.location} />}
                 {profile?.organization && <DisplayWithIcon icon={Building2Icon} text={profile.organization} />}
                 {profile?.email && <DisplayWithIcon icon={MailIcon} text={profile.email} />}
+                <Button variant={"outline"} onClick={()=>{
+                  const profileUrl = `${window.location.origin}/user/${profile?.username}`;
+                  navigator.clipboard.writeText(profileUrl);
+                  toast.success('Profile URL copied to clipboard!');
+                }}>
+                  <ShareIcon /> Share Profile
+                </Button>
               </div>
             </CardContent>
           </Card>

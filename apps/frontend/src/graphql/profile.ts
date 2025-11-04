@@ -1,5 +1,10 @@
 import { gql } from '@apollo/client'
 
+export interface Preference {
+  currentTheme: "LIGHT" | "DARK" | "SYSTEM"
+  isPublicProfile: boolean
+}
+
 export interface Profile {
   id: string
   email: string
@@ -9,6 +14,7 @@ export interface Profile {
   bio: string
   picture: string
   location: string
+  preference: Preference
   organization: string
   isAdmin: boolean
 }
@@ -21,6 +27,10 @@ export const GET_MY_PROFILE_QUERY = gql`
       lastName
       email
       bio
+      preference {
+        currentTheme
+        isPublicProfile
+      }
       picture
       location
       username
@@ -66,6 +76,23 @@ export const UPDATE_PROFILE_INFO_MUTATION = gql`
       isAdmin
       createdAt
       updatedAt
+    }
+  }
+`
+
+// Example input:
+// {
+//   "input": {
+//     "currentTheme": "LIGHT",
+//     "isPublicProfile": true
+//   }
+// }
+
+export const UPDATE_PREFERENCE_MUTATION = gql`
+  mutation UpdatePreference($input: PreferenceInput!) {
+    updatePreference(input: $input) {
+      currentTheme
+      isPublicProfile
     }
   }
 `

@@ -45,7 +45,7 @@ export default function AuthNavbar() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to={FEED_PATH}>
           <div className="flex flex-row items-center gap-2">
-            <div className="flex aspect-square w-10 flex-row items-center justify-center rounded-lg bg-primary font-bold text-white">
+            <div className="flex aspect-square w-10 flex-row items-center justify-center rounded-lg bg-primary font-bold text-white dark:text-black">
               OG
             </div>
             <h1 className="text-xl font-bold">Only Geeks</h1>
