@@ -212,9 +212,11 @@ const ProfileProjects = ({
               </EmptyHeader>
               <EmptyContent>
                 {myUsername === viewUsername &&
-                  <div className="flex gap-2">
-                    <Button variant={"default"}><PlusIcon /> Add new project</Button>
-                  </div>
+                  <Link to={CREATE_PROJECT_PATH}>
+                    <div className="flex gap-2">
+                      <Button variant={"default"}><PlusIcon /> Add new project</Button>
+                    </div>
+                  </Link>
                 }
               </EmptyContent>
             </Empty>

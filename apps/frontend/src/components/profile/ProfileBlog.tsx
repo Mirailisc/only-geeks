@@ -219,9 +219,9 @@ const ProfileBlog = ({
               </EmptyHeader>
               <EmptyContent>
                 {myUsername === viewUsername &&
-                  <div className="flex gap-2">
+                  <Link to={CREATE_BLOG_PATH}>
                     <Button variant={"default"}><PencilIcon /> Write Blog</Button>
-                  </div>
+                  </Link>
                 }
               </EmptyContent>
             </Empty>
