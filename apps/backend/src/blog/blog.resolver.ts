@@ -17,11 +17,17 @@ export class BlogResolver {
   }
 
   @Query(() => Blog)
+  @UseGuards(GqlAuthGuard)
   async getBlogBySlugAndUsername(
     @Args('slug') slug: string,
     @Args('username') username: string,
+    @CurrentUser() user: any,
   ) {
-    return await this.blogService.getBlogBySlugAndUsername(slug, username)
+    return await this.blogService.getBlogBySlugAndUsername(
+      slug,
+      username,
+      user.id,
+    )
   }
 
   @Query(() => [Blog])

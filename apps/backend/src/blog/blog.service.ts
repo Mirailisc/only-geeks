@@ -91,10 +91,16 @@ export class BlogService {
     })
   }
 
-  async getBlogBySlugAndUsername(slug: string, username: string) {
+  async getBlogBySlugAndUsername(
+    slug: string,
+    username: string,
+    currentUserId: string = null,
+  ) {
     const user = await this.userService.findUserByUsername(username)
     if (!user) throw new Error('BLOG_NOT_FOUND')
-    if (!user.preference.isPublicProfile) throw new Error('BLOG_NOT_FOUND')
+    if (!user.preference.isPublicProfile && user.id !== currentUserId) {
+      throw new Error('BLOG_NOT_FOUND')
+    }
     const result = await this.prisma.blog.findUnique({
       where: {
         userId_slug: { userId: user.id, slug },

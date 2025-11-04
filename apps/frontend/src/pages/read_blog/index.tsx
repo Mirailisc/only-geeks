@@ -35,9 +35,9 @@ const ReadBlog = () => {
             <Empty>
               <EmptyHeader>
                 <EmptyMedia variant="icon">
-                  <TriangleAlertIcon className='text-destructive' />
+                  <TriangleAlertIcon />
                 </EmptyMedia>
-                <EmptyTitle className='text-destructive'>Blog Not Found</EmptyTitle>
+                <EmptyTitle>Blog Not Found</EmptyTitle>
                 <EmptyDescription>
                   The blog you are looking for does not exist or is not published.
                 </EmptyDescription>
