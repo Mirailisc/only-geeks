@@ -33,8 +33,8 @@ export class User {
   @Field(() => Boolean)
   isAdmin: boolean
 
-  @Field(() => PreferenceEntity)
-  preference: PreferenceEntity
+  @Field(() => PreferenceEntity, { nullable: true })
+  preference?: PreferenceEntity
 
   @Field(() => Date)
   createdAt: Date

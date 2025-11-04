@@ -52,7 +52,7 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog; isMyProfile
             <div className="order-2 flex flex-1 flex-col justify-between md:order-1">
               <div>
                 <CardTitle className="mb-2 text-2xl font-bold leading-snug">{post.title}</CardTitle>
-                <p className="mb-4 text-base text-gray-600">{post.description}</p>
+                <p className="mb-4 text-base text-gray-600">{post.description?.substring(0, 160)}</p>
               </div>
 
               <div className="flex flex-row items-end gap-2">
