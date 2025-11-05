@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import AuthNavbar from '@/components/utils/AuthNavbar'
+import Meta from '@/components/utils/metadata'
 import {
   CREATE_EDUCATION_MUTATION,
   GET_MY_EDUCATION_QUERY,
@@ -230,6 +231,13 @@ export default function CreateEducationPage() {
   }
   return (
     <>
+      <Meta
+        title={editId ? 'Edit Education | Only Geeks' : 'Create Education | Only Geeks'}
+        description={editId ? 'Edit your education details on Only Geeks.' : 'Create a new education entry to showcase on Only Geeks.'}
+        keywords={editId ? 'edit education, only geeks' : 'create education, only geeks'}
+        image=""
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="container mx-auto py-4">
         <EducationForm education={education} onSubmit={handleSubmit} loading={creating || updating} />

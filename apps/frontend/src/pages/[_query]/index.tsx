@@ -2,6 +2,7 @@ import StudentBlogCard from '@/components/search/StudentBlogCard'
 import StudentProfileCard from '@/components/search/StudentProfileCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AuthNavbar from '@/components/utils/AuthNavbar'
+import Meta from '@/components/utils/metadata'
 import { SEARCH_QUERY, type Search } from '@/graphql/search'
 import { cn } from '@/lib/utils'
 import { useQuery } from '@apollo/client/react'
@@ -54,6 +55,13 @@ export default function SearchQuery() {
   }
   return (
     <>
+      <Meta
+        title={`Search results for "${query}" | Only Geeks`}
+        description={`Search results for "${query}" on Only Geeks.`}
+        keywords={`search, ${query || ''}, only geeks`}
+        image=""
+        url={window.location.href}
+      />  
       <AuthNavbar />
       <div className="container mx-auto mt-4">
         <div className="text-xl font-semibold">

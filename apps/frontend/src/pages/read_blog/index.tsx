@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import AuthNavbar from '@/components/utils/AuthNavbar'
 import { Loading } from '@/components/utils/loading'
+import Meta from '@/components/utils/metadata'
 import { CREATE_BLOG_PATH, FEED_PATH } from '@/constants/routes'
 import { BLOG_READ_QUERY, type Blog } from '@/graphql/blog'
 import type { Profile } from '@/graphql/profile'
@@ -58,6 +59,13 @@ const ReadBlog = () => {
     
   return (
     <>
+      <Meta
+        title={`${data?.getBlogBySlugAndUsername.title} | ${data?.getBlogBySlugAndUsername?.User?.username}'s Blog`}
+        description={data?.getBlogBySlugAndUsername.description || 'Read this blog on Only Geeks.'}
+        keywords={`blog, ${data?.getBlogBySlugAndUsername.title || ''}, ${data?.getBlogBySlugAndUsername.User.username || ''}`}
+        image={data?.getBlogBySlugAndUsername.thumbnail || ''}
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="mx-auto flex w-full flex-col gap-4 md:w-[85vw]">
         <BlogCard

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Loading } from '@/components/utils/loading'
 import ProfilePage from '@/components/profile/ProfilePage'
+import Meta from '@/components/utils/metadata'
 
 export default function Profile() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -24,5 +25,16 @@ export default function Profile() {
 
   if (loading || !user) return <Loading />
 
-  return <ProfilePage username={profile?.username} />
+  return (
+    <>
+      <Meta
+        title={`${profile?.username}'s Profile | Only Geeks`}
+        description={profile?.bio || `Welcome to ${profile?.username}'s profile on Only Geeks.`}
+        keywords={`profile, ${profile?.username || ''}, only geeks`}
+        image={profile?.picture || ''}
+        url={window.location.href}
+      />
+      <ProfilePage username={profile?.username} />
+    </>
+  )
 }
