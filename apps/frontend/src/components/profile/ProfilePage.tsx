@@ -13,11 +13,12 @@ import ProfileProjects from '@/components/profile/ProfileProject'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import ProfilePortfolio from './ProfilePortfolio'
 import { Button } from '../ui/button'
+import Meta from '../utils/metadata'
 
 function DisplayWithIcon({ icon, text }: { icon: LucideIcon; text: string }) {
   const Icon = icon
   return (
-    <div className="flex items-center gap-2 px-6 text-muted-foreground">
+    <div className="flex items-center gap-2 text-muted-foreground">
       <Icon />
       <span>{text}</span>
     </div>
@@ -55,6 +56,13 @@ export default function ProfilePage({ username }: ProfilePageProps) {
 
   return (
     <>
+      <Meta
+        title={`${profile?.firstName || ''} ${profile?.lastName || ''} (@${profile?.username}) | Only Geeks`}
+        description={profile?.bio || `Check out ${profile?.firstName || ''}'s profile on Only Geeks.`}
+        keywords={`profile, ${profile?.username || ''}, only geeks`}
+        image={profile?.picture || ''}
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="container mx-auto mt-4 flex flex-col gap-6 xl:flex-row">
         <div className="h-max w-full flex-shrink-0 self-start xl:sticky xl:top-20 xl:w-[400px]">
@@ -70,8 +78,8 @@ export default function ProfilePage({ username }: ProfilePageProps) {
                   {profile?.lastName[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <div className="space-y-4">
-                <CardHeader>
+              <div className="space-y-4 pl-6">
+                <CardHeader className='pl-0'>
                   <CardTitle>
                     <h2 className="text-3xl font-bold">
                       {profile?.firstName} {profile?.lastName}
@@ -81,7 +89,7 @@ export default function ProfilePage({ username }: ProfilePageProps) {
                     <p className="text-lg">@{profile?.username}</p>
                   </CardDescription>
                 </CardHeader>
-                <div className="px-6">
+                <div>
                   <p className="text-muted-foreground">{profile?.bio}</p>
                 </div>
                 {profile?.location && <DisplayWithIcon icon={MapPinIcon} text={profile.location} />}

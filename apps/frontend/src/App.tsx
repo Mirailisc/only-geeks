@@ -76,19 +76,11 @@ const router = createBrowserRouter([
       },
       {
         path: BLOG_READER_PATH,
-        element: (
-          <ProtectedRoute>
-            <ReadBlog />
-          </ProtectedRoute>
-        ),
+        element: (<ReadBlog />),
       },
       {
         path: FEED_PATH,
-        element: (
-          <ProtectedRoute>
-            <FeedHome />
-          </ProtectedRoute>
-        )
+        element: (<FeedHome />)
       },
       {
         path: CREATE_PROJECT_PATH,

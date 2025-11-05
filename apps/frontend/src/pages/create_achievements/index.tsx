@@ -3,6 +3,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import AuthNavbar from '@/components/utils/AuthNavbar'
+import Meta from '@/components/utils/metadata'
 import {
   CREATE_ACHIEVEMENT_MUTATION,
   GET_MY_ACHIEVEMENTS_QUERY,
@@ -260,6 +261,13 @@ export default function CreateAchievementsPage() {
 
   return (
     <>
+      <Meta
+        title={editId ? 'Edit Achievement | Only Geeks' : 'Create Achievement | Only Geeks'}
+        description={editId ? 'Edit your achievement details on Only Geeks.' : 'Create a new achievement to showcase on Only Geeks.'}
+        keywords={editId ? 'edit achievement, only geeks' : 'create achievement, only geeks'}
+        image=""
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="container mx-auto mb-10 mt-4">
         <AchievementForm achievement={achievement} onSubmit={handleSubmit} loading={creating || updating} />

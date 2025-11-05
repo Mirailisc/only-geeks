@@ -12,6 +12,7 @@ import { TabsContent } from '@radix-ui/react-tabs'
 import { Loading } from '@/components/utils/loading'
 import AppearanceSettings from '@/components/settings/Appearance'
 import PrivacySettings from '@/components/settings/Privacy'
+import Meta from '@/components/utils/metadata'
 type PageType = 'profile' | 'appearance' | 'privacy'
 export default function Settings() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -33,6 +34,13 @@ export default function Settings() {
 
   return (
     <>
+      <Meta
+        title="Settings | Only Geeks"
+        description="Update your profile information and preferences on Only Geeks."
+        keywords="settings, profile, appearance, privacy, only geeks"
+        image=""
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="container mx-auto">
         <div className="mb-8 mt-4">
