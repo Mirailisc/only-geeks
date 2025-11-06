@@ -1,0 +1,98 @@
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql'
+import { ReportService } from './report.service'
+import {
+  Report,
+  ReportsCount,
+  ReportStatus,
+  TargetType,
+} from './entities/report.entity'
+import { CreateReportInput } from './dto/create-report.input'
+import { UseGuards } from '@nestjs/common'
+import {
+  AdminGqlAuthGuard,
+  GqlAuthGuard,
+} from 'src/auth/guards/graphql-auth.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+
+@Resolver()
+export class ReportResolver {
+  constructor(private readonly reportService: ReportService) {}
+
+  @Query(() => [Report])
+  @UseGuards(GqlAuthGuard)
+  async getMyReports(@CurrentUser() user: any): Promise<Report[]> {
+    return this.reportService.findAllMyReports(user.id)
+  }
+
+  @Query(() => [Report])
+  @UseGuards(GqlAuthGuard)
+  async getMyWarnings(@CurrentUser() user: any): Promise<Report[]> {
+    return this.reportService.findAllMyWarnings(user.id)
+  }
+
+  @Mutation(() => Report)
+  @UseGuards(GqlAuthGuard)
+  async createReport(
+    @Args('input') input: CreateReportInput,
+    @CurrentUser() user: any,
+  ): Promise<Report> {
+    return this.reportService.createReport(input, user.id)
+  }
+
+  // getAllReports
+  @Query(() => [Report])
+  @UseGuards(AdminGqlAuthGuard)
+  async getAllReports(): Promise<Report[]> {
+    return this.reportService.getAllReports()
+  }
+
+  // getAllReportsByStatus
+  @Query(() => [Report])
+  @UseGuards(AdminGqlAuthGuard)
+  async getAllReportsByStatus(
+    @Args('status') status: ReportStatus,
+  ): Promise<Report[]> {
+    return this.reportService.getAllReportsByStatus(status)
+  }
+
+  // findReportById
+  @Query(() => Report)
+  @UseGuards(AdminGqlAuthGuard)
+  async findReportById(@Args('id') id: string): Promise<Report> {
+    return this.reportService.findReportById(id)
+  }
+
+  // updateReportStatus
+  @Mutation(() => Report)
+  @UseGuards(AdminGqlAuthGuard)
+  async updateReportStatus(
+    @Args('id') id: string,
+    @Args('status') status: ReportStatus,
+  ): Promise<Report> {
+    return this.reportService.updateReportStatus(id, status)
+  }
+
+  // deleteReport
+  @Mutation(() => Report)
+  @UseGuards(AdminGqlAuthGuard)
+  async deleteReport(@Args('id') id: string): Promise<Report> {
+    return this.reportService.deleteReport(id)
+  }
+
+  // countReportsByStatus
+  @Query(() => [ReportsCount])
+  @UseGuards(AdminGqlAuthGuard)
+  async countReportsByStatus(): Promise<ReportsCount[]> {
+    return this.reportService.countReportsByStatus()
+  }
+
+  @Query(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async hasReportedTarget(
+    @Args('targetId') targetId: string,
+    @Args('targetType') targetType: TargetType,
+    @CurrentUser() user: any,
+  ): Promise<boolean> {
+    return this.reportService.amIReportThis(user.id, targetType, targetId)
+  }
+}

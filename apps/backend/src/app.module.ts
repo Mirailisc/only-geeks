@@ -14,7 +14,9 @@ import { EducationModule } from './education/education.module'
 import { ProjectModule } from './project/project.module'
 import { AchievementModule } from './achievement/achievement.module'
 import { FeedModule } from './feed/feed.module'
-import { PreferenceModule } from './preference/preference.module';
+import { PreferenceModule } from './preference/preference.module'
+import { AdminModule } from './admin/admin.module'
+import { ReportModule } from './report/report.module'
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { PreferenceModule } from './preference/preference.module';
     AchievementModule,
     FeedModule,
     PreferenceModule,
+    AdminModule,
+    ReportModule,
   ],
   controllers: [
     AuthController,

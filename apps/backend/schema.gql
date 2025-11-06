@@ -144,6 +144,46 @@ type AchievementFeed {
   contentType: String!
 }
 
+type Admin {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type ModerationDecision {
+  id: String!
+  adminId: String!
+  reportId: String!
+  action: String!
+  note: String
+  createdAt: DateTime!
+  admin: User
+}
+
+type ReportsCount {
+  status: String!
+  count: Float!
+}
+
+type Report {
+  id: String!
+  reporterId: String!
+  targetType: String!
+  targetUserId: String
+  targetBlogId: String
+  targetProjectId: String
+  reason: String!
+  status: String!
+  adminNote: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: String!
+  reporter: User
+  targetUser: User
+  targetBlog: Blog
+  targetProject: Project
+  decision: ModerationDecision
+}
+
 type Query {
   getHealth: Health!
   getMyProfile: User!
@@ -165,6 +205,14 @@ type Query {
   getAchievementsByUsername(username: String!): [Achievement!]!
   feed(input: FeedInput!): FeedResponse!
   getNewFeedCount(input: NewFeedCountInput!): Float!
+  admin(id: Int!): Admin!
+  getMyReports: [Report!]!
+  getMyWarnings: [Report!]!
+  getAllReports: [Report!]!
+  getAllReportsByStatus(status: String!): [Report!]!
+  findReportById(id: String!): Report!
+  countReportsByStatus: [ReportsCount!]!
+  hasReportedTarget(targetId: String!, targetType: String!): Boolean!
 }
 
 input SearchInput {
@@ -206,6 +254,12 @@ type Mutation {
   updateAchievement(id: String!, input: UpdateAchievementInput!): Achievement!
   deleteAchievement(id: String!): Boolean!
   updatePreference(input: PreferenceInput!): PreferenceEntity!
+  createAdmin(createAdminInput: CreateAdminInput!): Admin!
+  updateAdmin(updateAdminInput: UpdateAdminInput!): Admin!
+  removeAdmin(id: Int!): Admin!
+  createReport(input: CreateReportInput!): Report!
+  updateReportStatus(id: String!, status: String!): Report!
+  deleteReport(id: String!): Report!
 }
 
 input UpdateUserInput {
@@ -299,4 +353,22 @@ input UpdateAchievementInput {
 input PreferenceInput {
   currentTheme: String
   isPublicProfile: Boolean
+}
+
+input CreateAdminInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateAdminInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateReportInput {
+  targetType: String!
+  targetId: String!
+  reason: String!
+  category: String!
 }

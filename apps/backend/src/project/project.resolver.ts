@@ -2,7 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ProjectService } from './project.service'
 import { Project } from './entities/project.entity'
 import { UseGuards } from '@nestjs/common'
-import { GqlAuthGuard } from 'src/auth/guards/graphql-auth.guard'
+import {
+  GqlAuthGuard,
+  OptionalGqlAuthGuard,
+} from 'src/auth/guards/graphql-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { CreateProjectInput } from './dto/create-project.input'
 import { UpdateProjectInput } from './dto/update-project.input'
@@ -18,7 +21,7 @@ export class ProjectResolver {
   }
 
   @Query(() => [Project])
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(OptionalGqlAuthGuard)
   async getProjectsByUsername(@Args('username') username: string) {
     return await this.projectService.findAllByUsername(username)
   }

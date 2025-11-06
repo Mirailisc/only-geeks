@@ -101,6 +101,7 @@ export class UserService {
       include: { preference: true },
     })
   }
+
   async getUserProfileByUsername(
     username: string,
     currentUserId: string | null,
