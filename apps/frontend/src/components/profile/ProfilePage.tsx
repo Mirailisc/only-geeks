@@ -14,6 +14,7 @@ import { useAppSelector } from '@/hooks/useAppSelector'
 import ProfilePortfolio from './ProfilePortfolio'
 import { Button } from '../ui/button'
 import Meta from '../utils/metadata'
+import ReportComponentWithButton from '../report/report'
 
 function DisplayWithIcon({ icon, text }: { icon: LucideIcon; text: string }) {
   const Icon = icon
@@ -95,13 +96,24 @@ export default function ProfilePage({ username }: ProfilePageProps) {
                 {profile?.location && <DisplayWithIcon icon={MapPinIcon} text={profile.location} />}
                 {profile?.organization && <DisplayWithIcon icon={Building2Icon} text={profile.organization} />}
                 {profile?.email && <DisplayWithIcon icon={MailIcon} text={profile.email} />}
-                <Button variant={"outline"} onClick={()=>{
-                  const profileUrl = `${window.location.origin}/user/${profile?.username}`;
-                  navigator.clipboard.writeText(profileUrl);
-                  toast.success('Profile URL copied to clipboard!');
-                }}>
-                  <ShareIcon /> Share Profile
-                </Button>
+                <div className='flex flex-row gap-2'>
+                  <Button variant={"outline"} size={"sm"} onClick={()=>{
+                    const profileUrl = `${window.location.origin}/user/${profile?.username}`;
+                    navigator.clipboard.writeText(profileUrl);
+                    toast.success('Profile URL copied to clipboard!');
+                  }}>
+                    <ShareIcon /> Share Profile
+                  </Button>
+                  {
+                    profile && 
+                    <ReportComponentWithButton
+                      type="USER"
+                      myUsername={myUser?.username || ""}
+                      user={profile}
+                      targetId={profile.id}
+                    />
+                  }
+                </div>
               </div>
             </CardContent>
           </Card>

@@ -253,11 +253,13 @@ export default function Login() {
             {currentRedirectUrl && currentRedirectUrl !== '/profile' && (
               <Alert className="text-left shadow-lg" variant={'destructive'}>
                 <TriangleAlertIcon size={16} />
-                <AlertTitle>Login required!</AlertTitle>
-                <AlertDescription>
-                  You will be redirected to{' '}
-                  <span className="font-medium">{redirectURIAlertParser(currentRedirectUrl)}</span> after login
-                </AlertDescription>
+                <div className="flex-1">
+                  <AlertTitle>Login required!</AlertTitle>
+                  <AlertDescription>
+                    You will be redirected to{' '}
+                    <span className="font-medium">{redirectURIAlertParser(currentRedirectUrl)}</span> after login
+                  </AlertDescription>
+                </div>
               </Alert>
             )}
           </div>

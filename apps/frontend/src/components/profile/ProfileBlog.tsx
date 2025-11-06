@@ -168,7 +168,7 @@ const ProfileBlog = ({
       variables: {
         username: viewUsername,
       },
-      skip: !viewUsername || !myUsername,
+      skip: !viewUsername,
     },
   )
 
@@ -179,7 +179,7 @@ const ProfileBlog = ({
     }
   }, [data, error, myUsername, viewUsername])
 
-  if (!myUsername || !viewUsername) return null
+  if (!viewUsername) return null
 
   return (
     <div className="min-h-screen">

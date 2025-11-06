@@ -34,8 +34,10 @@ const AppearanceSettings = ({profile}: AppearanceSettingsProps) => {
 				{
 					updateError && <Alert	variant='destructive' className='mb-4'>
 						<TriangleAlertIcon />
-						<AlertTitle>Error updating appearance settings</AlertTitle>
-						<AlertDescription>{updateError.message}</AlertDescription>
+            <div className="flex-1">
+						  <AlertTitle>Error updating appearance settings</AlertTitle>
+						  <AlertDescription>{updateError.message}</AlertDescription>
+            </div>
 					</Alert>
 				}
 				<div className='mt-4 w-full h-[1px]' />

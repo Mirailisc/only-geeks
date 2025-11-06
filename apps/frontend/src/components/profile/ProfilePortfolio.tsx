@@ -26,7 +26,7 @@ const EducationCard = ({ myUsername, viewUsername }: { myUsername?: string; view
     isMyProfile ? GET_MY_EDUCATION_QUERY : GET_EDUCATION_BY_USERNAME_QUERY,
     {
       variables: { username: viewUsername },
-      skip: !viewUsername || !myUsername,
+      skip: !viewUsername,
     },
   )
 
@@ -176,7 +176,7 @@ const AchievementsCard = ({ myUsername, viewUsername }: { myUsername?: string; v
     getAchievementsByUsername?: AchievementType[]
   }>(isMyProfile ? GET_MY_ACHIEVEMENTS_QUERY : GET_ACHIEVEMENTS_BY_USERNAME_QUERY, {
     variables: { username: viewUsername },
-    skip: !viewUsername || !myUsername,
+    skip: !viewUsername,
   })
 
   useEffect(() => {

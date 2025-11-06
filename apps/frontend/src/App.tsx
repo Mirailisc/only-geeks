@@ -52,11 +52,7 @@ const router = createBrowserRouter([
       },
       {
         path: USER_PROFILE_PATH,
-        element: (
-          <ProtectedRoute>
-            <UserProfile />
-          </ProtectedRoute>
-        ),
+        element: (<UserProfile />),
       },
       {
         path: SEARCH_PATH,

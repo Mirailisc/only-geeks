@@ -14,7 +14,7 @@ export interface Profile {
   bio: string
   picture: string
   location: string
-  preference: Preference
+  preference: Partial<Preference>
   organization: string
   isAdmin: boolean
 }

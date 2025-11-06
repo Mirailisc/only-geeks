@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 import type { Profile } from "./profile"
 
 export interface Project {
-    User: Profile
+    User: Partial<Profile>
     contentType: string
     description: string
     endDate: string
@@ -54,6 +54,13 @@ export const GET_PROJECTS_BY_USERNAME_QUERY = gql`
       photos
       startDate
       endDate
+      User {
+        username
+        lastName
+        firstName
+        email
+        picture
+      }
     }
   }
 `

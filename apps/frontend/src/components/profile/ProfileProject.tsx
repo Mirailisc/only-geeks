@@ -13,9 +13,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
 import { CREATE_PROJECT_PATH } from '@/constants/routes'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../ui/empty'
+import ReportComponentWithButton from '../report/report'
 
 // Component for a single project card
-const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: boolean }) => {
+const ProjectCard = ({ project, isMyProfile, myUsername }: { project: Project; isMyProfile: boolean; myUsername: string }) => {
   const [deleteProjectById, { loading }] = useMutation<{ deleteProjectById: Project }>(DELETE_PROJECT_MUTATION, {
     refetchQueries: [{ query: GET_MY_PROJECTS_QUERY }],
   })
@@ -60,9 +61,7 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
       <Card className="mb-6 rounded-xl">
         <CardContent className="p-6 pb-0 pt-0">
           <div className="flex h-full flex-col items-stretch gap-6 md:flex-row">
-            {/* LEFT: Project Details */}
             <div className="flex flex-1 flex-col justify-between">
-              {/* Top Part */}
               <div>
                 <CardTitle className="mb-2 text-2xl font-bold leading-snug">{project.title}</CardTitle>
                 <p className="mb-4 text-base text-gray-600">{project.description}</p>
@@ -70,19 +69,19 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
 
               {/* Bottom Actions */}
               <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
-                <a href={project.link ?? '#'} target="_blank" rel="noopener noreferrer">
                   <div className="flex space-x-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100"
-                      disabled={!project.link}
-                      data-cy="project-link-button"
-                    >
-                      <Globe className="mr-2 h-4 w-4" /> Link
-                    </Button>
+                    {project.link && <Link to={project.link} target='_blank' rel='noopener noreferrer'>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100"
+                        disabled={!project.link}
+                        data-cy="project-link-button"
+                      >
+                        <Globe className="mr-2 h-4 w-4" /> Link
+                      </Button>
+                    </Link>}
                   </div>
-                </a>
 
                 <span className="flex items-center text-sm text-gray-500">
                   {project.startDate && <Calendar className="mr-1.5 h-4 w-4 text-blue-500" />}
@@ -110,7 +109,7 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
               </div>
 
               {/* Edit/Delete Buttons */}
-              {isMyProfile && (
+              {isMyProfile ? (
                 <div className="flex justify-end space-x-2">
                   <Button
                     variant="outline"
@@ -137,6 +136,15 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
                     <Trash2 className="mr-1 h-4 w-4" /> Delete
                   </Button>
                 </div>
+              ) : (
+                <div className="flex justify-end space-x-2">
+                  <ReportComponentWithButton
+                    type='PROJECT'
+                    myUsername={myUsername ?? ''}
+                    user={project.User}
+                    targetId={project.id}
+                  />
+                </div>
               )}
             </div>
           </div>
@@ -161,7 +169,7 @@ const ProfileProjects = ({
       variables: {
         username: viewUsername,
       },
-      skip: !viewUsername || !myUsername,
+      skip: !viewUsername,
     },
   )
 
@@ -172,7 +180,7 @@ const ProfileProjects = ({
     }
   }, [data, error, myUsername, viewUsername])
 
-  if (!myUsername || !viewUsername) return null
+  if (!viewUsername) return null
 
   return (
     <div className="min-h-screen">
@@ -194,7 +202,12 @@ const ProfileProjects = ({
         {/* List of Projects */}
         <div className="space-y-6 px-4 py-4 sm:px-8">
           {projects.length > 0 ? projects.map((project) => (
-            <ProjectCard key={project.id} project={project} isMyProfile={myUsername === viewUsername} />
+            <ProjectCard 
+              key={project.id} 
+              project={project} 
+              isMyProfile={myUsername === viewUsername}
+              myUsername={myUsername ?? ''}
+            />
           )) : (
             <Empty>
               <EmptyHeader>
