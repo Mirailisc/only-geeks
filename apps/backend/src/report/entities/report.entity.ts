@@ -3,7 +3,12 @@ import { Blog } from 'src/blog/entities/blog.entity'
 import { Project } from 'src/project/entities/project.entity'
 import { User } from 'src/user/entities/user.entity'
 
-export type ReportStatus = 'PENDING' | 'UNDER_REVIEW' | 'RESOLVED' | 'REJECTED'
+export type ReportStatus =
+  | 'PENDING'
+  | 'UNDER_REVIEW'
+  | 'RESOLVED'
+  | 'REJECTED'
+  | 'ALL'
 export type TargetType = 'USER' | 'BLOG' | 'PROJECT'
 export type ModerationAction =
   | 'NONE'
@@ -124,4 +129,19 @@ export class Report {
 
   @Field(() => ModerationDecision, { nullable: true })
   decision: ModerationDecision
+}
+
+@ObjectType()
+export class ReportPagination {
+  @Field(() => [Report])
+  reports: Report[]
+
+  @Field(() => Number)
+  totalCount: number
+
+  @Field(() => Number)
+  page: number
+
+  @Field(() => Number)
+  pageSize: number
 }

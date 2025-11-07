@@ -80,6 +80,14 @@ export class ReportService {
   }
 
   async getAllReportsByStatus(status: ReportStatus): Promise<Report[]> {
+    if (status === 'ALL') {
+      return await this.prisma.report.findMany({
+        include: {
+          reporter: true,
+          decision: { include: { admin: true } },
+        },
+      })
+    }
     return await this.prisma.report.findMany({
       where: { status },
       include: {
@@ -100,6 +108,9 @@ export class ReportService {
   }
 
   async updateReportStatus(id: string, status: ReportStatus): Promise<Report> {
+    if (status === 'ALL') {
+      throw new Error('Invalid status update')
+    }
     return await this.prisma.report.update({
       where: { id },
       data: { status },
