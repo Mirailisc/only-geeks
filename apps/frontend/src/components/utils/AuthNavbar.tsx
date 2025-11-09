@@ -8,8 +8,8 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
-import { CREATE_BLOG_PATH, CREATE_PROJECT_PATH, FEED_PATH, LOGIN_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
-import { CodeIcon, FileTextIcon, LogInIcon, LogOut, PlusIcon, Settings, User, User2Icon } from 'lucide-react'
+import { ADMIN_DASHBOARD_PATH, CREATE_BLOG_PATH, CREATE_PROJECT_PATH, FEED_PATH, LOGIN_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
+import { CodeIcon, FileTextIcon, LogInIcon, LogOut, PlusIcon, Settings, GaugeIcon, User, User2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
 import { clearUser } from '@/store/authSlice'
@@ -123,6 +123,16 @@ export default function AuthNavbar() {
                   <DropdownMenuItem>
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
+                  </DropdownMenuItem>
+                </Link>
+                <DropdownMenuLabel>
+                  Admin Section
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <Link to={ADMIN_DASHBOARD_PATH}>
+                  <DropdownMenuItem>
+                    <GaugeIcon />
+                    <span>Admin Dashboard</span>
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />

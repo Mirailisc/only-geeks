@@ -13,12 +13,13 @@ import { Loading } from '@/components/utils/loading'
 import AppearanceSettings from '@/components/settings/Appearance'
 import PrivacySettings from '@/components/settings/Privacy'
 import Meta from '@/components/utils/metadata'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
+import { ADMIN_DASHBOARD_PATH } from '@/constants/routes'
 type PageType = 'profile' | 'appearance' | 'privacy'
 export default function Settings() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const { user } = useAppSelector((state) => state.auth)
-  const [currentPage, setCurrentPage] = useState<PageType>('profile')
+  const [currentTab, setCurrentTab] = useState<PageType>('profile')
   const { data, loading, error } = useQuery<{ getMyProfile: Profile }>(GET_MY_PROFILE_QUERY)
   const [searchParams] = useSearchParams()
   const errorQuery = searchParams.get('error')
@@ -67,10 +68,12 @@ export default function Settings() {
               <AlertTitle>Heads up!</AlertTitle>
               <AlertDescription>Now you login as an Admin, So be careful with the changes you make.</AlertDescription>
             </div>
-            <AlertButton variant={"outline"}>Go to Admin Dashboard</AlertButton>
+            <Link to={ADMIN_DASHBOARD_PATH}>
+              <AlertButton variant={"default"}>Go to Admin Dashboard</AlertButton>
+            </Link>
           </Alert>
         )}
-        <Tabs defaultValue="profile" onValueChange={(value) => setCurrentPage(value as PageType)} value={currentPage}>
+        <Tabs defaultValue="profile" onValueChange={(value) => setCurrentTab(value as PageType)} value={currentTab}>
           <TabsList>
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="appearance">Appearance</TabsTrigger>

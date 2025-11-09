@@ -11,6 +11,7 @@ import {
   SETTINGS_PATH,
   USER_PROFILE_PATH,
   FEED_PATH,
+  ADMIN_DASHBOARD_PATH,
 } from './constants/routes'
 import Login from './pages/login'
 import { Toaster } from 'sonner'
@@ -101,6 +102,10 @@ const router = createBrowserRouter([
             <CreateAchievement />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: ADMIN_DASHBOARD_PATH,
+        element: (<>This is admin dashboard</>),
       },
     ],
   },

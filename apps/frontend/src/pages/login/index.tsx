@@ -76,6 +76,22 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false)
   const navigate = useNavigate()
+  
+  // Login form state
+  const [loginForm, setLoginForm] = useState<LoginInput>({
+    username: '',
+    password: '',
+  })
+
+  // Register form state
+  const [registerForm, setRegisterForm] = useState<RegisterInput>({
+    email: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    username: '',
+  })
+
   const changeTab = (tab: string) => {
     //Clear form states when switching tabs
     setLoginForm({
@@ -92,20 +108,6 @@ export default function Login() {
     setConfirmPassword('')
     setActiveTab(tab)
   }
-  // Login form state
-  const [loginForm, setLoginForm] = useState<LoginInput>({
-    username: '',
-    password: '',
-  })
-
-  // Register form state
-  const [registerForm, setRegisterForm] = useState<RegisterInput>({
-    email: '',
-    firstName: '',
-    lastName: '',
-    password: '',
-    username: '',
-  })
 
   useEffect(() => {
     if (user) {
@@ -250,7 +252,7 @@ export default function Login() {
             </div>
             <h1 className="text-balance text-4xl font-bold tracking-tight">OnlyGeeks</h1>
             <p className="text-pretty text-lg text-muted-foreground">Share your projects, inspire the community</p>
-            {currentRedirectUrl && currentRedirectUrl !== '/profile' && (
+            {currentRedirectUrl && currentRedirectUrl !== '/profile' && currentRedirectUrl !== '/' && (
               <Alert className="text-left shadow-lg" variant={'destructive'}>
                 <TriangleAlertIcon size={16} />
                 <div className="flex-1">
