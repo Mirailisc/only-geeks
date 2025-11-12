@@ -63,6 +63,19 @@ export default defineConfig({
               },
             ],
           })
+          // Fetch the inserted users
+          const users = await prisma.user.findMany({
+            where: { email: { in: ['admin@test.com', 'user@test.com', 'janedoe@gmail.com'] } },
+            select: { id: true },
+          });
+
+          // Create preferences
+          await prisma.preference.createMany({
+            data: users.map((u) => ({
+              userId: u.id,
+              currentTheme: 'LIGHT',
+            })),
+          });
           return null
         },
         async 'db:clean'() {
@@ -72,6 +85,18 @@ export default defineConfig({
           })
           const userIds = users.map((u) => u.id)
           await prisma.blog.deleteMany({
+            where: { userId: { in: userIds } },
+          })
+          await prisma.project.deleteMany({
+            where: { userId: { in: userIds } },
+          })
+          await prisma.education.deleteMany({
+            where: { userId: { in: userIds } },
+          })
+          await prisma.achievement.deleteMany({
+            where: { userId: { in: userIds } },
+          })
+          await prisma.preference.deleteMany({
             where: { userId: { in: userIds } },
           })
           await prisma.user.deleteMany({

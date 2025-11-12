@@ -354,7 +354,7 @@ importers:
     devDependencies:
       '@badeball/cypress-cucumber-preprocessor':
         specifier: ^23.2.0
-        version: 23.2.0(@babel/core@7.28.4)(cypress@15.3.0)(typescript@5.8.3)
+        version: 23.2.0(@babel/core@7.28.4)(cypress@15.6.0)(typescript@5.8.3)
       '@bahmutov/cypress-esbuild-preprocessor':
         specifier: ^2.2.6
         version: 2.2.6(esbuild@0.25.10)
@@ -401,8 +401,8 @@ importers:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.6)
       cypress:
-        specifier: ^15.2.0
-        version: 15.3.0
+        specifier: ^15.6.0
+        version: 15.6.0
       dotenv:
         specifier: ^17.2.2
         version: 17.2.2
@@ -3376,8 +3376,8 @@ packages:
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
-  cypress@15.3.0:
-    resolution: {integrity: sha512-g9rDhoK9y8wW4Vx3Ppr8dtfvThXxPL3mJsV5e98fG+6EerrhXKmeRT2sL86cvNRtEZouXJfsuVL1lqiMuGNGcg==}
+  cypress@15.6.0:
+    resolution: {integrity: sha512-Vqo66GG1vpxZ7H1oDX9umfmzA3nF7Wy80QAc3VjwPREO5zTY4d1xfQFNPpOWleQl9vpdmR2z1liliOcYlRX6rQ==}
     engines: {node: ^20.1.0 || ^22.0.0 || >=24.0.0}
     hasBin: true
 
@@ -7641,7 +7641,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@badeball/cypress-cucumber-preprocessor@23.2.0(@babel/core@7.28.4)(cypress@15.3.0)(typescript@5.8.3)':
+  '@badeball/cypress-cucumber-preprocessor@23.2.0(@babel/core@7.28.4)(cypress@15.6.0)(typescript@5.8.3)':
     dependencies:
       '@cucumber/ci-environment': 10.0.1
       '@cucumber/cucumber': 12.2.0
@@ -7657,7 +7657,7 @@ snapshots:
       cli-table: 0.3.11
       common-ancestor-path: 1.0.1
       cosmiconfig: 9.0.0(typescript@5.8.3)
-      cypress: 15.3.0
+      cypress: 15.6.0
       debug: 4.4.3(supports-color@8.1.1)
       error-stack-parser: 2.1.4
       find-cypress-specs: 1.54.6(@babel/core@7.28.4)
@@ -9460,7 +9460,7 @@ snapshots:
 
   '@types/cypress@1.1.6':
     dependencies:
-      cypress: 15.3.0
+      cypress: 15.6.0
 
   '@types/debug@4.1.12':
     dependencies:
@@ -10651,7 +10651,7 @@ snapshots:
 
   csstype@3.1.3: {}
 
-  cypress@15.3.0:
+  cypress@15.6.0:
     dependencies:
       '@cypress/request': 3.0.9
       '@cypress/xvfb': 1.2.4(supports-color@8.1.1)
