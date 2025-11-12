@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import AuthNavbar from "@/components/utils/AuthNavbar";
 import { FEED_QUERY, FEED_NEW_COUNT_QUERY, type FeedResponse, type FeedItemType } from "@/graphql/feed";
 import { useLazyQuery } from "@apollo/client/react";
-import { renderFeedItem } from '@/components/utils/feedRenderer';
+import { RenderFeedItem } from '@/components/utils/feedRenderer';
+import Meta from '@/components/utils/metadata';
 
 const FeedHome = () => {
   const [getFeed, { data, loading, error, fetchMore }] = useLazyQuery<{ feed: FeedResponse }>(FEED_QUERY);
@@ -139,6 +140,13 @@ const FeedHome = () => {
 
   return (
     <>
+      <Meta
+        title="Home | Only Geeks"
+        description="Stay updated with the latest posts from the Only Geeks community."
+        keywords="feed, only geeks, latest posts, community"
+        image=""
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="min-h-screen bg-muted/30">
         <div className="container mx-auto px-4 py-6 max-w-2xl">
@@ -179,17 +187,21 @@ const FeedHome = () => {
 
           {items.length > 0 && (
             <>
-              {items.map(renderFeedItem)}
+              {items.map((i) => {
+                return <RenderFeedItem {...i} key={"feed"+ i.id} />
+              })}
               
               {/* Infinite Scroll Trigger */}
-              <div ref={observerTarget} className="h-20 flex items-center justify-center">
+              <div ref={observerTarget} className="h-20 w-full flex items-center justify-center">
                 {loadingMore && (
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
                 )}
                 {!nextCursor && !loadingMore && items.length > 0 && (
-                  <p className="text-sm text-muted-foreground">
-                    You&lsquo;ve reached the end
-                  </p>
+                  <Card className="p-8 text-center w-full">
+                    <p className="text-sm text-muted-foreground">
+                      You&lsquo;ve reached the end
+                    </p>
+                  </Card>
                 )}
               </div>
             </>

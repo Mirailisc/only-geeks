@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { Send } from 'lucide-react'
+import Meta from '@/components/utils/metadata'
 
 interface ProjectFormValues {
   title: string
@@ -285,6 +286,13 @@ export default function CreateOrEditProjectPage() {
 
   return (
     <>
+      <Meta
+        title={editId ? 'Edit Project | Only Geeks' : 'Create Project | Only Geeks'}
+        description={editId ? 'Edit your project details on Only Geeks.' : 'Create a new project to showcase on Only Geeks.'}
+        keywords={editId ? 'edit project, only geeks' : 'create project, only geeks'}
+        image=""
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="container mx-auto py-4">
         <ProjectForm project={project} onSubmit={handleSubmit} loading={creating || updating} />

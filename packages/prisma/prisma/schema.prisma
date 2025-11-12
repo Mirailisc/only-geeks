@@ -20,17 +20,17 @@ model User {
   organization String?
   type         String  @default("local")
 
-  isAdmin Boolean @default(false)
+  isAdmin      Boolean @default(false)
 
-  education  Education[]
-  blog       Blog[]
-  preference Preference?
+  education    Education[]
+  blog         Blog[]
+  preference   Preference?
 
   projects     Project[]
   achievements Achievement[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([email])
 }
@@ -79,11 +79,12 @@ model Achievement {
 }
 
 model Preference {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  isDark    Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  currentTheme    Theme    @default(LIGHT)
+  isPublicProfile Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id])
 }
@@ -104,4 +105,10 @@ model Blog {
 
   @@unique([userId, slug])
   @@index([title])
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
 }

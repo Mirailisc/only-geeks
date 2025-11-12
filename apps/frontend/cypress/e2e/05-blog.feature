@@ -6,7 +6,9 @@ Feature: Blog management
         Then I change input "bio" value to "Hey!"
         Then I change input "username" value to "imtest"
         Then I click submit button
+        Then I should wait for 2 seconds
         Then I click button named "create-dropdown-menu"
+        Then I should wait for 1 seconds
         Then I should see "Create New"
         Then I should see "Blog"
         Then I click button named "create-blog-dropdown-item"

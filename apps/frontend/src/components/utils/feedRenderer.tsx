@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { AwardIcon, CalendarIcon, ExternalLinkIcon, FileTextIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 export const getInitialName = (firstName: string, lastName: string) => {
   return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
@@ -27,13 +28,13 @@ export const formatDate = (dateString: string) => {
   });
 }
 
-export const renderFeedProject = (item: FeedProjectType) => {
+const RenderFeedProject = ({item}: {item: FeedProjectType}) => {
   const user = item.User;
   if (!user) return null;
 
   return (
     <Card key={item.id} className="mb-4">
-      <CardContent className="p-6">
+      <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -122,13 +123,13 @@ export const renderFeedProject = (item: FeedProjectType) => {
   );
 }
 
-  const renderFeedBlog = (item: FeedBlogType) => {
+const RenderFeedBlog = ({item}: {item: FeedBlogType}) => {
   const user = item.User;
   if (!user) return null;
 
   return (
     <Card key={item.id} className="mb-4">
-      <CardContent className="p-6">
+      <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -166,10 +167,10 @@ export const renderFeedProject = (item: FeedProjectType) => {
           )}
           {item.slug && (
             <Button variant="link" className="p-0 h-auto" asChild>
-            <a href={`/blog/${item.slug}`}>
+            <Link to={`/blog/${item.User.username}/${item.slug}`}>
               Read more
               <ExternalLinkIcon className="h-3 w-3 ml-1" />
-            </a>
+            </Link>
             </Button>
           )}
         </div>
@@ -200,13 +201,13 @@ export const renderFeedProject = (item: FeedProjectType) => {
   );
   };
 
-  const renderFeedAchievement = (item: FeedAchievementType) => {
+const RenderFeedAchievement = ({item}: {item: FeedAchievementType}) => {
   const user = item.User;
   if (!user) return null;
 
   return (
     <Card key={item.id} className="mb-4">
-      <CardContent className="p-6">
+      <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -289,13 +290,13 @@ export const renderFeedProject = (item: FeedProjectType) => {
   );
 }
 
-export const renderFeedItem = (item: FeedItemType) => {
+export const RenderFeedItem = (item: FeedItemType) => {
   if (item.contentType === "project") {
-    return renderFeedProject(item as FeedProjectType);
+    return <RenderFeedProject item={item as FeedProjectType} />;
   } else if (item.contentType === "blog") {
-    return renderFeedBlog(item as FeedBlogType);
+    return <RenderFeedBlog item={item as FeedBlogType} />;
   } else if (item.contentType === "achievement") {
-    return renderFeedAchievement(item as FeedAchievementType);
+    return <RenderFeedAchievement item={item as FeedAchievementType} />;
   }
   return null;
 }

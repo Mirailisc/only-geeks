@@ -3,7 +3,10 @@ import { BlogService } from './blog.service'
 import { Blog } from './entities/blog.entity'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { UseGuards } from '@nestjs/common'
-import { GqlAuthGuard } from 'src/auth/guards/graphql-auth.guard'
+import {
+  GqlAuthGuard,
+  OptionalGqlAuthGuard,
+} from 'src/auth/guards/graphql-auth.guard'
 import { CreateBlogInput } from './dto/create-blog.input'
 import { UpdateBlogInput } from './dto/update-blog.input'
 
@@ -17,11 +20,17 @@ export class BlogResolver {
   }
 
   @Query(() => Blog)
+  @UseGuards(OptionalGqlAuthGuard)
   async getBlogBySlugAndUsername(
     @Args('slug') slug: string,
     @Args('username') username: string,
+    @CurrentUser() user: any,
   ) {
-    return await this.blogService.getBlogBySlugAndUsername(slug, username)
+    return await this.blogService.getBlogBySlugAndUsername(
+      slug,
+      username,
+      user.id,
+    )
   }
 
   @Query(() => [Blog])

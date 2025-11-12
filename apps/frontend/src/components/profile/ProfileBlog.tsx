@@ -1,5 +1,5 @@
 // import React, { useState } from 'react'
-import { CalendarIcon, PencilIcon, Trash2Icon } from 'lucide-react'
+import { CalendarIcon, FileTextIcon, PencilIcon, Trash2Icon } from 'lucide-react'
 // import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { Card, CardContent, CardTitle } from '../ui/card'
 import { dateFormatter } from '@/lib/utils'
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
 import { Badge } from '../ui/badge'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../ui/empty'
 
 // // Component for a single blog post card
 const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog; isMyProfile: boolean; username: string }) => {
@@ -52,7 +53,7 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog; isMyProfile
             <div className="order-2 flex flex-1 flex-col justify-between md:order-1">
               <div>
                 <CardTitle className="mb-2 text-2xl font-bold leading-snug">{post.title}</CardTitle>
-                <p className="mb-4 text-base text-gray-600">{post.description}</p>
+                <p className="mb-4 text-base text-gray-600">{post.description?.substring(0, 160)}</p>
               </div>
 
               <div className="flex flex-row items-end gap-2">
@@ -91,16 +92,18 @@ const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog; isMyProfile
 
               {isMyProfile ? (
                 <div className="flex flex-row justify-end gap-2">
-                  <Button
-                    variant={'secondary'}
-                    disabled={loading}
-                    className=""
-                    onClick={() => {
-                      navigator(`/create/blog/?editid=${post.id}`)
-                    }}
-                  >
-                    <PencilIcon className="h-4 w-4" />
-                  </Button>
+                  {post.isPublished && (
+                    <Button
+                      variant={'secondary'}
+                      disabled={loading}
+                      className=""
+                      onClick={() => {
+                        navigator(`/create/blog/?editid=${post.id}`)
+                      }}
+                    >
+                      <PencilIcon className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button
                     variant={'destructive'}
                     disabled={loading}
@@ -183,20 +186,46 @@ const ProfileBlog = ({
       <div className="w-full">
         {/* Blog Header and Action Button */}
         <div className="mb-8 flex items-center justify-between px-4 pt-6 sm:px-8">
-          <h1 className="text-3xl font-extrabold text-gray-900">Blog Posts</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Blog Posts</h1>
           {/* Write Posts Button*/}
-          <Link to={CREATE_BLOG_PATH}>
-            <Button className="bg-gray-900 text-white hover:bg-gray-700">
-              <PencilIcon /> Write blog
-            </Button>
-          </Link>
+          {
+            myUsername === viewUsername &&
+            <Link to={CREATE_BLOG_PATH}>
+              <Button variant={"default"}>
+                <PencilIcon /> Write blog
+              </Button>
+            </Link>
+          }
         </div>
 
         {/* List of Blog Posts */}
         <div className="space-y-6 px-4 py-4 sm:px-8">
-          {BlogPosts.map((post) => (
+          {BlogPosts.length > 0 ? BlogPosts.map((post) => (
             <BlogPostCard isMyProfile={myUsername === viewUsername} username={viewUsername} key={post.id} post={post} />
-          ))}
+          )) : (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <FileTextIcon />
+                </EmptyMedia>
+                <EmptyTitle>No Blog yet</EmptyTitle>
+                <EmptyDescription>
+                  {
+                    myUsername === viewUsername
+                      ? 'You have not written any blog posts yet. Start sharing your knowledge and experiences with the world!'
+                      : 'This user has not written any blog posts yet.'
+                  }
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                {myUsername === viewUsername &&
+                  <Link to={CREATE_BLOG_PATH}>
+                    <Button variant={"default"}><PencilIcon /> Write Blog</Button>
+                  </Link>
+                }
+              </EmptyContent>
+            </Empty>
+          )}
         </div>
       </div>
     </div>

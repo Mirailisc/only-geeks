@@ -12,6 +12,7 @@ import { Button } from '../ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Label } from '../ui/label'
 import { UploadCloudIcon } from 'lucide-react'
+import { ME_QUERY } from '@/graphql/auth'
 
 type Props = {
   profile: Profile
@@ -97,6 +98,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
       variables: {
         input: { ...values },
       },
+      refetchQueries: [ME_QUERY]
     })
 
     if (data) {

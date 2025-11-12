@@ -18,8 +18,11 @@ export class UserResolver {
 
   @Query(() => User)
   @UseGuards(GqlAuthGuard)
-  async getProfileByUsername(@Args('username') username: string) {
-    return await this.userService.findUserByUsername(username)
+  async getProfileByUsername(
+    @Args('username') username: string,
+    @CurrentUser() user: any,
+  ) {
+    return await this.userService.getUserProfileByUsername(username, user.id)
   }
 
   @Mutation(() => User)

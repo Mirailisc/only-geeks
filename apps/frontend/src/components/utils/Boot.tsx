@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client/react'
 import { ME_QUERY, LOGOUT_MUTATION } from '@/graphql/auth'
@@ -6,6 +6,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { setUser, clearUser, type User } from '../../store/authSlice'
 import { toast } from 'sonner'
 import { Loading } from './loading'
+import { useTheme } from 'next-themes'
 
 export default function Boot() {
   const dispatch = useAppDispatch()
@@ -18,7 +19,8 @@ export default function Boot() {
   } = useQuery<{ me: User }>(ME_QUERY, {
     fetchPolicy: 'network-only',
   })
-
+  const { setTheme } = useTheme()
+  const isSyncThemeRef = useRef<boolean>(false)
   const [logoutMutation] = useMutation(LOGOUT_MUTATION)
 
   useEffect(() => {
@@ -33,13 +35,20 @@ export default function Boot() {
 
     if (!queryLoading) {
       if (data?.me) {
+        const preferredTheme = data.me.preferences.currentTheme
+        if(!isSyncThemeRef.current){
+          isSyncThemeRef.current = true
+          // eslint-disable-next-line no-console
+          console.log("Preferred Theme:", preferredTheme);
+          setTheme(preferredTheme.toLowerCase() as 'light' | 'dark' | 'system')
+        }
         dispatch(setUser({ user: data.me, accessToken: '' }))
       } else {
         handleLogout()
       }
       setLoading(false)
     }
-  }, [data, queryLoading, dispatch, logoutMutation])
+  }, [data, queryLoading, dispatch, logoutMutation, setTheme])
 
   useEffect(() => {
     if (error) {
