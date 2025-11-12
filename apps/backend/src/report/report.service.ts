@@ -9,10 +9,57 @@ export class ReportService {
 
   async findAllMyReports(userId: string): Promise<Report[]> {
     return await this.prisma.report.findMany({
-      where: { reporterId: userId },
       include: {
         reporter: true,
         decision: { include: { admin: true } },
+        userReport: {
+          include: {
+            target: true,
+            report: {
+              include: {
+                reporter: true,
+                decision: {
+                  include: {
+                    admin: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        blogReport: {
+          include: {
+            target: true,
+            report: {
+              include: {
+                reporter: true,
+                decision: {
+                  include: {
+                    admin: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        projectReport: {
+          include: {
+            target: true,
+            report: {
+              include: {
+                reporter: true,
+                decision: {
+                  include: {
+                    admin: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      where: {
+        reporterId: userId,
       },
     })
   }
@@ -22,20 +69,62 @@ export class ReportService {
       include: {
         reporter: true,
         decision: { include: { admin: true } },
+        userReport: {
+          include: {
+            target: true,
+            report: {
+              include: {
+                reporter: true,
+                decision: {
+                  include: {
+                    admin: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        blogReport: {
+          include: {
+            target: true,
+            report: {
+              include: {
+                reporter: true,
+                decision: {
+                  include: {
+                    admin: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        projectReport: {
+          include: {
+            target: true,
+            report: {
+              include: {
+                reporter: true,
+                decision: {
+                  include: {
+                    admin: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       where: {
         OR: [
           {
-            targetType: 'USER',
-            targetUser: { id: userId },
+            userReport: { target: { id: userId } },
           },
           {
-            targetType: 'BLOG',
-            targetBlog: { userId },
+            blogReport: { target: { userId: userId } },
           },
           {
-            targetType: 'PROJECT',
-            targetProject: { userId },
+            projectReport: { target: { userId: userId } },
           },
         ],
       },
@@ -46,26 +135,86 @@ export class ReportService {
     input: CreateReportInput,
     userId: string,
   ): Promise<Report> {
-    const targetData =
-      input.targetType === 'USER'
-        ? { targetUserId: input.targetId }
-        : input.targetType === 'BLOG'
-          ? { targetBlogId: input.targetId }
-          : input.targetType === 'PROJECT'
-            ? { targetProjectId: input.targetId }
-            : {}
-
     return await this.prisma.report.create({
       data: {
         reporterId: userId,
-        targetType: input.targetType,
         category: input.category,
         reason: input.reason,
-        ...targetData,
+        status: 'PENDING', // optional, default is already PENDING
+        // nested create for target
+        userReport:
+          input.targetType === 'USER'
+            ? {
+                create: {
+                  targetId: input.targetId,
+                },
+              }
+            : undefined,
+        blogReport:
+          input.targetType === 'BLOG'
+            ? {
+                create: {
+                  targetId: input.targetId,
+                },
+              }
+            : undefined,
+        projectReport:
+          input.targetType === 'PROJECT'
+            ? {
+                create: {
+                  targetId: input.targetId,
+                },
+              }
+            : undefined,
       },
       include: {
         reporter: true,
         decision: { include: { admin: true } },
+        userReport: {
+          include: {
+            target: true,
+            report: {
+              include: {
+                reporter: true,
+                decision: {
+                  include: {
+                    admin: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        blogReport: {
+          include: {
+            target: true,
+            report: {
+              include: {
+                reporter: true,
+                decision: {
+                  include: {
+                    admin: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        projectReport: {
+          include: {
+            target: true,
+            report: {
+              include: {
+                reporter: true,
+                decision: {
+                  include: {
+                    admin: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     })
   }
@@ -153,20 +302,18 @@ export class ReportService {
     targetType: TargetType,
     targetId: string,
   ): Promise<boolean> {
-    const whereCondition =
-      targetType === 'USER'
-        ? { targetUserId: targetId }
-        : targetType === 'BLOG'
-          ? { targetBlogId: targetId }
-          : targetType === 'PROJECT'
-            ? { targetProjectId: targetId }
-            : {}
-
     const report = await this.prisma.report.findFirst({
       where: {
         reporterId: userId,
-        targetType,
-        ...whereCondition,
+        AND: [
+          targetType === 'USER'
+            ? { userReport: { targetId } }
+            : targetType === 'BLOG'
+              ? { blogReport: { targetId } }
+              : targetType === 'PROJECT'
+                ? { projectReport: { targetId } }
+                : {},
+        ],
       },
     })
 

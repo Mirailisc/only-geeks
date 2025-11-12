@@ -31,7 +31,7 @@ model User {
   achievements      Achievement[]
 
   reportsMade       Report[] @relation("ReportsByUser")
-  reportsToMe       Report[] @relation("ReportsAgainstUser")
+  reportsToMe       UserReport[] @relation("ReportsAgainstUser")
   adminDecisions    ModerationDecision[]
   restrictions      UserRestriction[]
   auditLogs         AdminAuditLog[]
@@ -69,7 +69,7 @@ model Project {
   updatedAt   DateTime  @updatedAt
 
   User        User      @relation(fields: [userId], references: [id])
-  reports     Report[]  @relation("ReportsAgainstProject")
+  reports     ProjectReport[]  @relation("ReportsAgainstProject")
 }
 
 model Achievement {
@@ -109,8 +109,8 @@ model Blog {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  User User @relation(fields: [userId], references: [id])
-  reports Report[] @relation("ReportsAgainstBlog")
+  User        User @relation(fields: [userId], references: [id])
+  reports     BlogReport[] @relation("ReportsAgainstBlog")
 
   @@unique([userId, slug])
   @@index([title])
@@ -123,28 +123,51 @@ enum Theme {
 }
 
 // ==========================
-//  REPORT (Unified)
+//  REPORT
 // ==========================
 model Report {
-  id              String   @id @default(uuid())
-  reporterId      String
-  targetType      ReportTarget
-  targetUserId    String?
-  targetBlogId    String?
-  targetProjectId String?
-  category        ReportCategory
-  reason          String
-  status          ReportStatus @default(PENDING)
-  adminNote       String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id          String   @id @default(uuid())
+  reporterId  String
+  category    ReportCategory
+  reason      String
+  status      ReportStatus @default(PENDING)
+  adminNote   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
-  reporter        User      @relation("ReportsByUser", fields: [reporterId], references: [id])
-  targetUser      User?     @relation("ReportsAgainstUser", fields: [targetUserId], references: [id])
-  targetBlog      Blog?     @relation("ReportsAgainstBlog", fields: [targetBlogId], references: [id])
-  targetProject   Project?  @relation("ReportsAgainstProject", fields: [targetProjectId], references: [id])
+  reporter    User         @relation("ReportsByUser", fields: [reporterId], references: [id])
+  decision    ModerationDecision?
 
-  decision      ModerationDecision?
+  userReport     UserReport?
+  blogReport     BlogReport?
+  projectReport  ProjectReport?
+}
+
+model UserReport {
+  id        String  @id @default(uuid())
+  reportId  String  @unique
+  targetId  String
+
+  report    Report  @relation(fields: [reportId], references: [id])
+  target    User    @relation("ReportsAgainstUser", fields: [targetId], references: [id])
+}
+
+model BlogReport {
+  id        String  @id @default(uuid())
+  reportId  String  @unique
+  targetId  String
+
+  report    Report  @relation(fields: [reportId], references: [id])
+  target    Blog    @relation("ReportsAgainstBlog", fields: [targetId], references: [id])
+}
+
+model ProjectReport {
+  id        String  @id @default(uuid())
+  reportId  String  @unique
+  targetId  String
+
+  report    Report  @relation(fields: [reportId], references: [id])
+  target    Project @relation("ReportsAgainstProject", fields: [targetId], references: [id])
 }
 
 enum ReportTarget {

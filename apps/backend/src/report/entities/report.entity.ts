@@ -1,7 +1,8 @@
 import { ObjectType, Field } from '@nestjs/graphql'
-import { Blog } from 'src/blog/entities/blog.entity'
-import { Project } from 'src/project/entities/project.entity'
 import { User } from 'src/user/entities/user.entity'
+import { UserReport } from './report-special.entity'
+import { BlogReport } from './report-special.entity'
+import { ProjectReport } from './report-special.entity'
 
 export type ReportStatus =
   | 'PENDING'
@@ -91,44 +92,42 @@ export class ReportsCount {
 export class Report {
   @Field(() => String)
   id: string
+
   @Field(() => String)
   reporterId: string
-  @Field(() => String)
-  targetType: TargetType
-  @Field(() => String, { nullable: true })
-  targetUserId?: string
-  @Field(() => String, { nullable: true })
-  targetBlogId?: string
-  @Field(() => String, { nullable: true })
-  targetProjectId?: string
-  @Field(() => String)
-  reason: string
-  @Field(() => String)
-  status: ReportStatus
-  @Field(() => String)
-  adminNote: string
-  @Field(() => Date)
-  createdAt: Date
-  @Field(() => Date)
-  updatedAt: Date
 
   @Field(() => String)
   category: ReportCategory
 
+  @Field(() => String)
+  reason: string
+
+  @Field(() => String)
+  status: ReportStatus
+
+  @Field(() => String)
+  adminNote: string
+
+  @Field(() => Date)
+  createdAt: Date
+
+  @Field(() => Date)
+  updatedAt: Date
+
   @Field(() => User, { nullable: true })
   reporter: User
 
-  @Field(() => User, { nullable: true })
-  targetUser?: User
-
-  @Field(() => Blog, { nullable: true })
-  targetBlog?: Blog
-
-  @Field(() => Project, { nullable: true })
-  targetProject?: Project
-
   @Field(() => ModerationDecision, { nullable: true })
   decision: ModerationDecision
+
+  @Field(() => UserReport, { nullable: true })
+  userReport?: UserReport
+
+  @Field(() => BlogReport, { nullable: true })
+  blogReport?: BlogReport
+
+  @Field(() => ProjectReport, { nullable: true })
+  projectReport?: ProjectReport
 }
 
 @ObjectType()
