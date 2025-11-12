@@ -149,6 +149,30 @@ type Admin {
   exampleField: Int!
 }
 
+type UserReport {
+  id: String!
+  reportId: String!
+  targetId: String!
+  target: User
+  report: Report
+}
+
+type ProjectReport {
+  id: String!
+  reportId: String!
+  targetId: String!
+  target: Project
+  report: Report
+}
+
+type BlogReport {
+  id: String!
+  reportId: String!
+  targetId: String!
+  target: Blog
+  report: Report
+}
+
 type ModerationDecision {
   id: String!
   adminId: String!
@@ -167,21 +191,17 @@ type ReportsCount {
 type Report {
   id: String!
   reporterId: String!
-  targetType: String!
-  targetUserId: String
-  targetBlogId: String
-  targetProjectId: String
+  category: String!
   reason: String!
   status: String!
   adminNote: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-  category: String!
   reporter: User
-  targetUser: User
-  targetBlog: Blog
-  targetProject: Project
   decision: ModerationDecision
+  userReport: UserReport
+  blogReport: BlogReport
+  projectReport: ProjectReport
 }
 
 type Query {
