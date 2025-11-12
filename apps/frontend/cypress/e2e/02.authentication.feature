@@ -20,6 +20,10 @@ Feature: Authentication
   
   Scenario: Create an account
     Given I visit the landing page
+    Then I should wait for 3 seconds
+    Then I click button named "noauth-dropdown-menu"
+    Then I click button named "login"
+    Then I should wait for 1 seconds
     Then I click button named "tabs-register"
     Then I change input "register-firstName" value to "John"
     Then I change input "register-lastName" value to "Doe"
@@ -39,6 +43,9 @@ Feature: Authentication
   
   Scenario: Login to existed account
     Given I visit the landing page
+    Then I should wait for 3 seconds
+    Then I click button named "noauth-dropdown-menu"
+    Then I click button named "login"
     Then I change input "login-username" value to "janedoe2"
     Then I change input "login-password" value to "Janedoe@Password2"
     Then I click button named "button-login"
