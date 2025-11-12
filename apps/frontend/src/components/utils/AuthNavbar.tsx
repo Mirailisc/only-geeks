@@ -54,7 +54,7 @@ export default function AuthNavbar() {
         {!user && (
           <div className="flex items-center space-x-2">
             <DropdownMenu>
-              <DropdownMenuTrigger className="focus:outline-none" data-cy="dropdown-menu">
+              <DropdownMenuTrigger className="focus:outline-none" data-cy="noauth-dropdown-menu">
                 <User2Icon />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
