@@ -1,87 +1,82 @@
-import { ObjectType, Field } from '@nestjs/graphql'
+import { ObjectType, Field, registerEnumType } from '@nestjs/graphql'
 import { User } from 'src/user/entities/user.entity'
-import { UserReport } from './report-special.entity'
-import { BlogReport } from './report-special.entity'
-import { ProjectReport } from './report-special.entity'
+import { UserReport, BlogReport, ProjectReport } from './report-special.entity'
+import { ModerationDecision } from 'src/admin/entities/moderation.entity'
 
-export type ReportStatus =
-  | 'PENDING'
-  | 'UNDER_REVIEW'
-  | 'RESOLVED'
-  | 'REJECTED'
-  | 'ALL'
-export type TargetType = 'USER' | 'BLOG' | 'PROJECT'
-export type ModerationAction =
-  | 'NONE'
-  | 'REQUEST_EDIT'
-  | 'UNPUBLISH'
-  | 'DEACTIVATE'
-  | 'DELETE'
-export type ReportCategory =
-  | 'PLAGIARISM'
-  | 'VIOLENT_CONTENT'
-  | 'INAPPROPRIATE_CONTENT'
-  | 'MALWARE'
-  | 'INTELLECTUAL_PROPERTY_VIOLATION'
-  | 'MISINFORMATION'
-  | 'UNSAFE_FEATURES'
-  | 'DATA_MISUSE'
-  | 'SPAM'
-  | 'HARASSMENT'
-  | 'IMPERSONATION'
-  | 'INAPPROPRIATE_BEHAVIOR'
-  | 'SCAM'
-  | 'HATE_SPEECH'
-  | 'PRIVACY_VIOLATION'
-  | 'SEXUAL_HARASSMENT'
-  | 'THREATS'
-  | 'OTHER'
+// ------------------ ENUMS ------------------
 
-@ObjectType()
-export class ModerationDecision {
-  @Field(() => String)
-  id: string
-
-  @Field(() => String)
-  adminId: string
-
-  @Field(() => String)
-  reportId: string
-
-  @Field(() => String)
-  action: ModerationAction
-
-  @Field(() => String, { nullable: true })
-  note?: string
-
-  @Field(() => Date)
-  createdAt: Date
-
-  @Field(() => User, { nullable: true })
-  admin?: User
+export enum ReportStatus {
+  PENDING = 'PENDING',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+  RESOLVED = 'RESOLVED',
+  REJECTED = 'REJECTED',
+  ALL = 'ALL',
 }
+
+export enum TargetType {
+  USER = 'USER',
+  BLOG = 'BLOG',
+  PROJECT = 'PROJECT',
+}
+
+export enum ModerationAction {
+  NONE = 'NONE',
+  REQUEST_EDIT = 'REQUEST_EDIT',
+  UNPUBLISH = 'UNPUBLISH',
+  DEACTIVATE = 'DEACTIVATE',
+  DELETE = 'DELETE',
+}
+
+export enum ReportCategory {
+  PLAGIARISM = 'PLAGIARISM',
+  VIOLENT_CONTENT = 'VIOLENT_CONTENT',
+  INAPPROPRIATE_CONTENT = 'INAPPROPRIATE_CONTENT',
+  MALWARE = 'MALWARE',
+  INTELLECTUAL_PROPERTY_VIOLATION = 'INTELLECTUAL_PROPERTY_VIOLATION',
+  MISINFORMATION = 'MISINFORMATION',
+  UNSAFE_FEATURES = 'UNSAFE_FEATURES',
+  DATA_MISUSE = 'DATA_MISUSE',
+  SPAM = 'SPAM',
+  HARASSMENT = 'HARASSMENT',
+  IMPERSONATION = 'IMPERSONATION',
+  INAPPROPRIATE_BEHAVIOR = 'INAPPROPRIATE_BEHAVIOR',
+  SCAM = 'SCAM',
+  HATE_SPEECH = 'HATE_SPEECH',
+  PRIVACY_VIOLATION = 'PRIVACY_VIOLATION',
+  SEXUAL_HARASSMENT = 'SEXUAL_HARASSMENT',
+  THREATS = 'THREATS',
+  OTHER = 'OTHER',
+}
+
+// Register enums to GraphQL schema
+registerEnumType(ReportStatus, { name: 'ReportStatus' })
+registerEnumType(TargetType, { name: 'TargetType' })
+registerEnumType(ModerationAction, { name: 'ModerationAction' })
+registerEnumType(ReportCategory, { name: 'ReportCategory' })
+
+// ------------------ OBJECT TYPES ------------------
 
 @ObjectType()
 export class ReportSummary {
-  @Field(() => String)
+  @Field(() => Number)
   status: number
 
-  @Field(() => String)
+  @Field(() => Number)
   pendingReports: number
 
-  @Field(() => String)
+  @Field(() => Number)
   underReviewReports: number
 
-  @Field(() => String)
+  @Field(() => Number)
   resolvedReports: number
 
-  @Field(() => String)
+  @Field(() => Number)
   rejectedReports: number
 }
 
 @ObjectType()
 export class ReportsCount {
-  @Field(() => String)
+  @Field(() => ReportStatus)
   status: ReportStatus
 
   @Field(() => Number)
@@ -96,17 +91,20 @@ export class Report {
   @Field(() => String)
   reporterId: string
 
-  @Field(() => String)
+  @Field(() => ReportCategory)
   category: ReportCategory
 
   @Field(() => String)
   reason: string
 
-  @Field(() => String)
+  @Field(() => ReportStatus)
   status: ReportStatus
 
-  @Field(() => String)
-  adminNote: string
+  @Field(() => String, { nullable: true })
+  adminNote?: string
+
+  @Field(() => TargetType)
+  targetType: TargetType
 
   @Field(() => Date)
   createdAt: Date
@@ -118,7 +116,7 @@ export class Report {
   reporter: User
 
   @Field(() => ModerationDecision, { nullable: true })
-  decision: ModerationDecision
+  decision?: ModerationDecision
 
   @Field(() => UserReport, { nullable: true })
   userReport?: UserReport
@@ -128,19 +126,4 @@ export class Report {
 
   @Field(() => ProjectReport, { nullable: true })
   projectReport?: ProjectReport
-}
-
-@ObjectType()
-export class ReportPagination {
-  @Field(() => [Report])
-  reports: Report[]
-
-  @Field(() => Number)
-  totalCount: number
-
-  @Field(() => Number)
-  page: number
-
-  @Field(() => Number)
-  pageSize: number
 }

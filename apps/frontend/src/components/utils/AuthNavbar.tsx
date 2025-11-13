@@ -125,16 +125,16 @@ export default function AuthNavbar() {
                     <span>Settings</span>
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuLabel>
+                {user.isAdmin && <DropdownMenuLabel>
                   Admin Section
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <Link to={ADMIN_DASHBOARD_PATH}>
+                </DropdownMenuLabel>}
+                {user.isAdmin && <DropdownMenuSeparator />}
+                {user.isAdmin && <Link to={ADMIN_DASHBOARD_PATH}>
                   <DropdownMenuItem>
                     <GaugeIcon />
                     <span>Admin Dashboard</span>
                   </DropdownMenuItem>
-                </Link>
+                </Link>}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} data-cy="logout">
                   <LogOut className="mr-2 h-4 w-4" />

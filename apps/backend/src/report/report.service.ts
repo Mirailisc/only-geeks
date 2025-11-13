@@ -7,113 +7,102 @@ import { CreateReportInput } from './dto/create-report.input'
 export class ReportService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private includes = {
+    userReport: {
+      include: {
+        target: true,
+        report: {
+          include: {
+            reporter: true,
+            decision: {
+              include: {
+                admin: true,
+              },
+            },
+          },
+        },
+      },
+    },
+    blogReport: {
+      include: {
+        target: true,
+        report: {
+          include: {
+            reporter: true,
+            decision: {
+              include: {
+                admin: true,
+              },
+            },
+          },
+        },
+      },
+    },
+    projectReport: {
+      include: {
+        target: true,
+        report: {
+          include: {
+            reporter: true,
+            decision: {
+              include: {
+                admin: true,
+              },
+            },
+          },
+        },
+      },
+    },
+  }
+  async addTargetTypeToReports(report: Report): Promise<Report> {
+    if (report.userReport) {
+      return {
+        targetType: TargetType.USER,
+        ...report,
+      } as unknown as Report
+    }
+    if (report.blogReport) {
+      return {
+        targetType: TargetType.BLOG,
+        ...report,
+      } as unknown as Report
+    }
+    if (report.projectReport) {
+      return {
+        targetType: TargetType.PROJECT,
+        ...report,
+      } as unknown as Report
+    }
+    return report
+  }
+  async addTargetTypeToReportsArray(reportList: Report[]): Promise<Report[]> {
+    const reportsWithTargetType = reportList.map((report) => {
+      return this.addTargetTypeToReports(report)
+    })
+    return reportsWithTargetType as unknown as Report[]
+  }
   async findAllMyReports(userId: string): Promise<Report[]> {
-    return await this.prisma.report.findMany({
+    const reports = await this.prisma.report.findMany({
       include: {
         reporter: true,
         decision: { include: { admin: true } },
-        userReport: {
-          include: {
-            target: true,
-            report: {
-              include: {
-                reporter: true,
-                decision: {
-                  include: {
-                    admin: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        blogReport: {
-          include: {
-            target: true,
-            report: {
-              include: {
-                reporter: true,
-                decision: {
-                  include: {
-                    admin: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        projectReport: {
-          include: {
-            target: true,
-            report: {
-              include: {
-                reporter: true,
-                decision: {
-                  include: {
-                    admin: true,
-                  },
-                },
-              },
-            },
-          },
-        },
+        ...this.includes,
       },
       where: {
         reporterId: userId,
       },
     })
+    return await this.addTargetTypeToReportsArray(
+      reports as unknown as Report[],
+    )
   }
 
   async findAllMyWarnings(userId: string): Promise<Report[]> {
-    return await this.prisma.report.findMany({
+    const reports = await this.prisma.report.findMany({
       include: {
         reporter: true,
         decision: { include: { admin: true } },
-        userReport: {
-          include: {
-            target: true,
-            report: {
-              include: {
-                reporter: true,
-                decision: {
-                  include: {
-                    admin: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        blogReport: {
-          include: {
-            target: true,
-            report: {
-              include: {
-                reporter: true,
-                decision: {
-                  include: {
-                    admin: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        projectReport: {
-          include: {
-            target: true,
-            report: {
-              include: {
-                reporter: true,
-                decision: {
-                  include: {
-                    admin: true,
-                  },
-                },
-              },
-            },
-          },
-        },
+        ...this.includes,
       },
       where: {
         OR: [
@@ -129,13 +118,16 @@ export class ReportService {
         ],
       },
     })
+    return await this.addTargetTypeToReportsArray(
+      reports as unknown as Report[],
+    )
   }
 
   async createReport(
     input: CreateReportInput,
     userId: string,
   ): Promise<Report> {
-    return await this.prisma.report.create({
+    const report = await this.prisma.report.create({
       data: {
         reporterId: userId,
         category: input.category,
@@ -170,114 +162,120 @@ export class ReportService {
       include: {
         reporter: true,
         decision: { include: { admin: true } },
-        userReport: {
-          include: {
-            target: true,
-            report: {
-              include: {
-                reporter: true,
-                decision: {
-                  include: {
-                    admin: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        blogReport: {
-          include: {
-            target: true,
-            report: {
-              include: {
-                reporter: true,
-                decision: {
-                  include: {
-                    admin: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        projectReport: {
-          include: {
-            target: true,
-            report: {
-              include: {
-                reporter: true,
-                decision: {
-                  include: {
-                    admin: true,
-                  },
-                },
-              },
-            },
-          },
-        },
+        ...this.includes,
       },
     })
+    return this.addTargetTypeToReports(report as unknown as Report)
   }
-
   async getAllReports(): Promise<Report[]> {
-    return await this.prisma.report.findMany({
+    const reports = await this.prisma.report.findMany({
       include: {
         reporter: true,
         decision: { include: { admin: true } },
+        ...this.includes,
       },
     })
+    return await this.addTargetTypeToReportsArray(
+      reports as unknown as Report[],
+    )
   }
 
   async getAllReportsByStatus(status: ReportStatus): Promise<Report[]> {
-    if (status === 'ALL') {
-      return await this.prisma.report.findMany({
+    if (status === ReportStatus.ALL) {
+      const reports = await this.prisma.report.findMany({
         include: {
           reporter: true,
           decision: { include: { admin: true } },
+          ...this.includes,
         },
       })
+      return await this.addTargetTypeToReportsArray(
+        reports as unknown as Report[],
+      )
     }
-    return await this.prisma.report.findMany({
+    const reports = await this.prisma.report.findMany({
       where: { status },
       include: {
         reporter: true,
         decision: { include: { admin: true } },
+        ...this.includes,
       },
     })
+    return await this.addTargetTypeToReportsArray(
+      reports as unknown as Report[],
+    )
   }
-
+  async getAllReportByType(targetType: TargetType): Promise<Report[]> {
+    let reports: any[] = []
+    if (targetType === TargetType.USER) {
+      reports = await this.prisma.report.findMany({
+        where: { userReport: { isNot: null } },
+        include: {
+          reporter: true,
+          decision: { include: { admin: true } },
+          ...this.includes,
+        },
+      })
+    } else if (targetType === TargetType.BLOG) {
+      reports = await this.prisma.report.findMany({
+        where: { blogReport: { isNot: null } },
+        include: {
+          reporter: true,
+          decision: { include: { admin: true } },
+          ...this.includes,
+        },
+      })
+    } else if (targetType === TargetType.PROJECT) {
+      reports = await this.prisma.report.findMany({
+        where: { projectReport: { isNot: null } },
+        include: {
+          reporter: true,
+          decision: { include: { admin: true } },
+          ...this.includes,
+        },
+      })
+    }
+    return await this.addTargetTypeToReportsArray(
+      reports as unknown as Report[],
+    )
+  }
   async findReportById(id: string): Promise<Report> {
-    return await this.prisma.report.findUnique({
+    const report = await this.prisma.report.findUnique({
       where: { id },
       include: {
         reporter: true,
         decision: { include: { admin: true } },
+        ...this.includes,
       },
     })
+    return report as unknown as Report
   }
 
   async updateReportStatus(id: string, status: ReportStatus): Promise<Report> {
-    if (status === 'ALL') {
-      throw new Error('Invalid status update')
+    if (status === ReportStatus.ALL) {
+      throw new Error('Cannot update report to ALL status')
     }
-    return await this.prisma.report.update({
+    const report = await this.prisma.report.update({
       where: { id },
       data: { status },
       include: {
         reporter: true,
         decision: { include: { admin: true } },
+        ...this.includes,
       },
     })
+    return await this.addTargetTypeToReports(report as unknown as Report)
   }
 
   async deleteReport(id: string): Promise<Report> {
-    return await this.prisma.report.delete({
+    const report = await this.prisma.report.delete({
       where: { id },
       include: {
         reporter: true,
         decision: { include: { admin: true } },
       },
     })
+    return await this.addTargetTypeToReports(report as unknown as Report)
   }
 
   async countReportsByStatus(): Promise<
@@ -292,7 +290,7 @@ export class ReportService {
     })
 
     return result.map((r) => ({
-      status: r.status,
+      status: r.status as ReportStatus,
       count: r._count.status,
     }))
   }

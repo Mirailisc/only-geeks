@@ -55,6 +55,14 @@ export class ReportResolver {
     return this.reportService.getAllReportsByStatus(status)
   }
 
+  @Query(() => [Report])
+  @UseGuards(AdminGqlAuthGuard)
+  async getAllReportByTargetType(
+    @Args('targetType') targetType: TargetType,
+  ): Promise<Report[]> {
+    return this.reportService.getAllReportByType(targetType)
+  }
+
   // findReportById
   @Query(() => Report)
   @UseGuards(AdminGqlAuthGuard)

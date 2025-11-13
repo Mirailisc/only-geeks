@@ -61,25 +61,40 @@ export interface ReportsCount {
   count: number
 }
 
+export interface UserReport {
+  id: string
+  reportId: string
+  targetId: string
+  target: Partial<Profile>
+}
+export interface ProjectReport {
+  id: string
+  reportId: string
+  targetId: string
+  target: Partial<Project>
+}
+export interface BlogReport {
+  id: string
+  reportId: string
+  targetId: string
+  target: Partial<Blog>
+}
+
 export interface Report {
   id: string
   reporterId: string
-  targetType: ReportTargetType
-  targetId: string
-  targetUserId: string
-  targetBlogId: string
-  targetProjectId: string
+  category: ReportCategory
   reason: string
   status: ReportStatus
-  adminNote: string
+  adminNote?: string
+  targetType: ReportTargetType
   createdAt: Date
   updatedAt: Date
-  category: ReportCategory
   reporter: Partial<Profile>
-  targetUser?: Partial<Profile>
-  targetBlog?: Partial<Blog>
-  targetProject?: Partial<Project>
-  decision: Partial<ModerationDecision>
+  decision?: ModerationDecision
+  userReport?: UserReport
+  blogReport?: BlogReport
+  projectReport?: ProjectReport
 }
 
 // Example variables:
@@ -93,71 +108,14 @@ export interface Report {
 export const CREATE_REPORT_MUTATION = gql`
 mutation CreateReport($input: CreateReportInput!) {
   createReport(input: $input) {
+    id
+    reporterId
+    category
     reason
-    reporter {
-      username
-      lastName
-      firstName
-      email
-      picture
-    }
     status
-    decision {
-      action
-      note
-      admin {
-        lastName
-        firstName
-        email
-        picture
-        username
-      }
-      createdAt
-    }
-    targetBlog {
-      title
-      thumbnail
-      slug
-      User {
-        lastName
-        firstName
-        email
-        picture
-        username
-      }
-      description
-      id
-    }
-    targetUserId
-    targetBlogId
-    targetProjectId
-    targetProject {
-      photos
-      startDate
-      title
-      id
-      link
-      endDate
-      description
-      User {
-        firstName
-        lastName
-        email
-        username
-        picture
-      }
-    }
-    targetType
-    targetUser {
-      email
-      firstName
-      bio
-      lastName
-      location
-      organization
-      picture
-      username
-    }
+    adminNote
+    createdAt
+    updatedAt
   }
 }
 `

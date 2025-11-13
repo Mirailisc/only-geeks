@@ -18,5 +18,5 @@ export class AdminFinderInput {
   page?: number = 1
 
   @Field(() => String, { nullable: true })
-  status?: ReportStatus = 'ALL'
+  status?: ReportStatus = ReportStatus.ALL
 }

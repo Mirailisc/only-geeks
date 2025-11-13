@@ -215,8 +215,8 @@ model ModerationDecision {
   note        String?
   createdAt   DateTime @default(now())
 
-  admin   User   @relation(fields: [adminId], references: [id])
-  report  Report @relation(fields: [reportId], references: [id])
+  admin       User     @relation(fields: [adminId], references: [id])
+  report      Report   @relation(fields: [reportId], references: [id])
 }
 
 enum ModerationAction {
@@ -238,13 +238,12 @@ model UserRestriction {
   expiresAt DateTime?
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum RestrictionType {
   TEMP_BAN       // cannot login
   NO_POSTING     // cannot create blogs/projects
-  NO_COMMENT     // cannot comment/interact (future use)
 }
 
 // ==========================

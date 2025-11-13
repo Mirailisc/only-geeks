@@ -37,18 +37,20 @@ const RenderFeedProject = ({item}: {item: FeedProjectType}) => {
       <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
-              <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
-            </Avatar>
-            <div>
-            <p className="font-semibold text-sm">
-              {user.firstName} {user.lastName}
-            </p>
-            <p className="text-xs text-muted-foreground">@{user.username}</p>
+          <Link to={`/user/${user.username}`}>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+              <p className="font-semibold text-sm">
+                {user.firstName} {user.lastName}
+              </p>
+              <p className="text-xs text-muted-foreground">@{user.username}</p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Badge variant="secondary" className="gap-1">
             <FileTextIcon className="h-3 w-3" />
             Project
@@ -132,20 +134,22 @@ const RenderFeedBlog = ({item}: {item: FeedBlogType}) => {
       <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
-              <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
-            </Avatar>
-            <div>
-            <p className="font-semibold text-sm">
-              {user.firstName} {user.lastName}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              @{user.username} · {item.createdAt && formatDate(item.createdAt)}
-            </p>
+          <Link to={`/user/${user.username}`}>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+              <p className="font-semibold text-sm">
+                {user.firstName} {user.lastName}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                @{user.username} · {item.createdAt && formatDate(item.createdAt)}
+              </p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Badge variant="secondary" className="gap-1">
             <FileTextIcon className="h-3 w-3" />
             Blog
@@ -210,20 +214,22 @@ const RenderFeedAchievement = ({item}: {item: FeedAchievementType}) => {
       <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
-              <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold text-sm">
-                {user.firstName} {user.lastName}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                @{user.username} · {item.createdAt && formatDate(item.createdAt)}
-              </p>
+          <Link to={`/user/${user.username}`}>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-semibold text-sm">
+                  {user.firstName} {user.lastName}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  @{user.username} · {item.createdAt && formatDate(item.createdAt)}
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Badge variant="secondary" className="gap-1">
             <AwardIcon className="h-3 w-3" />
             Achievement

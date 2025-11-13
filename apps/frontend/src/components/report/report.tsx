@@ -1,6 +1,6 @@
 import { AM_I_REPORT_THIS_QUERY, CREATE_REPORT_MUTATION, type Report, type ReportStructure, type ReportTargetType } from '@/graphql/report'
 import { useMutation } from 'node_modules/@apollo/client/react/hooks/useMutation'
-import { useState } from 'react'
+import { useState, useCallback, useEffect } from 'react' // Import useEffect
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../ui/alert-dialog'
@@ -16,6 +16,7 @@ import { Separator } from '../ui/separator'
 import { Button } from '../ui/button'
 import { useNavigate } from 'react-router-dom'
 import { useLazyQuery } from '@apollo/client/react'
+
 interface ReportProps {
   type: ReportTargetType
   myUsername: string
@@ -49,12 +50,33 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
     type === 'PROJECT' ? PROJECT_REPORT_REASON :
     type === 'USER' ? USER_REPORT_REASON :
     DEFAULT_REPORT_REASON
+  
   const [reportStructure, setReportStructure] = useState<ReportStructure>(defaultReportStructure)
+  // New state for the Textarea input value
+  const [localReason, setLocalReason] = useState<string>(defaultReportStructure.reason) 
+  
   const [createReport, { loading: loadingCreatingReport, error: creatingReportError }] = useMutation<{ createReport: Report }>(CREATE_REPORT_MUTATION)
   const [promptReport, setPromptReport] = useState<boolean>(false)
   const [promptLoginToReport, setPromptLoginToReport] = useState<boolean>(false)
   const [errorReport, setErrorReport] = useState<string | null>(null)
   const [amIReport, { loading: loadingFindingReport }] = useLazyQuery<{ hasReportedTarget: boolean }>(AM_I_REPORT_THIS_QUERY)
+  
+  // Custom Debounce effect for the reason Textarea
+  useEffect(() => {
+    // Set a timeout to update the main reportStructure after 500ms
+    const handler = setTimeout(() => {
+      setReportStructure(prev => ({
+        ...prev,
+        reason: localReason,
+      }));
+    }, 500); // Debounce delay of 500ms
+
+    // Cleanup function to clear the timeout if localReason changes before 500ms
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [localReason]); // Only re-run the effect if localReason changes
+
   const toggleReportModal = async () => {
     const { data } = await amIReport({
       variables: {
@@ -74,11 +96,24 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
       setPromptReport(!promptReport)
     }
   }
+
+  // Handler for the Textarea onChange event
+  const handleReasonChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setLocalReason(e.target.value);
+  }, []); // Empty dependency array means this function is created once
+
   const submitReport = () => {
     setErrorReport(null);
-    // console.log("Report Structure:", reportStructure);
+    // Use the value from reportStructure (which is updated by the debounced effect)
     if(reportStructure.category == null){
       setErrorReport("Please select a reason for reporting this " + getType(type).toLowerCase() + ".");
+      return; // Exit if no category is selected
+    }
+    
+    // Check if the reason is still empty (even after debouncing)
+    if(!reportStructure.reason.trim()){
+        setErrorReport("Please provide a description for reporting this " + getType(type).toLowerCase() + ".");
+        return;
     }
 
     createReport({
@@ -93,6 +128,7 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
         setErrorReport(null)
         toast.success('Report submitted successfully.')
         setReportStructure(defaultReportStructure)
+        setLocalReason(defaultReportStructure.reason) // Also reset local reason
         setPromptReport(false)
       },
       onError: (error) => {
@@ -103,15 +139,20 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
     if(creatingReportError){
       setErrorReport(creatingReportError.message);
     }
-    
   }
+  
+  // Use a temporary function to safely reset states when closing the dialog
+  const handleDialogClose = () => {
+    setPromptReport(false)
+    setReportStructure(defaultReportStructure)
+    setLocalReason(defaultReportStructure.reason) // Reset local reason on close
+    setErrorReport(null) // Clear any lingering errors
+  }
+
   if(!user) return null;
   return (
     <>
-      <Dialog open={promptReport} onOpenChange={()=>{
-        setPromptReport(false)
-        setReportStructure(defaultReportStructure)
-      }}>
+      <Dialog open={promptReport} onOpenChange={handleDialogClose}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Report this {getType(type).toLowerCase()}</DialogTitle>
@@ -128,14 +169,14 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
           </Alert>}
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="name-1">Reason</Label>
+              <Label htmlFor="report-category">Reason</Label>
               <Select onValueChange={(value)=>{
                 setReportStructure({
                   ...reportStructure,
                   category: value as ReportStructure['category'],
                 })
               }}>
-                <SelectTrigger>
+                <SelectTrigger id="report-category">
                   {
                     reportStructure.category ? REPORT_REASON.find((reason)=>reason.value === reportStructure.category)?.label || "Select reason" : "Select reason"
                   }
@@ -143,15 +184,21 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
                 <SelectContent>
                   {
                     REPORT_REASON.map((reason)=>(
-                      <SelectItem key={`blog-report-${reason.value}`} value={reason.value}>{reason.label}</SelectItem>
+                      <SelectItem key={`report-reason-${reason.value}`} value={reason.value}>{reason.label}</SelectItem>
                     ))
                   }
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="username-1">Tell me why?</Label>
-              <Textarea placeholder={`I found this ${getType(type).toLowerCase()} offensive because...`} rows={7} />
+              <Label htmlFor="report-reason-text">Tell me why?</Label>
+              <Textarea 
+                id="report-reason-text"
+                value={localReason} // Bind to local state for immediate feedback
+                onChange={handleReasonChange} // Use the debounced change handler
+                placeholder={`I found this ${getType(type).toLowerCase()} offensive because...`} 
+                rows={7} 
+              />
             </div>
           </div>
           <Separator />
@@ -159,9 +206,9 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
             <DialogClose asChild>
               <Button variant="outline" disabled={loadingCreatingReport}>Cancel</Button>
             </DialogClose>
-            <Button variant={"destructive"} onClick={()=>{
-              submitReport();
-            }} disabled={loadingCreatingReport}>Submit</Button>
+            <Button variant={"destructive"} onClick={submitReport} disabled={loadingCreatingReport}>
+                {loadingCreatingReport ? 'Submitting...' : 'Submit'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -189,7 +236,7 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
               setPromptLoginToReport(true);
             }
           }}>
-              <TriangleAlertIcon /> Report {
+              <TriangleAlertIcon className='w-4 h-4 mr-2' /> Report {
                 getType(type).replace(/^\w/, (c) => c.toUpperCase())
               }
           </Button>

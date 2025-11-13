@@ -144,17 +144,11 @@ type AchievementFeed {
   contentType: String!
 }
 
-type Admin {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type UserReport {
   id: String!
   reportId: String!
   targetId: String!
   target: User
-  report: Report
 }
 
 type ProjectReport {
@@ -162,7 +156,6 @@ type ProjectReport {
   reportId: String!
   targetId: String!
   target: Project
-  report: Report
 }
 
 type BlogReport {
@@ -170,31 +163,48 @@ type BlogReport {
   reportId: String!
   targetId: String!
   target: Blog
-  report: Report
 }
 
 type ModerationDecision {
-  id: String!
+  id: ID!
   adminId: String!
   reportId: String!
-  action: String!
+  action: ModerationAction!
   note: String
   createdAt: DateTime!
   admin: User
+  report: Report
+}
+
+enum ModerationAction {
+  NONE
+  REQUEST_EDIT
+  UNPUBLISH
+  DEACTIVATE
+  DELETE
 }
 
 type ReportsCount {
-  status: String!
+  status: ReportStatus!
   count: Float!
+}
+
+enum ReportStatus {
+  PENDING
+  UNDER_REVIEW
+  RESOLVED
+  REJECTED
+  ALL
 }
 
 type Report {
   id: String!
   reporterId: String!
-  category: String!
+  category: ReportCategory!
   reason: String!
-  status: String!
-  adminNote: String!
+  status: ReportStatus!
+  adminNote: String
+  targetType: TargetType!
   createdAt: DateTime!
   updatedAt: DateTime!
   reporter: User
@@ -202,6 +212,59 @@ type Report {
   userReport: UserReport
   blogReport: BlogReport
   projectReport: ProjectReport
+}
+
+enum ReportCategory {
+  PLAGIARISM
+  VIOLENT_CONTENT
+  INAPPROPRIATE_CONTENT
+  MALWARE
+  INTELLECTUAL_PROPERTY_VIOLATION
+  MISINFORMATION
+  UNSAFE_FEATURES
+  DATA_MISUSE
+  SPAM
+  HARASSMENT
+  IMPERSONATION
+  INAPPROPRIATE_BEHAVIOR
+  SCAM
+  HATE_SPEECH
+  PRIVACY_VIOLATION
+  SEXUAL_HARASSMENT
+  THREATS
+  OTHER
+}
+
+enum TargetType {
+  USER
+  BLOG
+  PROJECT
+}
+
+type UserRestriction {
+  id: ID!
+  userId: String!
+  type: RestrictionType!
+  reason: String
+  expiresAt: DateTime
+  createdAt: DateTime!
+  user: User
+}
+
+enum RestrictionType {
+  TEMP_BAN
+  NO_POSTING
+}
+
+type AdminAuditLog {
+  id: ID!
+  adminId: String!
+  actionType: String!
+  targetType: String!
+  targetId: String
+  details: String
+  createdAt: DateTime!
+  admin: User
 }
 
 type Query {
@@ -225,11 +288,22 @@ type Query {
   getAchievementsByUsername(username: String!): [Achievement!]!
   feed(input: FeedInput!): FeedResponse!
   getNewFeedCount(input: NewFeedCountInput!): Float!
-  admin(id: Int!): Admin!
+  getAllModerationDecisions: [ModerationDecision!]!
+  getModerationDecisionByReportId(reportId: String!): ModerationDecision!
+  getAllUserRestrictions: [UserRestriction!]!
+  getUserRestrictionsByUserId(userId: String!): [UserRestriction!]!
+  getActiveUserRestrictions(userId: String!): [UserRestriction!]!
+  getAllDeactivatedUsers: [User!]!
+  getAllAuditLogs: [AdminAuditLog!]!
+  getAuditLogsByAdmin(adminId: String!): [AdminAuditLog!]!
+  getAuditLogsByTarget(targetType: String!, targetId: String!): [AdminAuditLog!]!
+  getAuditLogsByActionType(actionType: String!): [AdminAuditLog!]!
+  getRecentAuditLogs(limit: Float! = 50): [AdminAuditLog!]!
   getMyReports: [Report!]!
   getMyWarnings: [Report!]!
   getAllReports: [Report!]!
   getAllReportsByStatus(status: String!): [Report!]!
+  getAllReportByTargetType(targetType: String!): [Report!]!
   findReportById(id: String!): Report!
   countReportsByStatus: [ReportsCount!]!
   hasReportedTarget(targetId: String!, targetType: String!): Boolean!
@@ -274,9 +348,14 @@ type Mutation {
   updateAchievement(id: String!, input: UpdateAchievementInput!): Achievement!
   deleteAchievement(id: String!): Boolean!
   updatePreference(input: PreferenceInput!): PreferenceEntity!
-  createAdmin(createAdminInput: CreateAdminInput!): Admin!
-  updateAdmin(updateAdminInput: UpdateAdminInput!): Admin!
-  removeAdmin(id: Int!): Admin!
+  createModerationDecision(input: CreateModerationDecisionInput!): ModerationDecision!
+  updateModerationDecision(id: String!, action: String!, note: String): ModerationDecision!
+  deleteModerationDecision(id: String!): ModerationDecision!
+  createUserRestriction(input: CreateUserRestrictionInput!): UserRestriction!
+  removeUserRestriction(id: String!): UserRestriction!
+  updateUserRestriction(id: String!, type: String, reason: String, expiresAt: DateTime): UserRestriction!
+  deactivateUser(userId: String!, reason: String!): User!
+  activateUser(userId: String!): User!
   createReport(input: CreateReportInput!): Report!
   updateReportStatus(id: String!, status: String!): Report!
   deleteReport(id: String!): Report!
@@ -375,15 +454,17 @@ input PreferenceInput {
   isPublicProfile: Boolean
 }
 
-input CreateAdminInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+input CreateModerationDecisionInput {
+  reportId: String!
+  action: String!
+  note: String
 }
 
-input UpdateAdminInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input CreateUserRestrictionInput {
+  userId: String!
+  type: RestrictionType!
+  reason: String
+  expiresAt: DateTime
 }
 
 input CreateReportInput {

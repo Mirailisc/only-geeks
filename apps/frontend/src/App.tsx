@@ -29,6 +29,8 @@ import CreateProject from './pages/create_project'
 import CreateAchievement from './pages/create_achievements'
 import CreateEducation from './pages/create_education'
 import { ThemeProvider } from 'next-themes'
+import ProtectedAdminRoute from './components/utils/ProtectedAdminRoute'
+import AdminModerationDashboard from './pages/admin/dashboard'
 
 const router = createBrowserRouter([
   {
@@ -105,7 +107,9 @@ const router = createBrowserRouter([
       },
       {
         path: ADMIN_DASHBOARD_PATH,
-        element: (<>This is admin dashboard</>),
+        element: (<ProtectedAdminRoute>
+          <AdminModerationDashboard />
+        </ProtectedAdminRoute>),
       },
     ],
   },

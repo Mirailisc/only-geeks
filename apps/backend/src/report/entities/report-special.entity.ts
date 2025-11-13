@@ -1,5 +1,4 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { Report } from './report.entity'
 import { Project } from 'src/project/entities/project.entity'
 import { Blog } from 'src/blog/entities/blog.entity'
 import { User } from 'src/user/entities/user.entity'
@@ -17,9 +16,6 @@ export class UserReport {
 
   @Field(() => User, { nullable: true })
   target: User
-
-  @Field(() => Report, { nullable: true })
-  report: Report
 }
 
 @ObjectType()
@@ -35,9 +31,6 @@ export class ProjectReport {
 
   @Field(() => Project, { nullable: true })
   target: Project
-
-  @Field(() => Report, { nullable: true })
-  report: Report
 }
 
 @ObjectType()
@@ -53,7 +46,4 @@ export class BlogReport {
 
   @Field(() => Blog, { nullable: true })
   target: Blog
-
-  @Field(() => Report, { nullable: true })
-  report: Report
 }
