@@ -30,7 +30,7 @@ export class GqlAuthGuard {
 }
 
 @Injectable()
-export class OptionalGqlAuthGuard {
+export class GuestAuthGuard {
   constructor(private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -63,7 +63,7 @@ export class OptionalGqlAuthGuard {
 }
 
 @Injectable()
-export class AdminGqlAuthGuard {
+export class AdminAuthGuard {
   constructor(private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

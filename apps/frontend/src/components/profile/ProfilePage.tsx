@@ -12,7 +12,7 @@ import ProfileBlog from '@/components/profile/ProfileBlog'
 import ProfileProjects from '@/components/profile/ProfileProject'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import ProfilePortfolio from './ProfilePortfolio'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 import Meta from '../utils/metadata'
 import ReportComponentWithButton from '../report/report'
 

@@ -4,7 +4,7 @@ import { Project } from './entities/project.entity'
 import { UseGuards } from '@nestjs/common'
 import {
   GqlAuthGuard,
-  OptionalGqlAuthGuard,
+  GuestAuthGuard,
 } from 'src/auth/guards/graphql-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { CreateProjectInput } from './dto/create-project.input'
@@ -21,7 +21,7 @@ export class ProjectResolver {
   }
 
   @Query(() => [Project])
-  @UseGuards(OptionalGqlAuthGuard)
+  @UseGuards(GuestAuthGuard)
   async getProjectsByUsername(@Args('username') username: string) {
     return await this.projectService.findAllByUsername(username)
   }

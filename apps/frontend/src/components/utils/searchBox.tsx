@@ -1,12 +1,12 @@
 import { useDebounce } from '@/hooks/useDebounce'
 import { FileTextIcon, SearchIcon, UserIcon } from 'lucide-react'
 import React from 'react'
-import { Input } from '../ui/input'
+import { Input } from '@/components/ui/input'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client/react'
 import { SEARCH_SUGGEST_QUERY, type Search } from './../../graphql/search'
-import { ScrollArea } from '../ui/scroll-area'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 const SearchBox = () => {
   const [searchQuery, setSearchQuery] = React.useState('')

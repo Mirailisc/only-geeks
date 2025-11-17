@@ -36,9 +36,62 @@ export interface AdminAuditLog {
 }
 
 // GraphQL Queries
-export const GET_ALL_REPORTS = gql`
-  query GetAllReports {
-    getAllReports {
+// export const GET_ALL_REPORTS = gql`
+//   query GetAllReports {
+//     getAllReports {
+//       id
+//       reporterId
+//       category
+//       reason
+//       status
+//       adminNote
+//       targetType
+//       createdAt
+//       updatedAt
+//       reporter {
+//         id
+//         username
+//         email
+//       }
+//       decision {
+//         id
+//         action
+//         note
+//         createdAt
+//       }
+//     }
+//   }
+// `;
+
+// export const GET_ALL_REPORTS_BY_STATUS = gql`
+// query GetAllReportsByStatus($status: String!) {
+//   getAllReportsByStatus(status: $status) {
+//     id
+//     reporterId
+//     category
+//     reason
+//     status
+//     adminNote
+//     targetType
+//     createdAt
+//     updatedAt
+//     reporter {
+//       id
+//       username
+//       email
+//     }
+//     decision {
+//       id
+//       action
+//       note
+//       createdAt
+//     }
+//   }
+// }
+// `
+export const GET_REPORTS_BY_STATUS_OR_ALL = gql`
+  query GetReportsByStatusOrAll($status: String!) {
+    getAllReportsByStatus(status: $status) {
       id
       reporterId
       category
@@ -59,36 +112,50 @@ export const GET_ALL_REPORTS = gql`
         note
         createdAt
       }
+      blogReport {
+        target {
+          id
+          title
+          slug
+          User {
+            firstName
+            lastName
+            picture
+            username
+            email
+          }
+          description
+        }
+      }
+      projectReport {
+        target {
+          id
+          photos
+          title
+          description
+          User {
+            lastName
+            firstName
+            picture
+            username
+            email
+          }
+        }
+      }
+      userReport {
+        target {
+          id
+          username
+          picture
+          lastName
+          firstName
+          email
+        }
+      }
     }
   }
 `;
 
-export const GET_ALL_REPORTS_BY_STATUS = gql`
-query GetAllReportsByStatus($status: String!) {
-  getAllReportsByStatus(status: $status) {
-    id
-    reporterId
-    category
-    reason
-    status
-    adminNote
-    targetType
-    createdAt
-    updatedAt
-    reporter {
-      id
-      username
-      email
-    }
-    decision {
-      id
-      action
-      note
-      createdAt
-    }
-  }
-}
-`
 export const GET_ALL_REPORTS_BY_TARGET_TYPE = gql`
 query GetAllReportByTargetType($status: String!) {
   getAllReportByTargetType(status: $status) {
@@ -175,6 +242,15 @@ export const CREATE_MODERATION_DECISION = gql`
     }
   }
 `;
+export const UPDATE_MODERATION_DECISION = gql`
+mutation UpdateModerationDecision($updateModerationDecisionId: String!, $action: String!, $note: String) {
+  updateModerationDecision(id: $updateModerationDecisionId, action: $action, note: $note) {
+    id
+    action
+    note
+  }
+}
+`;
 
 export const UPDATE_REPORT_STATUS = gql`
   mutation UpdateReportStatus($id: String!, $status: String!) {
@@ -217,6 +293,31 @@ export const REMOVE_USER_RESTRICTION = gql`
   mutation RemoveUserRestriction($id: String!) {
     removeUserRestriction(id: $id) {
       id
+    }
+  }
+`;
+
+export const GET_REPORT_COUNTS_BY_STATUS = gql`
+query CountReportsByStatus {
+  countReportsByStatus {
+    ALL
+    PENDING
+    REJECTED
+    RESOLVED
+    UNDER_REVIEW
+  }
+}
+`
+
+export const SEARCH_USER_QUERY = gql`
+  query SearchUser($query: String!) {
+    searchUser(query: $query) {
+      id
+      picture
+      email
+      lastName
+      username
+      firstName
     }
   }
 `;

@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql'
 import { UseGuards } from '@nestjs/common'
-import { AdminGqlAuthGuard } from 'src/auth/guards/graphql-auth.guard'
+import { AdminAuthGuard } from 'src/auth/guards/graphql-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { AdminService } from './admin.service'
 import { UserRestriction, RestrictionType } from './entities/restriction.entity'
@@ -18,7 +18,7 @@ export class AdminResolver {
   // ==================== MODERATION DECISIONS ====================
 
   @Mutation(() => ModerationDecision)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async createModerationDecision(
     @Args('input') input: CreateModerationDecisionInput,
     @CurrentUser() admin: any,
@@ -27,13 +27,13 @@ export class AdminResolver {
   }
 
   @Query(() => [ModerationDecision])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAllModerationDecisions(): Promise<ModerationDecision[]> {
     return this.adminService.getAllModerationDecisions()
   }
 
   @Query(() => ModerationDecision)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getModerationDecisionByReportId(
     @Args('reportId') reportId: string,
   ): Promise<ModerationDecision> {
@@ -41,7 +41,7 @@ export class AdminResolver {
   }
 
   @Mutation(() => ModerationDecision)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async updateModerationDecision(
     @Args('id') id: string,
     @Args('action') action: ModerationAction,
@@ -57,7 +57,7 @@ export class AdminResolver {
   }
 
   @Mutation(() => ModerationDecision)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async deleteModerationDecision(
     @Args('id') id: string,
     @CurrentUser() admin: any,
@@ -68,7 +68,7 @@ export class AdminResolver {
   // ==================== USER RESTRICTIONS ====================
 
   @Mutation(() => UserRestriction)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async createUserRestriction(
     @Args('input') input: CreateUserRestrictionInput,
     @CurrentUser() admin: any,
@@ -77,13 +77,13 @@ export class AdminResolver {
   }
 
   @Query(() => [UserRestriction])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAllUserRestrictions(): Promise<UserRestriction[]> {
     return this.adminService.getAllUserRestrictions()
   }
 
   @Query(() => [UserRestriction])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getUserRestrictionsByUserId(
     @Args('userId') userId: string,
   ): Promise<UserRestriction[]> {
@@ -91,7 +91,7 @@ export class AdminResolver {
   }
 
   @Query(() => [UserRestriction])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getActiveUserRestrictions(
     @Args('userId') userId: string,
   ): Promise<UserRestriction[]> {
@@ -99,7 +99,7 @@ export class AdminResolver {
   }
 
   @Mutation(() => UserRestriction)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async removeUserRestriction(
     @Args('id') id: string,
     @CurrentUser() admin: any,
@@ -108,7 +108,7 @@ export class AdminResolver {
   }
 
   @Mutation(() => UserRestriction)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async updateUserRestriction(
     @Args('id') id: string,
     @Args('type', { nullable: true }) type: RestrictionType,
@@ -128,7 +128,7 @@ export class AdminResolver {
   // ==================== USER MANAGEMENT ====================
 
   @Mutation(() => User)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async deactivateUser(
     @Args('userId') userId: string,
     @Args('reason') reason: string,
@@ -138,7 +138,7 @@ export class AdminResolver {
   }
 
   @Mutation(() => User)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async activateUser(
     @Args('userId') userId: string,
     @CurrentUser() admin: any,
@@ -147,7 +147,7 @@ export class AdminResolver {
   }
 
   @Query(() => [User])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAllDeactivatedUsers(): Promise<User[]> {
     return this.adminService.getAllDeactivatedUsers()
   }
@@ -155,13 +155,13 @@ export class AdminResolver {
   // ==================== AUDIT LOGS ====================
 
   @Query(() => [AdminAuditLog])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAllAuditLogs(): Promise<AdminAuditLog[]> {
     return this.adminService.getAllAuditLogs()
   }
 
   @Query(() => [AdminAuditLog])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAuditLogsByAdmin(
     @Args('adminId') adminId: string,
   ): Promise<AdminAuditLog[]> {
@@ -169,7 +169,7 @@ export class AdminResolver {
   }
 
   @Query(() => [AdminAuditLog])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAuditLogsByTarget(
     @Args('targetType') targetType: string,
     @Args('targetId') targetId: string,
@@ -178,7 +178,7 @@ export class AdminResolver {
   }
 
   @Query(() => [AdminAuditLog])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAuditLogsByActionType(
     @Args('actionType') actionType: string,
   ): Promise<AdminAuditLog[]> {
@@ -186,7 +186,7 @@ export class AdminResolver {
   }
 
   @Query(() => [AdminAuditLog])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getRecentAuditLogs(
     @Args('limit', { defaultValue: 50 }) limit: number,
   ): Promise<AdminAuditLog[]> {

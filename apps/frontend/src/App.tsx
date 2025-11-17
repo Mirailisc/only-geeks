@@ -30,7 +30,7 @@ import CreateAchievement from './pages/create_achievements'
 import CreateEducation from './pages/create_education'
 import { ThemeProvider } from 'next-themes'
 import ProtectedAdminRoute from './components/utils/ProtectedAdminRoute'
-import AdminModerationDashboard from './pages/admin/dashboard'
+import AdminModerationDashboard from './pages/admin'
 
 const router = createBrowserRouter([
   {

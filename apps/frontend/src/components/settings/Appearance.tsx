@@ -1,12 +1,12 @@
 import { GET_MY_PROFILE_QUERY, UPDATE_PREFERENCE_MUTATION, type Preference, type Profile } from '@/graphql/profile'
-import { Card, CardContent, CardDescription, CardTitle } from '../ui/card'
-import { Separator } from '../ui/separator'
-import { ButtonGroup } from '../ui/button-group'
-import { Button } from '../ui/button'
+import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Button } from '@/components/ui/button'
 import { MonitorIcon, MoonIcon, SunIcon, TriangleAlertIcon } from 'lucide-react'
-import { Label } from '../ui/label'
+import { Label } from '@/components/ui/label'
 import { useMutation } from '@apollo/client/react'
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useTheme } from 'next-themes'
 
 interface AppearanceSettingsProps {

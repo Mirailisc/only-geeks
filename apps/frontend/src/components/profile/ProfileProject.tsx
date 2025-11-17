@@ -10,9 +10,9 @@ import {
   GET_PROJECTS_BY_USERNAME_QUERY,
 } from '@/graphql/project'
 import { Link, useNavigate } from 'react-router-dom'
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
 import { CREATE_PROJECT_PATH } from '@/constants/routes'
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../ui/empty'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import ReportComponentWithButton from '../report/report'
 
 // Component for a single project card

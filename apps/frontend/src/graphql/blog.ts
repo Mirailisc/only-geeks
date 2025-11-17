@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import type { Profile } from './profile'
 
 export interface Blog {
   id: string
@@ -11,6 +12,7 @@ export interface Blog {
   isPublished: boolean
   createdAt: string
   updatedAt: string
+  User: Partial<Profile>
 }
 
 export const GET_BLOGS_QUERY = gql`

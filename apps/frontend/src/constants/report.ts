@@ -1,3 +1,5 @@
+import type { ModerationAction } from "@/graphql/report";
+
 export const BLOG_REPORT_REASON = [
   { label: 'Spam or Misleading', value: 'SPAM' },
   { label: 'Inappropriate or Offensive Content', value: 'INAPPROPRIATE_CONTENT' },
@@ -45,3 +47,11 @@ export const DEFAULT_REPORT_REASON = [
     { label: 'Privacy Violation', value: 'PRIVACY_VIOLATION' },
     { label: 'Other (Specify)', value: 'OTHER' },
 ];
+
+export const MODERATION_ACTIONS_TEXT: Record<ModerationAction, string> = {
+  NONE: "No Action Taken",
+  REQUEST_EDIT: "Request Edit",
+  UNPUBLISH: "Unpublish Content",
+  DELETE: "Delete Content",
+  DEACTIVATE: "Deactivate User",
+};

@@ -184,17 +184,12 @@ enum ModerationAction {
   DELETE
 }
 
-type ReportsCount {
-  status: ReportStatus!
-  count: Float!
-}
-
-enum ReportStatus {
-  PENDING
-  UNDER_REVIEW
-  RESOLVED
-  REJECTED
-  ALL
+type ReportsCountSummary {
+  PENDING: Float!
+  UNDER_REVIEW: Float!
+  RESOLVED: Float!
+  REJECTED: Float!
+  ALL: Float!
 }
 
 type Report {
@@ -235,6 +230,14 @@ enum ReportCategory {
   OTHER
 }
 
+enum ReportStatus {
+  PENDING
+  UNDER_REVIEW
+  RESOLVED
+  REJECTED
+  ALL
+}
+
 enum TargetType {
   USER
   BLOG
@@ -271,6 +274,7 @@ type Query {
   getHealth: Health!
   getMyProfile: User!
   getProfileByUsername(username: String!): User!
+  searchUser(query: String!): [User!]!
   getGoogleOauthUrl(state: String!): String!
   me: AuthUser!
   getBlogs: [Blog!]!
@@ -305,7 +309,7 @@ type Query {
   getAllReportsByStatus(status: String!): [Report!]!
   getAllReportByTargetType(targetType: String!): [Report!]!
   findReportById(id: String!): Report!
-  countReportsByStatus: [ReportsCount!]!
+  countReportsByStatus: ReportsCountSummary!
   hasReportedTarget(targetId: String!, targetType: String!): Boolean!
 }
 

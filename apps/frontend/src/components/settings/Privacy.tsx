@@ -1,11 +1,11 @@
 import { GET_MY_PROFILE_QUERY, type Profile, UPDATE_PREFERENCE_MUTATION } from '@/graphql/profile'
-import { Card, CardContent, CardDescription, CardTitle } from '../ui/card'
-import { Separator } from '../ui/separator'
+import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import { TriangleAlertIcon } from 'lucide-react'
-import { Label } from '../ui/label'
+import { Label } from '@/components/ui/label'
 import { useMutation } from '@apollo/client/react'
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
-import { Switch } from '../ui/switch'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Switch } from '@/components/ui/switch'
 
 interface PrivacySettingsProps {
   profile: Profile

@@ -4,7 +4,7 @@ import { Education } from './entities/education.entity'
 import { UseGuards } from '@nestjs/common'
 import {
   GqlAuthGuard,
-  OptionalGqlAuthGuard,
+  GuestAuthGuard,
 } from 'src/auth/guards/graphql-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { CreateEducationInput } from './dto/create-education.input'
@@ -21,7 +21,7 @@ export class EducationResolver {
   }
 
   @Query(() => [Education])
-  @UseGuards(OptionalGqlAuthGuard)
+  @UseGuards(GuestAuthGuard)
   async getEducationsByUsername(@Args('username') username: string) {
     return await this.educationService.findAllByUsername(username)
   }

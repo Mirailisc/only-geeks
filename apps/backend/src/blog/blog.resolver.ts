@@ -5,7 +5,7 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { UseGuards } from '@nestjs/common'
 import {
   GqlAuthGuard,
-  OptionalGqlAuthGuard,
+  GuestAuthGuard,
 } from 'src/auth/guards/graphql-auth.guard'
 import { CreateBlogInput } from './dto/create-blog.input'
 import { UpdateBlogInput } from './dto/update-blog.input'
@@ -20,7 +20,7 @@ export class BlogResolver {
   }
 
   @Query(() => Blog)
-  @UseGuards(OptionalGqlAuthGuard)
+  @UseGuards(GuestAuthGuard)
   async getBlogBySlugAndUsername(
     @Args('slug') slug: string,
     @Args('username') username: string,

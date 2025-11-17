@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { Report, ReportStatus, TargetType } from './entities/report.entity'
+import {
+  Report,
+  ReportsCountSummary,
+  ReportStatus,
+  TargetType,
+} from './entities/report.entity'
 import { CreateReportInput } from './dto/create-report.input'
 
 @Injectable()
@@ -278,21 +283,28 @@ export class ReportService {
     return await this.addTargetTypeToReports(report as unknown as Report)
   }
 
-  async countReportsByStatus(): Promise<
-    {
-      status: ReportStatus
-      count: number
-    }[]
-  > {
+  async countReportsByStatus(): Promise<ReportsCountSummary> {
     const result = await this.prisma.report.groupBy({
       by: ['status'],
       _count: { status: true },
     })
 
-    return result.map((r) => ({
-      status: r.status as ReportStatus,
-      count: r._count.status,
-    }))
+    // Initialize summary with zero
+    const summary: ReportsCountSummary = {
+      PENDING: 0,
+      UNDER_REVIEW: 0,
+      RESOLVED: 0,
+      REJECTED: 0,
+      ALL: 0,
+    }
+
+    result.forEach((r) => {
+      const key = r.status as keyof ReportsCountSummary
+      summary[key] = r._count.status
+      summary.ALL += r._count.status
+    })
+
+    return summary
   }
 
   async amIReportThis(

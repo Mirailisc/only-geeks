@@ -6,7 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu'
+} from '@/components/ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
 import { ADMIN_DASHBOARD_PATH, CREATE_BLOG_PATH, CREATE_PROJECT_PATH, FEED_PATH, LOGIN_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
 import { CodeIcon, FileTextIcon, LogInIcon, LogOut, PlusIcon, Settings, GaugeIcon, User, User2Icon } from 'lucide-react'
@@ -16,9 +16,9 @@ import { clearUser } from '@/store/authSlice'
 import { useAppDispatch } from '@/hooks/useAppDispatch'
 import { useApolloClient, useMutation } from '@apollo/client/react'
 import { LOGOUT_MUTATION } from '@/graphql/auth'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import SearchBox from './searchBox'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 
 export default function AuthNavbar() {
   const { user } = useAppSelector((state) => state.auth)
@@ -112,7 +112,6 @@ export default function AuthNavbar() {
                 <DropdownMenuLabel>
                   {user.firstName} {user.lastName}
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
                 <Link to={PROFILE_PATH}>
                   <DropdownMenuItem>
                     <User className="mr-2 h-4 w-4" />
@@ -125,10 +124,10 @@ export default function AuthNavbar() {
                     <span>Settings</span>
                   </DropdownMenuItem>
                 </Link>
+                {user.isAdmin && <DropdownMenuSeparator />}
                 {user.isAdmin && <DropdownMenuLabel>
                   Admin Section
                 </DropdownMenuLabel>}
-                {user.isAdmin && <DropdownMenuSeparator />}
                 {user.isAdmin && <Link to={ADMIN_DASHBOARD_PATH}>
                   <DropdownMenuItem>
                     <GaugeIcon />

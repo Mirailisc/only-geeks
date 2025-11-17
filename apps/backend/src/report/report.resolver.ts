@@ -2,14 +2,14 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql'
 import { ReportService } from './report.service'
 import {
   Report,
-  ReportsCount,
+  ReportsCountSummary,
   ReportStatus,
   TargetType,
 } from './entities/report.entity'
 import { CreateReportInput } from './dto/create-report.input'
 import { UseGuards } from '@nestjs/common'
 import {
-  AdminGqlAuthGuard,
+  AdminAuthGuard,
   GqlAuthGuard,
 } from 'src/auth/guards/graphql-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
@@ -41,14 +41,14 @@ export class ReportResolver {
 
   // getAllReports
   @Query(() => [Report])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAllReports(): Promise<Report[]> {
     return this.reportService.getAllReports()
   }
 
   // getAllReportsByStatus
   @Query(() => [Report])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAllReportsByStatus(
     @Args('status') status: ReportStatus,
   ): Promise<Report[]> {
@@ -56,7 +56,7 @@ export class ReportResolver {
   }
 
   @Query(() => [Report])
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getAllReportByTargetType(
     @Args('targetType') targetType: TargetType,
   ): Promise<Report[]> {
@@ -65,14 +65,14 @@ export class ReportResolver {
 
   // findReportById
   @Query(() => Report)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async findReportById(@Args('id') id: string): Promise<Report> {
     return this.reportService.findReportById(id)
   }
 
   // updateReportStatus
   @Mutation(() => Report)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async updateReportStatus(
     @Args('id') id: string,
     @Args('status') status: ReportStatus,
@@ -82,15 +82,15 @@ export class ReportResolver {
 
   // deleteReport
   @Mutation(() => Report)
-  @UseGuards(AdminGqlAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async deleteReport(@Args('id') id: string): Promise<Report> {
     return this.reportService.deleteReport(id)
   }
 
   // countReportsByStatus
-  @Query(() => [ReportsCount])
-  @UseGuards(AdminGqlAuthGuard)
-  async countReportsByStatus(): Promise<ReportsCount[]> {
+  @Query(() => ReportsCountSummary)
+  @UseGuards(AdminAuthGuard)
+  async countReportsByStatus(): Promise<ReportsCountSummary> {
     return this.reportService.countReportsByStatus()
   }
 

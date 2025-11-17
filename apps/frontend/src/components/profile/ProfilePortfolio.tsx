@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Card, CardContent, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
+import { Card, CardContent, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Pencil, Trash2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
 import {
   GET_MY_EDUCATION_QUERY,
   GET_EDUCATION_BY_USERNAME_QUERY,

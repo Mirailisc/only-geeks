@@ -75,12 +75,21 @@ export class ReportSummary {
 }
 
 @ObjectType()
-export class ReportsCount {
-  @Field(() => ReportStatus)
-  status: ReportStatus
+export class ReportsCountSummary {
+  @Field(() => Number)
+  PENDING: number
 
   @Field(() => Number)
-  count: number
+  UNDER_REVIEW: number
+
+  @Field(() => Number)
+  RESOLVED: number
+
+  @Field(() => Number)
+  REJECTED: number
+
+  @Field(() => Number)
+  ALL: number
 }
 
 @ObjectType()

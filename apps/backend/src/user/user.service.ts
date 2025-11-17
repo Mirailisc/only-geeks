@@ -142,4 +142,43 @@ export class UserService {
       data: input,
     })
   }
+
+  async searchQuery(searchQuery: string): Promise<User[]> {
+    return await this.prisma.user.findMany({
+      where: {
+        OR: [
+          {
+            username: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+          {
+            firstName: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+          {
+            lastName: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+          {
+            email: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+          {
+            bio: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    })
+  }
 }

@@ -7,11 +7,11 @@ import { CREATE_BLOG_PATH } from '@/constants/routes'
 import { DELETE_BLOG_MUTATION, GET_BLOGS_BY_USERNAME_QUERY, GET_MY_BLOGS_QUERY, type Blog } from '@/graphql/blog'
 import { useMutation, useQuery } from '@apollo/client/react'
 import { useEffect, useState } from 'react'
-import { Card, CardContent, CardTitle } from '../ui/card'
+import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { dateFormatter } from '@/lib/utils'
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
-import { Badge } from '../ui/badge'
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../ui/empty'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
+import { Badge } from '@/components/ui/badge'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 
 // // Component for a single blog post card
 const BlogPostCard = ({ post, isMyProfile, username }: { post: Blog; isMyProfile: boolean; username: string }) => {
