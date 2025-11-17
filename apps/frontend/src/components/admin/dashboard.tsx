@@ -34,7 +34,7 @@ export const DashboardTab = () => {
         </div>
       </div>
       <h2 className="text-xl font-medium mb-2">Report Statistics</h2>
-      <div className={'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4'}>
+      <div className={'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4'}>
         {
           ReportStatusList.map((status: ReportStatus) => {
             const { icon: StatusIcon, className } = ReportStatusIconColor[status]

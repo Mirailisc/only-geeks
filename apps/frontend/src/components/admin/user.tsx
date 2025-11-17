@@ -9,14 +9,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { UsersIcon } from "lucide-react";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader } from "../ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import UserSearchCombobox from "./userFinder";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
 
 // User Management Tab
 export const UserManagementTab = () => {
   const [deactivateUserId, setDeactivateUserId] = useState('');
   const [deactivateReason, setDeactivateReason] = useState('');
-  const [activatePromptUserId, setActivatePromptUserId] = useState<string | null>(null);
+  const [activatePromptUserId, setActivatePromptUserId] = useState<string>('');
   const { data: deactivatedUsersData, loading: deactivatedUsersLoading, refetch: refetchDeactivated } = useQuery<{ getAllDeactivatedUsers: Partial<Profile>[] }>(GET_ALL_DEACTIVATED_USERS);
   const [deactivateUser] = useMutation(DEACTIVATE_USER);
   const [activateUser] = useMutation(ACTIVATE_USER);
@@ -37,8 +38,8 @@ export const UserManagementTab = () => {
     }
   }
 
-  const handleActivateUser = (userId: string | undefined) => {
-    setActivatePromptUserId(userId || null);
+  const handleActivateUser = (userId: string) => {
+    setActivatePromptUserId(userId);
     setPromptReactivation(true);
   }
   const confirmActivateUser = async () => {
@@ -47,8 +48,10 @@ export const UserManagementTab = () => {
         toast.error('Invalid user ID');
         return;
       }
-      await activateUser({ variables: { activatePromptUserId } });
+      await activateUser({ variables: { userId: activatePromptUserId } });
       await refetchDeactivated();
+      setActivatePromptUserId('');
+      setPromptReactivation(false);
       toast.success('User reactivated successfully.');
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -59,12 +62,14 @@ export const UserManagementTab = () => {
 
   return (
     <>
-      <Dialog open={promptReactivation} onOpenChange={()=>{
+      <Dialog open={promptReactivation} onOpenChange={() => {
         setPromptReactivation(false)
-        setActivatePromptUserId(null)
+        setActivatePromptUserId('')
       }}>
         <DialogContent>
-          <DialogHeader>Are you sure you want to reactivate user?</DialogHeader>
+          <DialogHeader>
+            <DialogTitle>Are you sure you want to reactivate user?</DialogTitle>
+          </DialogHeader>
           <DialogDescription>
             This action will restore the user&apos;s access to the platform.
           </DialogDescription>
@@ -96,7 +101,7 @@ export const UserManagementTab = () => {
               <UserSearchCombobox
                 placeholder="Search and select user to deactivate"
                 value={deactivateUserId}
-                setValue={(value)=> setDeactivateUserId(value)}
+                setValue={setDeactivateUserId}
               />
               {/* <Input
                 value={deactivateUserId}
@@ -124,7 +129,19 @@ export const UserManagementTab = () => {
             <div>Loading...</div>
           ) : (
             <div className="grid gap-4">
-              {deactivatedUsersData?.getAllDeactivatedUsers?.map((user) => (
+              {deactivatedUsersData?.getAllDeactivatedUsers.length == 0 ? (
+                <Empty>
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <UsersIcon />
+                    </EmptyMedia>
+                    <EmptyTitle>No Deactivated Users</EmptyTitle>
+                    <EmptyDescription>
+                      There are currently no deactivated users in the system.
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
+              ) : deactivatedUsersData?.getAllDeactivatedUsers?.map((user) => (
                 <Card key={user.id}>
                   <CardContent>
                     <div className="flex justify-between items-center">
@@ -134,8 +151,9 @@ export const UserManagementTab = () => {
                           {user.firstName} {user.lastName}
                         </p>
                         <p className="text-sm text-gray-500">{user.email}</p>
+                        <p className="text-sm text-gray-500">{user.id}</p>
                       </div>
-                      <Button onClick={() => handleActivateUser(user.id)}>
+                      <Button onClick={() => handleActivateUser(user.id ?? 'wtf')}>
                         Reactivate
                       </Button>
                     </div>

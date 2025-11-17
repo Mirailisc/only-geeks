@@ -81,6 +81,16 @@ export class AuthController {
       })
 
       const token = await this.authService.generateJwt(user)
+      const redirectDomain =
+        process.env.NODE_ENV === 'production'
+          ? this.configService.get<string>('URL')
+          : 'http://localhost:3000'
+
+      await this.authService.checkWarningsAndRestrictions(
+        user,
+        res,
+        redirectDomain,
+      )
 
       res.cookie(ACCESS_TOKEN, token, {
         httpOnly: true,
@@ -89,11 +99,7 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
 
-      return res.redirect(
-        process.env.NODE_ENV === 'production'
-          ? `${this.configService.get<string>('URL')}${req.query.state || '/profile'}`
-          : `http://localhost:3000${req.query.state || '/profile'}`,
-      )
+      return res.redirect(`${redirectDomain}${req.query.state || '/profile'}`)
     } catch (err) {
       console.error(isAxiosError(err) ? err.response?.data || err.message : err)
       throw new UnauthorizedException(

@@ -307,6 +307,23 @@ export class ReportService {
     return summary
   }
 
+  async getRecentReports(limit: number): Promise<Report[]> {
+    const reports = await this.prisma.report.findMany({
+      take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        reporter: true,
+        decision: { include: { admin: true } },
+        ...this.includes,
+      },
+    })
+    return await this.addTargetTypeToReportsArray(
+      reports as unknown as Report[],
+    )
+  }
+
   async amIReportThis(
     userId: string,
     targetType: TargetType,

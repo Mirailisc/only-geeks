@@ -36,14 +36,15 @@ type User {
   updatedAt: DateTime!
 }
 
-type AuthUser {
-  firstName: String
-  username: String!
-  lastName: String
-  email: String!
-  isAdmin: Boolean!
-  picture: String
-  preferences: PreferenceEntity
+type Project {
+  id: ID!
+  title: String!
+  description: String
+  link: String
+  photos: [String!]
+  startDate: DateTime
+  endDate: DateTime
+  User: User
 }
 
 type Blog {
@@ -58,90 +59,6 @@ type Blog {
   createdAt: DateTime!
   updatedAt: DateTime!
   User: User
-}
-
-type Search {
-  users: [User!]!
-  blogs: [Blog!]!
-}
-
-type Education {
-  id: ID!
-  school: String!
-  degree: String!
-  fieldOfStudy: String
-  startDate: DateTime
-  endDate: DateTime
-}
-
-type Project {
-  id: ID!
-  title: String!
-  description: String
-  link: String
-  photos: [String!]
-  startDate: DateTime
-  endDate: DateTime
-  User: User
-}
-
-type Achievement {
-  id: ID!
-  title: String!
-  description: String
-  issuer: String
-  date: DateTime
-  photos: [String!]
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  User: User
-}
-
-type FeedResponse {
-  items: [FeedItem!]!
-  nextCursor: String
-}
-
-union FeedItem = BlogFeed | ProjectFeed | AchievementFeed
-
-type BlogFeed {
-  id: String!
-  userId: String!
-  slug: String!
-  title: String!
-  content: String
-  description: String
-  thumbnail: String
-  isPublished: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  User: User
-  contentType: String!
-}
-
-type ProjectFeed {
-  id: ID!
-  title: String!
-  description: String
-  link: String
-  photos: [String!]
-  startDate: DateTime
-  endDate: DateTime
-  User: User
-  contentType: String!
-}
-
-type AchievementFeed {
-  id: ID!
-  title: String!
-  description: String
-  issuer: String
-  date: DateTime
-  photos: [String!]
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  User: User
-  contentType: String!
 }
 
 type UserReport {
@@ -244,6 +161,16 @@ enum TargetType {
   PROJECT
 }
 
+type AuthUser {
+  firstName: String
+  username: String!
+  lastName: String
+  email: String!
+  isAdmin: Boolean!
+  picture: String
+  preferences: PreferenceEntity
+}
+
 type UserRestriction {
   id: ID!
   userId: String!
@@ -270,6 +197,79 @@ type AdminAuditLog {
   admin: User
 }
 
+type Search {
+  users: [User!]!
+  blogs: [Blog!]!
+}
+
+type Education {
+  id: ID!
+  school: String!
+  degree: String!
+  fieldOfStudy: String
+  startDate: DateTime
+  endDate: DateTime
+}
+
+type Achievement {
+  id: ID!
+  title: String!
+  description: String
+  issuer: String
+  date: DateTime
+  photos: [String!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  User: User
+}
+
+type FeedResponse {
+  items: [FeedItem!]!
+  nextCursor: String
+}
+
+union FeedItem = BlogFeed | ProjectFeed | AchievementFeed
+
+type BlogFeed {
+  id: String!
+  userId: String!
+  slug: String!
+  title: String!
+  content: String
+  description: String
+  thumbnail: String
+  isPublished: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  User: User
+  contentType: String!
+}
+
+type ProjectFeed {
+  id: ID!
+  title: String!
+  description: String
+  link: String
+  photos: [String!]
+  startDate: DateTime
+  endDate: DateTime
+  User: User
+  contentType: String!
+}
+
+type AchievementFeed {
+  id: ID!
+  title: String!
+  description: String
+  issuer: String
+  date: DateTime
+  photos: [String!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  User: User
+  contentType: String!
+}
+
 type Query {
   getHealth: Health!
   getMyProfile: User!
@@ -277,6 +277,26 @@ type Query {
   searchUser(query: String!): [User!]!
   getGoogleOauthUrl(state: String!): String!
   me: AuthUser!
+  getMyReports: [Report!]!
+  getMyWarnings: [Report!]!
+  getAllReports: [Report!]!
+  getAllReportsByStatus(status: String!): [Report!]!
+  getAllReportByTargetType(targetType: String!): [Report!]!
+  findReportById(id: String!): Report!
+  countReportsByStatus: ReportsCountSummary!
+  hasReportedTarget(targetId: String!, targetType: String!): Boolean!
+  getRecentReports(limit: Float!): [Report!]!
+  getAllModerationDecisions: [ModerationDecision!]!
+  getModerationDecisionByReportId(reportId: String!): ModerationDecision!
+  getAllUserRestrictions: [UserRestriction!]!
+  getUserRestrictionsByUserId(userId: String!): [UserRestriction!]!
+  getActiveUserRestrictions(userId: String!): [UserRestriction!]!
+  getAllDeactivatedUsers: [User!]!
+  getAllAuditLogs: [AdminAuditLog!]!
+  getAuditLogsByAdmin(adminId: String!): [AdminAuditLog!]!
+  getAuditLogsByTarget(targetType: String!, targetId: String!): [AdminAuditLog!]!
+  getAuditLogsByActionType(actionType: String!): [AdminAuditLog!]!
+  getRecentAuditLogs(limit: Float! = 50): [AdminAuditLog!]!
   getBlogs: [Blog!]!
   getBlogBySlugAndUsername(slug: String!, username: String!): Blog!
   getBlogsByUsername(username: String!): [Blog!]!
@@ -292,25 +312,6 @@ type Query {
   getAchievementsByUsername(username: String!): [Achievement!]!
   feed(input: FeedInput!): FeedResponse!
   getNewFeedCount(input: NewFeedCountInput!): Float!
-  getAllModerationDecisions: [ModerationDecision!]!
-  getModerationDecisionByReportId(reportId: String!): ModerationDecision!
-  getAllUserRestrictions: [UserRestriction!]!
-  getUserRestrictionsByUserId(userId: String!): [UserRestriction!]!
-  getActiveUserRestrictions(userId: String!): [UserRestriction!]!
-  getAllDeactivatedUsers: [User!]!
-  getAllAuditLogs: [AdminAuditLog!]!
-  getAuditLogsByAdmin(adminId: String!): [AdminAuditLog!]!
-  getAuditLogsByTarget(targetType: String!, targetId: String!): [AdminAuditLog!]!
-  getAuditLogsByActionType(actionType: String!): [AdminAuditLog!]!
-  getRecentAuditLogs(limit: Float! = 50): [AdminAuditLog!]!
-  getMyReports: [Report!]!
-  getMyWarnings: [Report!]!
-  getAllReports: [Report!]!
-  getAllReportsByStatus(status: String!): [Report!]!
-  getAllReportByTargetType(targetType: String!): [Report!]!
-  findReportById(id: String!): Report!
-  countReportsByStatus: ReportsCountSummary!
-  hasReportedTarget(targetId: String!, targetType: String!): Boolean!
 }
 
 input SearchInput {
@@ -339,6 +340,17 @@ type Mutation {
   login(input: LoginInput!): String!
   register(input: RegisterInput!): String!
   logout: Boolean!
+  createReport(input: CreateReportInput!): Report!
+  updateReportStatus(id: String!, status: String!): Report!
+  deleteReport(id: String!): Report!
+  createModerationDecision(input: CreateModerationDecisionInput!): ModerationDecision!
+  updateModerationDecision(id: String!, action: String!, note: String): ModerationDecision!
+  deleteModerationDecision(id: String!): ModerationDecision!
+  createUserRestriction(input: CreateUserRestrictionInput!): UserRestriction!
+  removeUserRestriction(id: String!): UserRestriction!
+  updateUserRestriction(id: String!, type: String, reason: String, expiresAt: DateTime): UserRestriction!
+  deactivateUser(userId: String!, reason: String!): User!
+  activateUser(userId: String!): User!
   createBlog(input: CreateBlogInput!): Blog!
   updateBlog(id: String!, input: UpdateBlogInput!): Blog!
   deleteBlog(id: String!): Blog!
@@ -352,17 +364,6 @@ type Mutation {
   updateAchievement(id: String!, input: UpdateAchievementInput!): Achievement!
   deleteAchievement(id: String!): Boolean!
   updatePreference(input: PreferenceInput!): PreferenceEntity!
-  createModerationDecision(input: CreateModerationDecisionInput!): ModerationDecision!
-  updateModerationDecision(id: String!, action: String!, note: String): ModerationDecision!
-  deleteModerationDecision(id: String!): ModerationDecision!
-  createUserRestriction(input: CreateUserRestrictionInput!): UserRestriction!
-  removeUserRestriction(id: String!): UserRestriction!
-  updateUserRestriction(id: String!, type: String, reason: String, expiresAt: DateTime): UserRestriction!
-  deactivateUser(userId: String!, reason: String!): User!
-  activateUser(userId: String!): User!
-  createReport(input: CreateReportInput!): Report!
-  updateReportStatus(id: String!, status: String!): Report!
-  deleteReport(id: String!): Report!
 }
 
 input UpdateUserInput {
@@ -386,6 +387,26 @@ input RegisterInput {
   firstName: String!
   lastName: String!
   password: String!
+}
+
+input CreateReportInput {
+  targetType: String!
+  targetId: String!
+  reason: String!
+  category: String!
+}
+
+input CreateModerationDecisionInput {
+  reportId: String!
+  action: String!
+  note: String
+}
+
+input CreateUserRestrictionInput {
+  userId: String!
+  type: RestrictionType!
+  reason: String
+  expiresAt: DateTime
 }
 
 input CreateBlogInput {
@@ -456,24 +477,4 @@ input UpdateAchievementInput {
 input PreferenceInput {
   currentTheme: String
   isPublicProfile: Boolean
-}
-
-input CreateModerationDecisionInput {
-  reportId: String!
-  action: String!
-  note: String
-}
-
-input CreateUserRestrictionInput {
-  userId: String!
-  type: RestrictionType!
-  reason: String
-  expiresAt: DateTime
-}
-
-input CreateReportInput {
-  targetType: String!
-  targetId: String!
-  reason: String!
-  category: String!
 }

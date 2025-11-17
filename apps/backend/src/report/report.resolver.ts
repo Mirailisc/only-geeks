@@ -103,4 +103,11 @@ export class ReportResolver {
   ): Promise<boolean> {
     return this.reportService.amIReportThis(user.id, targetType, targetId)
   }
+
+  //Get recent reports
+  @Query(() => [Report])
+  @UseGuards(AdminAuthGuard)
+  async getRecentReports(@Args('limit') limit: number): Promise<Report[]> {
+    return this.reportService.getRecentReports(limit)
+  }
 }

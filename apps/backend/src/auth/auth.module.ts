@@ -5,11 +5,15 @@ import { UserModule } from 'src/user/user.module'
 import { JwtModule } from '@nestjs/jwt'
 import { GoogleStrategy } from './strategies/google.strategy'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ReportModule } from 'src/report/report.module'
+import { AdminModule } from 'src/admin/admin.module'
 
 @Global()
 @Module({
   imports: [
     forwardRef(() => UserModule),
+    forwardRef(() => ReportModule),
+    forwardRef(() => AdminModule),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

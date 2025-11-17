@@ -10,7 +10,9 @@ import { Card, CardContent, CardHeader,CardTitle, CardDescription } from "@/comp
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ClockIcon } from "lucide-react";
+import { ClockIcon, ShieldUserIcon } from "lucide-react";
+import UserSearchCombobox from "./userFinder";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
 
 export const RestrictionsTab = () => {
 
@@ -63,6 +65,14 @@ export const RestrictionsTab = () => {
 
   return (
     <div className="space-y-4">
+      <div className="mb-4">
+        <h1 className="text-3xl font-bold flex items-center gap-2">
+          <ShieldUserIcon className="h-8 w-8" /> User Restrictions
+        </h1>
+        <p className="text-gray-600 mt-2">
+          Manage user restrictions on the platform
+        </p>
+      </div>
       <Card>
         <CardHeader>
           <CardTitle>Create User Restriction</CardTitle>
@@ -71,10 +81,10 @@ export const RestrictionsTab = () => {
         <CardContent className="space-y-4">
           <div>
             <Label>User ID</Label>
-            <Input
+            <UserSearchCombobox
+              setValue={setUserId}
               value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              placeholder="Enter user ID"
+              placeholder="Search and select user..."
             />
           </div>
           <div>
@@ -115,7 +125,19 @@ export const RestrictionsTab = () => {
           <div>Loading...</div>
         ) : (
           <div className="grid gap-4">
-            {restrictionsData?.getAllUserRestrictions?.map((restriction) => (
+            {restrictionsData?.getAllUserRestrictions.length ==0 ? (
+                <Empty>
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <ShieldUserIcon />
+                    </EmptyMedia>
+                    <EmptyTitle>No Restricted Users</EmptyTitle>
+                    <EmptyDescription>
+                      There are currently no user restrictions in the system.
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
+            ) : restrictionsData?.getAllUserRestrictions?.map((restriction) => (
               <Card key={restriction.id}>
                 <CardContent className="pt-6">
                   <div className="flex justify-between items-start">
