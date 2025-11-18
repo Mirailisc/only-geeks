@@ -79,11 +79,18 @@ export class AdminService {
       },
     })
 
-    // Update report status to RESOLVED
-    await this.prisma.report.update({
-      where: { id: input.reportId },
-      data: { status: ReportStatus.RESOLVED },
-    })
+    // Update report status to RESOLVED if action is other than REQUEST_EDIT
+    if (input.action !== ModerationAction.REQUEST_EDIT) {
+      await this.prisma.report.update({
+        where: { id: input.reportId },
+        data: { status: ReportStatus.RESOLVED },
+      })
+    } else {
+      await this.prisma.report.update({
+        where: { id: input.reportId },
+        data: { status: ReportStatus.REQUEST_EDIT },
+      })
+    }
 
     // Log the action
     await this.createAuditLog(
@@ -137,6 +144,76 @@ export class AdminService {
     }
 
     return decision as unknown as ModerationDecision
+  }
+
+  async markModerationDecisionAsResponded(
+    id: string,
+  ): Promise<ModerationDecision> {
+    const decision = await this.prisma.moderationDecision.findUnique({
+      where: { id },
+    })
+
+    if (!decision) {
+      throw new NotFoundException('Moderation decision not found')
+    }
+
+    const updated = await this.prisma.moderationDecision.update({
+      where: { id },
+      data: { isResponse: true },
+      include: {
+        admin: true,
+        report: {
+          include: {
+            reporter: true,
+            userReport: { include: { target: true } },
+            blogReport: { include: { target: true } },
+            projectReport: { include: { target: true } },
+          },
+        },
+      },
+    })
+
+    return updated as unknown as ModerationDecision
+  }
+
+  async markModerationDecisionAsUnresponded(
+    id: string,
+    adminId: string,
+  ): Promise<ModerationDecision> {
+    const decision = await this.prisma.moderationDecision.findUnique({
+      where: { id },
+    })
+
+    if (!decision) {
+      throw new NotFoundException('Moderation decision not found')
+    }
+
+    const updated = await this.prisma.moderationDecision.update({
+      where: { id },
+      data: { isResponse: false },
+      include: {
+        admin: true,
+        report: {
+          include: {
+            reporter: true,
+            userReport: { include: { target: true } },
+            blogReport: { include: { target: true } },
+            projectReport: { include: { target: true } },
+          },
+        },
+      },
+    })
+
+    // Log the action
+    await this.createAuditLog(
+      adminId,
+      'MARK_MODERATION_DECISION_AS_UNRESPONDED',
+      'MODERATION_DECISION',
+      id,
+      'Marked decision as unresponded',
+    )
+
+    return updated as unknown as ModerationDecision
   }
 
   async updateModerationDecision(

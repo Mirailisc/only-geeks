@@ -10,19 +10,21 @@ export interface ReportStructure {
   category: ReportCategory | null
 }
 
-export type ReportStatus = 'PENDING' | 'UNDER_REVIEW' | 'RESOLVED' | 'REJECTED' | 'ALL'
+export type ReportStatus = 'PENDING' | 'UNDER_REVIEW' | 'REQUEST_EDIT' | 'RESOLVED' | 'REJECTED' | 'ALL'
 export interface ReportStatusSummary {
   ALL: number
   PENDING: number
   REJECTED: number
   RESOLVED: number
   UNDER_REVIEW: number
+  REQUEST_EDIT: number
 }
 
 export const ReportStatusList: ReportStatus[] = [
   'ALL',
   'PENDING',
   'UNDER_REVIEW',
+  'REQUEST_EDIT',
   'RESOLVED',
   'REJECTED',
 ]
@@ -31,6 +33,7 @@ export const REPORT_STATUS_TEXT: Record<ReportStatus, string> = {
   ALL: 'All',
   PENDING: 'Pending',
   UNDER_REVIEW: 'Under Review',
+  REQUEST_EDIT: 'Request Edit',
   RESOLVED: 'Resolved',
   REJECTED: 'Rejected',
 }

@@ -33,6 +33,9 @@ export class User {
   @Field(() => Boolean)
   isAdmin: boolean
 
+  @Field(() => Boolean)
+  isActive: boolean
+
   @Field(() => PreferenceEntity, { nullable: true })
   preference?: PreferenceEntity
 

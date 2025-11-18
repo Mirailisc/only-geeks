@@ -10,6 +10,7 @@ export enum ReportStatus {
   UNDER_REVIEW = 'UNDER_REVIEW',
   RESOLVED = 'RESOLVED',
   REJECTED = 'REJECTED',
+  REQUEST_EDIT = 'REQUEST_EDIT',
   ALL = 'ALL',
 }
 
@@ -87,6 +88,9 @@ export class ReportsCountSummary {
 
   @Field(() => Number)
   REJECTED: number
+
+  @Field(() => Number)
+  REQUEST_EDIT: number
 
   @Field(() => Number)
   ALL: number

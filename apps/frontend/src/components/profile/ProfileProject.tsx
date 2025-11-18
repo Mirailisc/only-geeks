@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/
 import { CREATE_PROJECT_PATH } from '@/constants/routes'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import ReportComponentWithButton from '../report/report'
+import { Badge } from '../ui/badge'
 
 // Component for a single project card
 const ProjectCard = ({ project, isMyProfile, myUsername }: { project: Project; isMyProfile: boolean; myUsername: string }) => {
@@ -65,6 +66,13 @@ const ProjectCard = ({ project, isMyProfile, myUsername }: { project: Project; i
               <div>
                 <CardTitle className="mb-2 text-2xl font-bold leading-snug">{project.title}</CardTitle>
                 <p className="mb-4 text-base text-gray-600">{project.description}</p>
+                {
+                  project.editRequested && isMyProfile && (
+                    <Badge variant="warning" className="mb-2">
+                      Admin request to edit this project
+                    </Badge>
+                  )
+                }
               </div>
 
               {/* Bottom Actions */}

@@ -45,7 +45,7 @@ export const UserManagementTab = () => {
   const confirmActivateUser = async () => {
     try {
       if (!activatePromptUserId) {
-        toast.error('Invalid user ID');
+        toast.error('Invalid user id.');
         return;
       }
       await activateUser({ variables: { userId: activatePromptUserId } });
@@ -97,17 +97,12 @@ export const UserManagementTab = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label>User ID</Label>
+              <Label>User</Label>
               <UserSearchCombobox
                 placeholder="Search and select user to deactivate"
                 value={deactivateUserId}
                 setValue={setDeactivateUserId}
               />
-              {/* <Input
-                value={deactivateUserId}
-                onChange={(e) => setDeactivateUserId(e.target.value)}
-                placeholder="Enter user ID"
-              /> */}
             </div>
             <div>
               <Label>Reason</Label>

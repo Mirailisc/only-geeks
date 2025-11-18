@@ -1,6 +1,6 @@
 import { GET_REPORT_COUNTS_BY_STATUS } from "@/graphql/admin";
 import { useQuery } from "@apollo/client/react";
-import { CheckCircleIcon, ClockIcon, ListChecksIcon, SearchIcon, ShieldCheckIcon, XCircleIcon, type LucideIcon } from "lucide-react";
+import { CheckCircleIcon, ClockIcon, EditIcon, ListChecksIcon, SearchIcon, ShieldCheckIcon, XCircleIcon, type LucideIcon } from "lucide-react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { REPORT_STATUS_TEXT, ReportStatusList, type ReportStatus, type ReportStatusSummary } from "@/graphql/report";
 // export type ReportStatus = 'PENDING' | 'UNDER_REVIEW' | 'RESOLVED' | 'REJECTED' | 'ALL'
@@ -17,6 +17,7 @@ const ReportStatusIconColor: Record<ReportStatus,{ className: string; icon: Luci
   RESOLVED: { className: "bg-green-500", icon: CheckCircleIcon },
   REJECTED: { className: "bg-red-500", icon: XCircleIcon },
   ALL: { className: "bg-gray-500", icon: ListChecksIcon },
+  REQUEST_EDIT: { className: "bg-purple-500", icon: EditIcon },
 }
 export const DashboardTab = () => {
   const {data: reportCountsData, loading: reportCountsLoading} = useQuery<{countReportsByStatus: ReportStatusSummary}>(GET_REPORT_COUNTS_BY_STATUS)
@@ -37,6 +38,7 @@ export const DashboardTab = () => {
       <div className={'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4'}>
         {
           ReportStatusList.map((status: ReportStatus) => {
+            if(status === "ALL") return;
             const { icon: StatusIcon, className } = ReportStatusIconColor[status]
             return (
               <Card key={status} className="">

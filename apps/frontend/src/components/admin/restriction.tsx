@@ -80,7 +80,7 @@ export const RestrictionsTab = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label>User ID</Label>
+            <Label>User</Label>
             <UserSearchCombobox
               setValue={setUserId}
               value={userId}

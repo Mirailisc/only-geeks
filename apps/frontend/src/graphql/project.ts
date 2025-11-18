@@ -7,6 +7,8 @@ export interface Project {
     contentType: string
     description: string
     endDate: string
+    editRequested: boolean
+    requestUnpublish: boolean
     id: string
     link: string
     photos: string[]
@@ -26,6 +28,8 @@ export const GET_MY_PROJECTS_QUERY = gql`
       photos
       startDate
       endDate
+      editRequested
+      requestUnpublish
     }
   }
 `
@@ -40,6 +44,8 @@ export const GET_MY_PROJECTS_QUERY_EDITING = gql`
       photos
       startDate
       endDate
+      editRequested
+      requestUnpublish
     }
   }
 `

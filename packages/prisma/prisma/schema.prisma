@@ -179,6 +179,7 @@ enum ReportTarget {
 enum ReportStatus {
   PENDING
   UNDER_REVIEW
+  REQUEST_EDIT
   RESOLVED
   REJECTED
 }
@@ -212,6 +213,7 @@ model ModerationDecision {
   adminId     String
   reportId    String   @unique
   action      ModerationAction
+  isResponse  Boolean  @default(false)
   note        String?
   createdAt   DateTime @default(now())
 

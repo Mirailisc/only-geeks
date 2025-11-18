@@ -65,6 +65,23 @@ export class AdminResolver {
     return this.adminService.deleteModerationDecision(id, admin.id)
   }
 
+  @Mutation(() => ModerationDecision)
+  @UseGuards(AdminAuthGuard)
+  async markModerationDecisionAsResponse(
+    @Args('id') id: string,
+  ): Promise<ModerationDecision> {
+    return this.adminService.markModerationDecisionAsResponded(id)
+  }
+
+  @Mutation(() => ModerationDecision)
+  @UseGuards(AdminAuthGuard)
+  async markModerationDecisionAsUnresponded(
+    @Args('id') id: string,
+    @CurrentUser() admin: any,
+  ): Promise<ModerationDecision> {
+    return this.adminService.markModerationDecisionAsUnresponded(id, admin.id)
+  }
+
   // ==================== USER RESTRICTIONS ====================
 
   @Mutation(() => UserRestriction)

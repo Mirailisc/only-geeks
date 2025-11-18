@@ -36,7 +36,13 @@ export class SearchService {
 
   async searchSuggest(input: SearchInput): Promise<Search> {
     const users = await this.prisma.user.findMany({
-      where: { username: { contains: input.input } },
+      where: {
+        OR: [
+          { username: { contains: input.input } },
+          { firstName: { contains: input.input } },
+          { lastName: { contains: input.input } },
+        ],
+      },
       take: 3,
     })
     const blogs = await this.prisma.blog.findMany({

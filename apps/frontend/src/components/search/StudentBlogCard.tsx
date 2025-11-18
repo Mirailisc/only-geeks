@@ -8,7 +8,7 @@ export default function StudentBlogCard({ blog }: { blog: Search['blogs'][0] }) 
       <CardContent>
         <CardHeader>
           <CardTitle>{blog.title}</CardTitle>
-          <CardDescription>By User ID: {blog.userId}</CardDescription>
+          <CardDescription>By User: {blog.User.username}</CardDescription>
         </CardHeader>
         <CardFooter>
           <CalendarIcon />

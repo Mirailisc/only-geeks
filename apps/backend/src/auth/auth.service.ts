@@ -5,7 +5,6 @@ import { UserService } from 'src/user/user.service'
 import { LoginInput } from './dto/login.input'
 import { RegisterInput } from './dto/register.input'
 import * as bcrypt from 'bcrypt'
-import { ReportService } from 'src/report/report.service'
 import { AdminService } from 'src/admin/admin.service'
 import { Response } from 'express'
 
@@ -14,7 +13,6 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
-    private readonly reportService: ReportService,
     private readonly adminService: AdminService,
   ) {}
 
@@ -24,23 +22,16 @@ export class AuthService {
     redirectDomain: string | null = null,
   ) {
     console.log('Checking warnings and restrictions for user:', user.id)
-    const myWarning = await Promise.all(
-      await this.reportService.findAllMyWarnings(user.id),
-    )
-    const deactivateWarning = myWarning.find(
-      (report) => report?.decision?.action === 'DEACTIVATE',
-    )
-
-    if (deactivateWarning) {
+    if (!user.isActive) {
       if (res && redirectDomain)
         res.redirect(`${redirectDomain}/login?error=deactivated`)
       throw new UnauthorizedException(
-        'Your account has been deactivated due to violations of our community guidelines.',
+        'Your account has been deactivated. Please contact support for more information.',
       )
     }
 
     const myRestriction = await Promise.all(
-      await this.adminService.getUserRestrictionsByUserId(user.id),
+      await this.adminService.getActiveUserRestrictions(user.id),
     )
 
     const now = new Date()

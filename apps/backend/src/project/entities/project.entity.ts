@@ -3,12 +3,33 @@ import { User } from 'src/user/entities/user.entity'
 
 @ObjectType()
 export class Project {
-  @Field(() => ID) id: string
-  @Field() title: string
-  @Field({ nullable: true }) description?: string
-  @Field({ nullable: true }) link?: string
-  @Field(() => [String], { nullable: true }) photos?: string[]
-  @Field({ nullable: true }) startDate?: Date
-  @Field({ nullable: true }) endDate?: Date
-  @Field(() => User, { nullable: true }) User?: User
+  @Field(() => ID)
+  id: string
+
+  @Field()
+  title: string
+
+  @Field({ nullable: true })
+  description?: string
+
+  @Field({ nullable: true })
+  link?: string
+
+  @Field(() => [String], { nullable: true })
+  photos?: string[]
+
+  @Field(() => Boolean, { nullable: true })
+  editRequested?: boolean
+
+  @Field(() => Boolean, { nullable: true })
+  requestUnpublish?: boolean
+
+  @Field({ nullable: true })
+  startDate?: Date
+
+  @Field({ nullable: true })
+  endDate?: Date
+
+  @Field(() => User, { nullable: true })
+  User?: User
 }

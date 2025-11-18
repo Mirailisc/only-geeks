@@ -16,6 +16,9 @@ export class ModerationDecision {
   @Field(() => ModerationAction)
   action: ModerationAction
 
+  @Field(() => Boolean, { nullable: true })
+  isResponse?: boolean
+
   @Field({ nullable: true })
   note?: string
 

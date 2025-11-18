@@ -110,6 +110,7 @@ export const GET_REPORTS_BY_STATUS_OR_ALL = gql`
         id
         action
         note
+        isResponse
         createdAt
       }
       blogReport {
@@ -177,6 +178,7 @@ query GetAllReportByTargetType($status: String!) {
       id
       action
       note
+      isResponse
       createdAt
     }
   }
@@ -250,6 +252,21 @@ mutation UpdateModerationDecision($updateModerationDecisionId: String!, $action:
     note
   }
 }
+`;
+
+export const MARK_MODERATION_DECISION_AS_UNRESPONDED = gql`
+  mutation MarkModerationDecisionAsUnresponded($id: String!) {
+    markModerationDecisionAsUnresponded(id: $id) {
+      id
+    }
+  }
+`;
+export const MARK_MODERATION_DECISION_AS_RESPONSE = gql`
+  mutation MarkModerationDecisionAsResponse($id: String!) {
+    markModerationDecisionAsResponse(id: $id) {
+      id
+    }
+  }
 `;
 
 export const UPDATE_REPORT_STATUS = gql`

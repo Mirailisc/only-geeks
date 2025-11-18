@@ -31,6 +31,7 @@ type User {
   location: String
   organization: String
   isAdmin: Boolean!
+  isActive: Boolean!
   preference: PreferenceEntity
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -42,6 +43,8 @@ type Project {
   description: String
   link: String
   photos: [String!]
+  editRequested: Boolean
+  requestUnpublish: Boolean
   startDate: DateTime
   endDate: DateTime
   User: User
@@ -106,6 +109,7 @@ type ReportsCountSummary {
   UNDER_REVIEW: Float!
   RESOLVED: Float!
   REJECTED: Float!
+  REQUEST_EDIT: Float!
   ALL: Float!
 }
 
@@ -152,6 +156,7 @@ enum ReportStatus {
   UNDER_REVIEW
   RESOLVED
   REJECTED
+  REQUEST_EDIT
   ALL
 }
 
@@ -251,6 +256,8 @@ type ProjectFeed {
   description: String
   link: String
   photos: [String!]
+  editRequested: Boolean
+  requestUnpublish: Boolean
   startDate: DateTime
   endDate: DateTime
   User: User

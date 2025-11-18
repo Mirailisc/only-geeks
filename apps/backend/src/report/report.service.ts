@@ -30,7 +30,11 @@ export class ReportService {
     },
     blogReport: {
       include: {
-        target: true,
+        target: {
+          include: {
+            User: true,
+          },
+        },
         report: {
           include: {
             reporter: true,
@@ -45,7 +49,11 @@ export class ReportService {
     },
     projectReport: {
       include: {
-        target: true,
+        target: {
+          include: {
+            User: true,
+          },
+        },
         report: {
           include: {
             reporter: true,
@@ -110,15 +118,24 @@ export class ReportService {
         ...this.includes,
       },
       where: {
-        OR: [
+        AND: [
           {
-            userReport: { target: { id: userId } },
+            status: {
+              in: ['RESOLVED', 'UNDER_REVIEW'],
+            },
           },
           {
-            blogReport: { target: { userId: userId } },
-          },
-          {
-            projectReport: { target: { userId: userId } },
+            OR: [
+              {
+                userReport: { target: { id: userId } },
+              },
+              {
+                blogReport: { target: { userId: userId } },
+              },
+              {
+                projectReport: { target: { userId: userId } },
+              },
+            ],
           },
         ],
       },
@@ -295,6 +312,7 @@ export class ReportService {
       UNDER_REVIEW: 0,
       RESOLVED: 0,
       REJECTED: 0,
+      REQUEST_EDIT: 0,
       ALL: 0,
     }
 

@@ -14,6 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
 
 export const ReportsTab = () => {
   // State for decision modal
@@ -26,9 +27,10 @@ export const ReportsTab = () => {
   const {
     data: reportsData,
     loading: reportsLoading,
-    refetch: refetchReports
+    refetch: refetchReports,
   } = useQuery<{ getAllReportsByStatus: Report[] }>(GET_REPORTS_BY_STATUS_OR_ALL, {
     variables: { status: filterStatus },
+    fetchPolicy: 'network-only',
     // Ensure the data field name matches the query: getAllReportsByStatus
   });
   const [createDecision] = useMutation(CREATE_MODERATION_DECISION);
@@ -59,7 +61,6 @@ export const ReportsTab = () => {
     // refetchReports will be called automatically by useQuery hook 
     // when filterStatus state changes, triggering a new query.
   };
-
   const handleCreateDecision = async (reportId: string) => {
     try {
       await createDecision({
@@ -71,8 +72,8 @@ export const ReportsTab = () => {
           }
         }
       });
-      if(decisionAction === "DEACTIVATE" && selectedReport?.targetType === "USER" && selectedReport.userReport) {
-        try{
+      if (decisionAction === "DEACTIVATE" && selectedReport?.targetType === "USER" && selectedReport.userReport) {
+        try {
           await deactivateUser({
             variables: {
               userId: selectedReport.userReport.target.id,
@@ -81,7 +82,7 @@ export const ReportsTab = () => {
             refetchQueries: [GET_ALL_DEACTIVATED_USERS, GET_ALL_AUDIT_LOGS]
           });
           toast.success('User deactivated successfully.');
-        }catch(error){
+        } catch (error) {
           // eslint-disable-next-line no-console
           console.error('Failed to deactivate user:', error);
           toast.error('Failed to deactivate user.');
@@ -104,8 +105,8 @@ export const ReportsTab = () => {
             refetchQueries: [{ query: GET_REPORTS_BY_STATUS_OR_ALL, variables: { status: filterStatus } }]
           });
           toast.success('Updated existing decision successfully.'); // Added toast
-          if(decisionAction === "DEACTIVATE" && selectedReport?.targetType === "USER" && selectedReport.userReport) {
-            try{
+          if (decisionAction === "DEACTIVATE" && selectedReport?.targetType === "USER" && selectedReport.userReport) {
+            try {
               await deactivateUser({
                 variables: {
                   userId: selectedReport.userReport.target.id,
@@ -114,7 +115,7 @@ export const ReportsTab = () => {
                 refetchQueries: [GET_ALL_DEACTIVATED_USERS]
               });
               toast.success('User deactivated successfully.');
-            }catch(error){
+            } catch (error) {
               // eslint-disable-next-line no-console
               console.error('Failed to deactivate user:', error);
               toast.error('Failed to deactivate user.');
@@ -188,7 +189,19 @@ export const ReportsTab = () => {
         <div className="text-center py-8">Loading reports...</div>
       ) : (
         <div className="grid gap-4">
-          {filteredReports.map((report) => (
+          {filteredReports.length == 0 ? (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <FileTextIcon />
+                </EmptyMedia>
+                <EmptyTitle>No &ldquo;{filterStatus}&rdquo; Report</EmptyTitle>
+                <EmptyDescription>
+                  There are currently no reports with the status &ldquo;{filterStatus}&rdquo;.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          ) : filteredReports.map((report) => (
             <Card key={report.id}>
               <CardContent>
                 <div className="flex justify-between gap-4 items-start">
@@ -273,6 +286,7 @@ export const ReportsTab = () => {
                       <SelectContent>
                         <SelectItem value={'PENDING'}>Pending</SelectItem>
                         <SelectItem value={'UNDER_REVIEW'}>Under Review</SelectItem>
+                        <SelectItem value={'REQUEST_EDIT'}>Request Edit</SelectItem>
                         <SelectItem value={'RESOLVED'}>Resolved</SelectItem>
                         <SelectItem value={'REJECTED'}>Rejected</SelectItem>
                       </SelectContent>
