@@ -246,7 +246,7 @@ export const ReportsTab = () => {
                       Report at: {new Date(report.createdAt).toLocaleString()}
                     </p>
                     {report.decision && (
-                      <Alert className="justify-start mb-4" variant={"default"}>
+                      <Alert className="justify-start my-4" variant={"default"}>
                         <CheckCircleIcon />
                         <div className='flex-1'>
                           <AlertTitle>Decision:&nbsp;{MODERATION_ACTIONS_TEXT[report.decision.action]}</AlertTitle>
