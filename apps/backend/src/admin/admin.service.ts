@@ -9,10 +9,14 @@ import {
 } from 'src/report/entities/report.entity'
 import { RestrictionType, UserRestriction } from './entities/restriction.entity'
 import { User } from 'src/user/entities/user.entity'
+import { ReportService } from 'src/report/report.service'
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly reportService: ReportService,
+  ) {}
 
   // ==================== AUDIT LOGGING ====================
 
@@ -81,15 +85,19 @@ export class AdminService {
 
     // Update report status to RESOLVED if action is other than REQUEST_EDIT
     if (input.action !== ModerationAction.REQUEST_EDIT) {
-      await this.prisma.report.update({
-        where: { id: input.reportId },
-        data: { status: ReportStatus.RESOLVED },
-      })
-    } else {
-      await this.prisma.report.update({
-        where: { id: input.reportId },
-        data: { status: ReportStatus.REQUEST_EDIT },
-      })
+      // await this.prisma.report.update({
+      //   where: { id: input.reportId },
+      //   data: { status: ReportStatus.RESOLVED },
+      // })
+      await this.reportService.updateReportStatus(
+        input.reportId,
+        ReportStatus.RESOLVED,
+      )
+    } else if (input.action === ModerationAction.REQUEST_EDIT) {
+      await this.reportService.updateReportStatus(
+        input.reportId,
+        ReportStatus.REQUEST_EDIT,
+      )
     }
 
     // Log the action
@@ -232,7 +240,7 @@ export class AdminService {
 
     const updated = await this.prisma.moderationDecision.update({
       where: { id },
-      data: { action, note },
+      data: { action, note, isResponse: false },
       include: {
         admin: true,
         report: {
@@ -245,7 +253,17 @@ export class AdminService {
         },
       },
     })
-
+    if (action !== ModerationAction.REQUEST_EDIT) {
+      await this.reportService.updateReportStatus(
+        decision.reportId,
+        ReportStatus.RESOLVED,
+      )
+    } else {
+      await this.reportService.updateReportStatus(
+        decision.reportId,
+        ReportStatus.REQUEST_EDIT,
+      )
+    }
     // Log the action
     await this.createAuditLog(
       adminId,

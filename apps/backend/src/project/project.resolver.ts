@@ -17,7 +17,7 @@ export class ProjectResolver {
   @Query(() => [Project])
   @UseGuards(GqlAuthGuard)
   async getMyProjects(@CurrentUser() user: any) {
-    return await this.projectService.findAllByUser(user.id)
+    return await this.projectService.findAllByUserId(user.id)
   }
 
   @Query(() => [Project])

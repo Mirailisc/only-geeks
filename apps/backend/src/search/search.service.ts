@@ -9,10 +9,21 @@ export class SearchService {
 
   async search({ input }: SearchInput): Promise<Search> {
     const users = await this.prisma.user.findMany({
-      where: { username: { contains: input } },
+      where: {
+        isActive: true,
+        OR: [
+          { username: { contains: input } },
+          { firstName: { contains: input } },
+          { lastName: { contains: input } },
+        ],
+      },
     })
     const blogs = await this.prisma.blog.findMany({
-      where: { title: { contains: input }, isPublished: true },
+      where: {
+        title: { contains: input },
+        isPublished: true,
+        User: { isActive: true },
+      },
       select: {
         id: true,
         title: true,
@@ -37,6 +48,7 @@ export class SearchService {
   async searchSuggest(input: SearchInput): Promise<Search> {
     const users = await this.prisma.user.findMany({
       where: {
+        isActive: true,
         OR: [
           { username: { contains: input.input } },
           { firstName: { contains: input.input } },
@@ -46,7 +58,11 @@ export class SearchService {
       take: 3,
     })
     const blogs = await this.prisma.blog.findMany({
-      where: { title: { contains: input.input }, isPublished: true },
+      where: {
+        title: { contains: input.input },
+        isPublished: true,
+        User: { isActive: true },
+      },
       select: {
         id: true,
         title: true,

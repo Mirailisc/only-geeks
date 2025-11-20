@@ -9,7 +9,7 @@ import { AdminService } from 'src/admin/admin.service'
 @Injectable()
 export class ProjectService {
   constructor(
-    private readonly prisma: PrismaService,
+    private prisma: PrismaService,
     private readonly userService: UserService,
     private readonly adminService: AdminService,
   ) {}
@@ -23,7 +23,7 @@ export class ProjectService {
     })
   }
 
-  async findAllByUser(userId: string): Promise<Project[]> {
+  async findAllByUserId(userId: string): Promise<Project[]> {
     const projects = await this.prisma.project.findMany({
       where: { userId },
       orderBy: { startDate: 'desc' },
@@ -100,7 +100,7 @@ export class ProjectService {
 
   async findOne(id: string) {
     const project = await this.prisma.project.findUnique({
-      where: { id },
+      where: { id, User: { isActive: true } },
       include: { User: true, reports: true },
     })
     if (!project) throw new BadRequestException('Project not found')

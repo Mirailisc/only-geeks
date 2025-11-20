@@ -19,6 +19,7 @@ export class FeedService {
         // Public profiles
         {
           User: {
+            isActive: true,
             preference: {
               is: {
                 isPublicProfile: true,
@@ -29,6 +30,7 @@ export class FeedService {
         // No preference row → assume public
         {
           User: {
+            isActive: true,
             preference: {
               is: null,
             },

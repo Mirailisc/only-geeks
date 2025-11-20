@@ -7,7 +7,7 @@ import { UserService } from 'src/user/user.service'
 @Injectable()
 export class AchievementService {
   constructor(
-    private readonly prisma: PrismaService,
+    private prisma: PrismaService,
     private readonly userService: UserService,
   ) {}
 

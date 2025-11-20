@@ -306,6 +306,15 @@ type Query {
   getAuditLogsByTarget(targetType: String!, targetId: String!): [AdminAuditLog!]!
   getAuditLogsByActionType(actionType: String!): [AdminAuditLog!]!
   getRecentAuditLogs(limit: Float! = 50): [AdminAuditLog!]!
+  getMyReports: [Report!]!
+  getMyWarnings: [Report!]!
+  getAllReports: [Report!]!
+  getAllReportsByStatus(status: String!): [Report!]!
+  getAllReportByTargetType(targetType: String!): [Report!]!
+  findReportById(id: String!): Report!
+  countReportsByStatus: ReportsCountSummary!
+  hasReportedTarget(targetId: String!, targetType: String!): Boolean!
+  getRecentReports(limit: Float!): [Report!]!
   getBlogs: [Blog!]!
   getBlogBySlugAndUsername(slug: String!, username: String!): Blog!
   getBlogsByUsername(username: String!): [Blog!]!
@@ -321,15 +330,6 @@ type Query {
   getAchievementsByUsername(username: String!): [Achievement!]!
   feed(input: FeedInput!): FeedResponse!
   getNewFeedCount(input: NewFeedCountInput!): Float!
-  getMyReports: [Report!]!
-  getMyWarnings: [Report!]!
-  getAllReports: [Report!]!
-  getAllReportsByStatus(status: String!): [Report!]!
-  getAllReportByTargetType(targetType: String!): [Report!]!
-  findReportById(id: String!): Report!
-  countReportsByStatus: ReportsCountSummary!
-  hasReportedTarget(targetId: String!, targetType: String!): Boolean!
-  getRecentReports(limit: Float!): [Report!]!
 }
 
 input SearchInput {
@@ -368,6 +368,9 @@ type Mutation {
   updateUserRestriction(id: String!, type: String, reason: String, expiresAt: DateTime): UserRestriction!
   deactivateUser(userId: String!, reason: String!): User!
   activateUser(userId: String!): User!
+  createReport(input: CreateReportInput!): Report!
+  updateReportStatus(id: String!, status: String!): Report!
+  deleteReport(id: String!): Report!
   createBlog(input: CreateBlogInput!): Blog!
   updateBlog(id: String!, input: UpdateBlogInput!): Blog!
   deleteBlog(id: String!): Blog!
@@ -381,9 +384,6 @@ type Mutation {
   updateAchievement(id: String!, input: UpdateAchievementInput!): Achievement!
   deleteAchievement(id: String!): Boolean!
   updatePreference(input: PreferenceInput!): PreferenceEntity!
-  createReport(input: CreateReportInput!): Report!
-  updateReportStatus(id: String!, status: String!): Report!
-  deleteReport(id: String!): Report!
 }
 
 input UpdateUserInput {
@@ -420,6 +420,13 @@ input CreateUserRestrictionInput {
   type: RestrictionType!
   reason: String
   expiresAt: DateTime
+}
+
+input CreateReportInput {
+  targetType: String!
+  targetId: String!
+  reason: String!
+  category: String!
 }
 
 input CreateBlogInput {
@@ -490,11 +497,4 @@ input UpdateAchievementInput {
 input PreferenceInput {
   currentTheme: String
   isPublicProfile: Boolean
-}
-
-input CreateReportInput {
-  targetType: String!
-  targetId: String!
-  reason: String!
-  category: String!
 }

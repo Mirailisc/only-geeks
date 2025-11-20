@@ -286,6 +286,7 @@ export class ReportService {
         ...this.includes,
       },
     })
+
     return await this.addTargetTypeToReports(report as unknown as Report)
   }
 

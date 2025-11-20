@@ -54,4 +54,5 @@ export const MODERATION_ACTIONS_TEXT: Record<ModerationAction, string> = {
   UNPUBLISH: "Unpublish Content",
   DELETE: "Delete Content",
   DEACTIVATE: "Deactivate User",
+  RESOLVED: "Mark as Resolved",
 };

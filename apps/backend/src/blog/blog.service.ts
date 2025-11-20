@@ -17,6 +17,7 @@ export class BlogService {
     return await this.prisma.blog.findMany({
       where: {
         isPublished: true,
+        User: { isActive: true },
       },
       select: {
         id: true,
@@ -55,7 +56,7 @@ export class BlogService {
 
   async getBlogById(id: string) {
     return await this.prisma.blog.findUnique({
-      where: { id },
+      where: { id, User: { isActive: true } },
       select: {
         id: true,
         title: true,

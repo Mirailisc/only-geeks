@@ -96,30 +96,36 @@ export const ReportsTab = () => {
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === "Moderation decision already exists for this report") {
-          updateDecision({
-            variables: {
-              updateModerationDecisionId: selectedReport?.decision?.id || '',
-              action: decisionAction,
-              note: decisionNote
-            },
-            refetchQueries: [{ query: GET_REPORTS_BY_STATUS_OR_ALL, variables: { status: filterStatus } }]
-          });
-          toast.success('Updated existing decision successfully.'); // Added toast
-          if (decisionAction === "DEACTIVATE" && selectedReport?.targetType === "USER" && selectedReport.userReport) {
-            try {
-              await deactivateUser({
-                variables: {
-                  userId: selectedReport.userReport.target.id,
-                  reason: `Deactivated due to report: ${decisionNote || 'No reason provided'}`
-                },
-                refetchQueries: [GET_ALL_DEACTIVATED_USERS]
-              });
-              toast.success('User deactivated successfully.');
-            } catch (error) {
-              // eslint-disable-next-line no-console
-              console.error('Failed to deactivate user:', error);
-              toast.error('Failed to deactivate user.');
+          try{
+            updateDecision({
+              variables: {
+                updateModerationDecisionId: selectedReport?.decision?.id || '',
+                action: decisionAction,
+                note: decisionNote
+              },
+              refetchQueries: [{ query: GET_REPORTS_BY_STATUS_OR_ALL, variables: { status: filterStatus } }]
+            });
+            toast.success('Updated existing decision successfully.'); // Added toast
+            if (decisionAction === "DEACTIVATE" && selectedReport?.targetType === "USER" && selectedReport.userReport) {
+              try {
+                await deactivateUser({
+                  variables: {
+                    userId: selectedReport.userReport.target.id,
+                    reason: `Deactivated due to report: ${decisionNote || 'No reason provided'}`
+                  },
+                  refetchQueries: [GET_ALL_DEACTIVATED_USERS]
+                });
+                toast.success('User deactivated successfully.');
+              } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Failed to deactivate user:', error);
+                toast.error('Failed to deactivate user.');
+              }
             }
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Error updating decision:', error);
+            toast.error('Failed to update existing decision.'); // Added toast
           }
         } else {
           toast.error('Failed to create decision.'); // Added toast
@@ -130,7 +136,26 @@ export const ReportsTab = () => {
       }
     }
   };
-
+  const markAsResolved = async (decisionId: string | undefined) => {
+    try{
+      if (!decisionId) {
+        toast.error('No decision found to mark as resolved.');
+        return;
+      }
+      await updateDecision({
+        variables: {
+          updateModerationDecisionId: decisionId || '',
+          action: "RESOLVED",
+          note: 'Marked as resolved by admin.'
+        },
+        refetchQueries: [{ query: GET_REPORTS_BY_STATUS_OR_ALL, variables: { status: filterStatus } }]
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error marking as resolved:', error);
+      toast.error('Failed to mark as resolved.'); // Added toast
+    }
+  }
   const handleUpdateStatus = async (reportId: string, status: ReportStatus) => {
     try {
       await updateReportStatus({
@@ -250,13 +275,16 @@ export const ReportsTab = () => {
                             }
                           </AlertDescription>
                         </div>
-                        <AlertButton variant={"destructive"}>
+                        {
+                          report.decision.isResponse &&
+                          <AlertButton variant={"destructive"}>
                             Mark as not response
-                        </AlertButton>
+                          </AlertButton>
+                        }
                       </Alert>
                     )}
                   </div>
-                  <div className="flex gap-2 flex-col">
+                  <div className="flex gap-2 flex-col w-48">
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button onClick={() => setSelectedReport(report)}>
@@ -369,11 +397,15 @@ export const ReportsTab = () => {
                     </Dialog>
                     {
                       report.decision && (
-                        report.decision.action === "REQUEST_EDIT" || 
-                        report.decision.action === "UNPUBLISH" ? (
+                        (report.decision.action === "REQUEST_EDIT" || 
+                        report.decision.action === "UNPUBLISH") && (
+                          report.decision.isResponse
+                        ) ? (
                           <Button variant={'outline'} onClick={()=>{
-                            handleUpdateStatus(report.id, "RESOLVED")
-                          }}>Mark as Resolved</Button>
+                            markAsResolved(report?.decision?.id);
+                          }}>
+                            Remove {report.decision.action === "REQUEST_EDIT" ? 'edit' : 'unpublish'} request
+                          </Button>
                         ) : null
                       )
                     }

@@ -45,6 +45,7 @@ export type ModerationAction =
   | 'UNPUBLISH'
   | 'DEACTIVATE'
   | 'DELETE'
+  | 'RESOLVED'
 export type ReportCategory =
   | 'PLAGIARISM'
   | 'VIOLENT_CONTENT'

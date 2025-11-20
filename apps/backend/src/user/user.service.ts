@@ -10,7 +10,7 @@ import { AdminService } from 'src/admin/admin.service'
 @Injectable()
 export class UserService {
   constructor(
-    private readonly prisma: PrismaService,
+    private prisma: PrismaService,
     private readonly adminService: AdminService,
   ) {}
 
@@ -121,7 +121,7 @@ export class UserService {
     username: string,
   ): Promise<User & { password?: string }> {
     return await this.prisma.user.findUnique({
-      where: { username },
+      where: { username, isActive: true },
       include: { preference: true },
     })
   }
