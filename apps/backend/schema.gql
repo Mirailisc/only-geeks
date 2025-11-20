@@ -43,8 +43,9 @@ type Project {
   description: String
   link: String
   photos: [String!]
-  editRequested: Boolean
+  requestEdit: Boolean
   requestUnpublish: Boolean
+  isResponse: Boolean
   startDate: DateTime
   endDate: DateTime
   User: User
@@ -61,6 +62,9 @@ type Blog {
   isPublished: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  requestEdit: Boolean
+  requestUnpublish: Boolean
+  isResponse: Boolean
   User: User
 }
 
@@ -90,8 +94,10 @@ type ModerationDecision {
   adminId: String!
   reportId: String!
   action: ModerationAction!
+  isResponse: Boolean
   note: String
   createdAt: DateTime!
+  updatedAt: DateTime!
   admin: User
   report: Report
 }
@@ -102,6 +108,7 @@ enum ModerationAction {
   UNPUBLISH
   DEACTIVATE
   DELETE
+  RESOLVED
 }
 
 type ReportsCountSummary {
@@ -246,6 +253,9 @@ type BlogFeed {
   isPublished: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  requestEdit: Boolean
+  requestUnpublish: Boolean
+  isResponse: Boolean
   User: User
   contentType: String!
 }
@@ -256,8 +266,9 @@ type ProjectFeed {
   description: String
   link: String
   photos: [String!]
-  editRequested: Boolean
+  requestEdit: Boolean
   requestUnpublish: Boolean
+  isResponse: Boolean
   startDate: DateTime
   endDate: DateTime
   User: User
@@ -284,15 +295,6 @@ type Query {
   searchUser(query: String!): [User!]!
   getGoogleOauthUrl(state: String!): String!
   me: AuthUser!
-  getMyReports: [Report!]!
-  getMyWarnings: [Report!]!
-  getAllReports: [Report!]!
-  getAllReportsByStatus(status: String!): [Report!]!
-  getAllReportByTargetType(targetType: String!): [Report!]!
-  findReportById(id: String!): Report!
-  countReportsByStatus: ReportsCountSummary!
-  hasReportedTarget(targetId: String!, targetType: String!): Boolean!
-  getRecentReports(limit: Float!): [Report!]!
   getAllModerationDecisions: [ModerationDecision!]!
   getModerationDecisionByReportId(reportId: String!): ModerationDecision!
   getAllUserRestrictions: [UserRestriction!]!
@@ -319,6 +321,15 @@ type Query {
   getAchievementsByUsername(username: String!): [Achievement!]!
   feed(input: FeedInput!): FeedResponse!
   getNewFeedCount(input: NewFeedCountInput!): Float!
+  getMyReports: [Report!]!
+  getMyWarnings: [Report!]!
+  getAllReports: [Report!]!
+  getAllReportsByStatus(status: String!): [Report!]!
+  getAllReportByTargetType(targetType: String!): [Report!]!
+  findReportById(id: String!): Report!
+  countReportsByStatus: ReportsCountSummary!
+  hasReportedTarget(targetId: String!, targetType: String!): Boolean!
+  getRecentReports(limit: Float!): [Report!]!
 }
 
 input SearchInput {
@@ -347,12 +358,11 @@ type Mutation {
   login(input: LoginInput!): String!
   register(input: RegisterInput!): String!
   logout: Boolean!
-  createReport(input: CreateReportInput!): Report!
-  updateReportStatus(id: String!, status: String!): Report!
-  deleteReport(id: String!): Report!
   createModerationDecision(input: CreateModerationDecisionInput!): ModerationDecision!
   updateModerationDecision(id: String!, action: String!, note: String): ModerationDecision!
   deleteModerationDecision(id: String!): ModerationDecision!
+  markModerationDecisionAsResponse(id: String!): ModerationDecision!
+  markModerationDecisionAsUnresponded(id: String!): ModerationDecision!
   createUserRestriction(input: CreateUserRestrictionInput!): UserRestriction!
   removeUserRestriction(id: String!): UserRestriction!
   updateUserRestriction(id: String!, type: String, reason: String, expiresAt: DateTime): UserRestriction!
@@ -371,6 +381,9 @@ type Mutation {
   updateAchievement(id: String!, input: UpdateAchievementInput!): Achievement!
   deleteAchievement(id: String!): Boolean!
   updatePreference(input: PreferenceInput!): PreferenceEntity!
+  createReport(input: CreateReportInput!): Report!
+  updateReportStatus(id: String!, status: String!): Report!
+  deleteReport(id: String!): Report!
 }
 
 input UpdateUserInput {
@@ -394,13 +407,6 @@ input RegisterInput {
   firstName: String!
   lastName: String!
   password: String!
-}
-
-input CreateReportInput {
-  targetType: String!
-  targetId: String!
-  reason: String!
-  category: String!
 }
 
 input CreateModerationDecisionInput {
@@ -484,4 +490,11 @@ input UpdateAchievementInput {
 input PreferenceInput {
   currentTheme: String
   isPublicProfile: Boolean
+}
+
+input CreateReportInput {
+  targetType: String!
+  targetId: String!
+  reason: String!
+  category: String!
 }

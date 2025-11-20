@@ -157,8 +157,8 @@ model BlogReport {
   reportId  String  @unique
   targetId  String
 
-  report    Report  @relation(fields: [reportId], references: [id])
-  target    Blog    @relation("ReportsAgainstBlog", fields: [targetId], references: [id])
+  report    Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  target    Blog    @relation("ReportsAgainstBlog", fields: [targetId], references: [id], onDelete: Cascade)
 }
 
 model ProjectReport {
@@ -166,8 +166,8 @@ model ProjectReport {
   reportId  String  @unique
   targetId  String
 
-  report    Report  @relation(fields: [reportId], references: [id])
-  target    Project @relation("ReportsAgainstProject", fields: [targetId], references: [id])
+  report    Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  target    Project @relation("ReportsAgainstProject", fields: [targetId], references: [id], onDelete: Cascade)
 }
 
 enum ReportTarget {
@@ -216,15 +216,17 @@ model ModerationDecision {
   isResponse  Boolean  @default(false)
   note        String?
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
 
   admin       User     @relation(fields: [adminId], references: [id])
-  report      Report   @relation(fields: [reportId], references: [id])
+  report      Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
 }
 
 enum ModerationAction {
   NONE          // no action taken
   REQUEST_EDIT  // admin requests user to edit
   UNPUBLISH     // admin unpublishes blog/project
+  RESOLVED      // issue resolved
   DEACTIVATE    // admin deactivates user
   DELETE        // admin deletes content
 }
@@ -239,6 +241,7 @@ model UserRestriction {
   reason    String?
   expiresAt DateTime?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user      User     @relation(fields: [userId], references: [id])
 }

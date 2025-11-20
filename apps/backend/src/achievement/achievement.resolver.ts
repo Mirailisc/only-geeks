@@ -40,13 +40,14 @@ export class AchievementResolver {
   async updateAchievement(
     @Args('id') id: string,
     @Args('input') input: UpdateAchievementInput,
+    @CurrentUser() user: any,
   ) {
-    return await this.achievementService.update(id, input)
+    return await this.achievementService.update(id, user.id, input)
   }
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
-  async deleteAchievement(@Args('id') id: string) {
-    return await this.achievementService.remove(id)
+  async deleteAchievement(@Args('id') id: string, @CurrentUser() user: any) {
+    return await this.achievementService.remove(id, user.id)
   }
 }

@@ -70,8 +70,10 @@ export interface ModerationDecision {
   adminId: string
   reportId: string
   action: ModerationAction
+  isResponse: boolean
   note?: string
   createdAt: Date
+  updatedAt: Date
   admin?: Partial<Profile>
 }
 

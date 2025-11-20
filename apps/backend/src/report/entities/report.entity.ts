@@ -26,6 +26,7 @@ export enum ModerationAction {
   UNPUBLISH = 'UNPUBLISH',
   DEACTIVATE = 'DEACTIVATE',
   DELETE = 'DELETE',
+  RESOLVED = 'RESOLVED',
 }
 
 export enum ReportCategory {

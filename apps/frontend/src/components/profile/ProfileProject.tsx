@@ -15,6 +15,7 @@ import { CREATE_PROJECT_PATH } from '@/constants/routes'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import ReportComponentWithButton from '../report/report'
 import { Badge } from '../ui/badge'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 
 // Component for a single project card
 const ProjectCard = ({ project, isMyProfile, myUsername }: { project: Project; isMyProfile: boolean; myUsername: string }) => {
@@ -67,10 +68,47 @@ const ProjectCard = ({ project, isMyProfile, myUsername }: { project: Project; i
                 <CardTitle className="mb-2 text-2xl font-bold leading-snug">{project.title}</CardTitle>
                 <p className="mb-4 text-base text-gray-600">{project.description}</p>
                 {
-                  project.editRequested && isMyProfile && (
-                    <Badge variant="warning" className="mb-2">
-                      Admin request to edit this project
-                    </Badge>
+                  project.requestEdit && isMyProfile && !project.isResponse && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="warning" className="mt-1">
+                          Admin request to edit this project
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>This project will be private until admin resolve your request.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                }
+                {
+                  project.requestUnpublish && isMyProfile && !project.isResponse && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="destructive" className="mt-1">
+                          Admin request to unpublish this project
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>This project will be private until admin resolve your request.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                }
+                {
+                  project.isResponse && isMyProfile && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="secondary" className="mt-1">
+                          This project already responded to admin request
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          Please wait for admin to review your changes. The project is private until then.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
                   )
                 }
               </div>

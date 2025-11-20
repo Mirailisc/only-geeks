@@ -17,20 +17,54 @@ export class FeedService {
     const profileFilter = {
       OR: [
         // Public profiles
-        { User: { preference: { isPublicProfile: true } } },
-        // No preference set (assume public)
-        { User: { preference: { isPublicProfile: undefined } } },
-        // Content owned by the requester (even if private)
+        {
+          User: {
+            preference: {
+              is: {
+                isPublicProfile: true,
+              },
+            },
+          },
+        },
+        // No preference row → assume public
+        {
+          User: {
+            preference: {
+              is: null,
+            },
+          },
+        },
+        // Owner can see their own content
         ...(userId ? [{ userId }] : []),
       ],
     }
-
     // PROJECTS
     if (type === FeedType.ALL || type === FeedType.PROJECT) {
       const projects = await this.prisma.project.findMany({
         where: {
           ...cursorFilter,
           ...profileFilter,
+          AND: [
+            {
+              OR: [
+                // Owner always sees their own projects
+                userId ? { userId } : {},
+
+                // Everyone else: hide projects with REQUEST_EDIT or UNPUBLISH reports
+                {
+                  reports: {
+                    none: {
+                      report: {
+                        decision: {
+                          action: { in: ['REQUEST_EDIT', 'UNPUBLISH'] },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          ],
         },
         orderBy: { createdAt: 'desc' },
         select: {
@@ -45,10 +79,33 @@ export class FeedService {
           createdAt: true,
           updatedAt: true,
           User: true,
+          reports: {
+            include: {
+              report: {
+                include: {
+                  decision: true,
+                },
+              },
+            },
+          },
         },
         take: limit,
       })
-      feedItems.push(...projects.map((p) => ({ ...p, contentType: 'project' })))
+
+      feedItems.push(
+        ...projects.map((p) => {
+          const decisions = p.reports
+            .map((pr) => pr.report.decision?.action)
+            .filter(Boolean)
+          return {
+            ...p,
+            contentType: 'project',
+            isResponse: p.reports.some((r) => r.report.decision.isResponse),
+            requestEdit: decisions.includes('REQUEST_EDIT'),
+            requestUnpublish: decisions.includes('UNPUBLISH'),
+          }
+        }),
+      )
     }
 
     // BLOGS
@@ -58,6 +115,27 @@ export class FeedService {
           isPublished: true,
           ...cursorFilter,
           ...profileFilter,
+          AND: [
+            {
+              OR: [
+                // Owner always sees their own projects
+                userId ? { userId } : {},
+
+                // Everyone else: hide projects with REQUEST_EDIT or UNPUBLISH reports
+                {
+                  reports: {
+                    none: {
+                      report: {
+                        decision: {
+                          action: { in: ['REQUEST_EDIT', 'UNPUBLISH'] },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          ],
         },
         orderBy: { createdAt: 'desc' },
         select: {
@@ -72,10 +150,33 @@ export class FeedService {
           createdAt: true,
           updatedAt: true,
           User: true,
+          reports: {
+            include: {
+              report: {
+                include: {
+                  decision: true,
+                },
+              },
+            },
+          },
         },
         take: limit,
       })
-      feedItems.push(...blogs.map((b) => ({ ...b, contentType: 'blog' })))
+      // feedItems.push(...blogs.map((b) => ({ ...b, contentType: 'blog' })))
+      feedItems.push(
+        ...blogs.map((b) => {
+          const decisions = b.reports
+            .map((pr) => pr.report.decision?.action)
+            .filter(Boolean)
+          return {
+            ...b,
+            contentType: 'blog',
+            isResponse: b.reports.some((r) => r.report.decision.isResponse),
+            requestEdit: decisions.includes('REQUEST_EDIT'),
+            requestUnpublish: decisions.includes('UNPUBLISH'),
+          }
+        }),
+      )
     }
 
     // ACHIEVEMENTS
@@ -128,6 +229,27 @@ export class FeedService {
         isPublished: true,
         createdAt: { gt: since },
         ...profileFilter,
+        AND: [
+          {
+            OR: [
+              // Owner always sees their own projects
+              userId ? { userId } : {},
+
+              // Everyone else: hide projects with REQUEST_EDIT or UNPUBLISH reports
+              {
+                reports: {
+                  none: {
+                    report: {
+                      decision: {
+                        action: { in: ['REQUEST_EDIT', 'UNPUBLISH'] },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        ],
       },
     })
 
@@ -135,6 +257,27 @@ export class FeedService {
       where: {
         createdAt: { gt: since },
         ...profileFilter,
+        AND: [
+          {
+            OR: [
+              // Owner always sees their own projects
+              userId ? { userId } : {},
+
+              // Everyone else: hide projects with REQUEST_EDIT or UNPUBLISH reports
+              {
+                reports: {
+                  none: {
+                    report: {
+                      decision: {
+                        action: { in: ['REQUEST_EDIT', 'UNPUBLISH'] },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        ],
       },
     })
 

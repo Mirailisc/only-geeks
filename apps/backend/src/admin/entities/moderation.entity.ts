@@ -25,6 +25,9 @@ export class ModerationDecision {
   @Field()
   createdAt: Date
 
+  @Field()
+  updatedAt: Date
+
   @Field(() => User, { nullable: true })
   admin?: User
 

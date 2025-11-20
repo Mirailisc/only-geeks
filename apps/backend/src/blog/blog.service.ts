@@ -3,12 +3,14 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateBlogInput } from './dto/create-blog.input'
 import { UserService } from 'src/user/user.service'
 import { UpdateBlogInput } from './dto/update-blog.input'
+import { AdminService } from 'src/admin/admin.service'
 
 @Injectable()
 export class BlogService {
   constructor(
     private prisma: PrismaService,
     private readonly userService: UserService,
+    private readonly adminService: AdminService,
   ) {}
 
   async getBlogs() {
@@ -66,6 +68,7 @@ export class BlogService {
         createdAt: true,
         updatedAt: true,
         User: true,
+        reports: true,
       },
     })
   }
@@ -125,6 +128,8 @@ export class BlogService {
   }
 
   async createBlog(userId: string, input: CreateBlogInput) {
+    await this.userService.checkPostingRestriction(userId)
+
     const slug = input.title.toLowerCase().replace(/\s+/g, '-')
 
     return await this.prisma.blog.create({
@@ -149,8 +154,35 @@ export class BlogService {
     })
   }
 
-  async updateBlog(id: string, input: UpdateBlogInput) {
+  async updateBlog(id: string, userId: string, input: UpdateBlogInput) {
+    await this.userService.checkPostingRestriction(userId)
+
     const slug = input.title.toLowerCase().replace(/\s+/g, '-')
+
+    const existing = await this.getBlogById(id)
+    if (!existing) throw new Error('BLOG_NOT_FOUND')
+
+    const moderationDecisions = await Promise.all(
+      existing.reports.map((r) =>
+        this.adminService.getModerationDecisionByReportId(r.reportId),
+      ),
+    )
+
+    // Filter only decisions (REQUEST_EDIT or UNPUBLISH) that are not yet responded
+    const pendingDecisions = moderationDecisions.filter(
+      (d) =>
+        d &&
+        (d.action === 'REQUEST_EDIT' || d.action === 'UNPUBLISH') &&
+        !d.isResponse,
+    )
+
+    if (pendingDecisions.length > 0) {
+      await Promise.all(
+        pendingDecisions.map((d) =>
+          this.adminService.markModerationDecisionAsResponded(d.id),
+        ),
+      )
+    }
 
     return await this.prisma.blog.update({
       where: { id },
@@ -171,7 +203,9 @@ export class BlogService {
     })
   }
 
-  async deleteBlog(id: string) {
+  async deleteBlog(id: string, userId: string) {
+    await this.userService.checkPostingRestriction(userId)
+
     return await this.prisma.blog.delete({
       where: { id },
       select: {

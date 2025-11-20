@@ -31,6 +31,7 @@ import CreateEducation from './pages/create_education'
 import { ThemeProvider } from 'next-themes'
 import ProtectedAdminRoute from './components/utils/ProtectedAdminRoute'
 import AdminModerationDashboard from './pages/admin'
+import { TooltipProvider } from './components/ui/tooltip'
 
 const router = createBrowserRouter([
   {
@@ -122,10 +123,12 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ThemeProvider defaultTheme="light" attribute="class" storageKey="onlygeek-theme">
-      <div>
-        <Toaster richColors position="bottom-right" />
-        <RouterProvider router={router} />
-      </div>
+      <TooltipProvider>
+        <div>
+          <Toaster richColors position="bottom-right" />
+          <RouterProvider router={router} />
+        </div>
+      </TooltipProvider>
     </ThemeProvider>
   )
 }

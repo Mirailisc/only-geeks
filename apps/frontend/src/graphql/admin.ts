@@ -112,6 +112,7 @@ export const GET_REPORTS_BY_STATUS_OR_ALL = gql`
         note
         isResponse
         createdAt
+        updatedAt
       }
       blogReport {
         target {
@@ -320,6 +321,7 @@ query CountReportsByStatus {
     ALL
     PENDING
     REJECTED
+    REQUEST_EDIT
     RESOLVED
     UNDER_REVIEW
   }

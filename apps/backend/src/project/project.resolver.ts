@@ -40,13 +40,14 @@ export class ProjectResolver {
   async updateProject(
     @Args('id') id: string,
     @Args('input') input: UpdateProjectInput,
+    @CurrentUser() user: any,
   ) {
-    return await this.projectService.update(id, input)
+    return await this.projectService.update(id, user.id, input)
   }
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
-  async deleteProject(@Args('id') id: string) {
-    return await this.projectService.remove(id)
+  async deleteProject(@Args('id') id: string, @CurrentUser() user: any) {
+    return await this.projectService.remove(id, user.id)
   }
 }

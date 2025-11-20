@@ -15,22 +15,7 @@ export class ProjectService {
   ) {}
 
   async create(userId: string, input: CreateProjectInput) {
-    // verify that user exists and no restriction "NO_POSTING"
-    const user = await this.userService.findUserById(userId)
-    if (!user) throw new BadRequestException('User not found')
-
-    const myRestriction = await Promise.all(
-      await this.adminService.getActiveUserRestrictions(userId),
-    )
-    const now = new Date()
-    const noPostRestrictions = myRestriction.find(
-      (restriction) =>
-        restriction.type === 'NO_POSTING' && restriction.expiresAt > now,
-    )
-    if (noPostRestrictions)
-      throw new BadRequestException(
-        'You are restricted from posting new projects.',
-      )
+    await this.userService.checkPostingRestriction(userId)
 
     return await this.prisma.project.create({
       data: { ...input, userId },
@@ -63,7 +48,8 @@ export class ProjectService {
 
       return {
         ...p,
-        editRequested: decisions.includes('REQUEST_EDIT'),
+        isResponse: p.reports.some((r) => r.report.decision.isResponse),
+        requestEdit: decisions.includes('REQUEST_EDIT'),
         requestUnpublish: decisions.includes('UNPUBLISH'),
       }
     })
@@ -105,7 +91,8 @@ export class ProjectService {
     return projects.map((p) => {
       return {
         ...p,
-        editRequested: false,
+        isResponse: p.reports.some((r) => r.report.decision.isResponse),
+        requestEdit: false,
         requestUnpublish: false,
       }
     })
@@ -120,7 +107,9 @@ export class ProjectService {
     return project
   }
 
-  async update(id: string, input: UpdateProjectInput) {
+  async update(id: string, userId: string, input: UpdateProjectInput) {
+    await this.userService.checkPostingRestriction(userId)
+
     const existing = await this.findOne(id)
 
     const moderationDecisions = await Promise.all(
@@ -153,7 +142,9 @@ export class ProjectService {
     })
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
+    await this.userService.checkPostingRestriction(userId)
+
     const existing = await this.findOne(id)
     await this.prisma.project.delete({
       where: { id: existing.id },

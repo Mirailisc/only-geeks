@@ -42,6 +42,9 @@ query Feed($input: FeedInput!) {
         createdAt
         updatedAt
         contentType
+        requestUnpublish
+        requestEdit
+        isResponse
       }
       ... on ProjectFeed {
         photos
@@ -60,6 +63,9 @@ query Feed($input: FeedInput!) {
           lastName
         }
         contentType
+        requestEdit
+        requestUnpublish
+        isResponse
       }
       ... on AchievementFeed {
         updatedAt

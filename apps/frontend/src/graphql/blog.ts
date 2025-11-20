@@ -10,6 +10,9 @@ export interface Blog {
   description: string | null
   content: string | null
   isPublished: boolean
+  isResponse?: boolean
+  requestEdit?: boolean
+  requestUnpublish?: boolean
   createdAt: string
   updatedAt: string
   User: Partial<Profile>

@@ -2,11 +2,11 @@ import { CREATE_MODERATION_DECISION, DEACTIVATE_USER, GET_ALL_AUDIT_LOGS, GET_AL
 import { REPORT_STATUS_TEXT, ReportStatusList, type Report, type ReportStatus } from '@/graphql/report';
 import { useMutation, useQuery } from "@apollo/client/react";
 import { useMemo, useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertButton, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { MODERATION_ACTIONS_TEXT } from "@/constants/report";
 import { toast } from "sonner";
-import { CheckCircleIcon, FileTextIcon, SearchIcon } from "lucide-react";
+import { CheckCircleIcon, FileTextIcon, SearchIcon, UserPenIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -221,12 +221,38 @@ export const ReportsTab = () => {
                       Report at: {new Date(report.createdAt).toLocaleString()}
                     </p>
                     {report.decision && (
-                      <Alert className="mt-3" variant={"default"}>
+                      <Alert className="justify-start mb-4" variant={"default"}>
                         <CheckCircleIcon />
-                        <div className='ml-3'>
+                        <div className='flex-1'>
                           <AlertTitle>Decision:&nbsp;{MODERATION_ACTIONS_TEXT[report.decision.action]}</AlertTitle>
-                          <AlertDescription className="text-muted-foreground">{report.decision.note}</AlertDescription>
+                          <AlertDescription>{report.decision.note}</AlertDescription>
                         </div>
+                      </Alert>
+                    )}
+                    {report.decision && (report.decision.action === "REQUEST_EDIT" || report.decision.action === "UNPUBLISH") && (
+                      <Alert className="justify-start" variant={"default"}>
+                        <UserPenIcon />
+                        <div className='flex-1'>
+                          <AlertTitle>User response</AlertTitle>
+                          <AlertDescription>
+                            {
+                              report.decision.isResponse ? (
+                                <span className="text-sm text-green-600 font-medium">
+                                  The user has responded to this decision by editing their content at {
+                                    new Date(report.decision.updatedAt).toLocaleString()
+                                  }
+                                </span>
+                              ) : (
+                                <span className="text-sm text-red-600 font-medium">
+                                  Waiting for the user to respond to this decision, now their content is not showing to public.
+                                </span>
+                              )
+                            }
+                          </AlertDescription>
+                        </div>
+                        <AlertButton variant={"destructive"}>
+                            Mark as not response
+                        </AlertButton>
                       </Alert>
                     )}
                   </div>
@@ -280,7 +306,7 @@ export const ReportsTab = () => {
                       value={report.status}
                       onValueChange={(status: ReportStatus) => handleUpdateStatus(report.id, status)}
                     >
-                      <SelectTrigger className="w-32">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -341,6 +367,16 @@ export const ReportsTab = () => {
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
+                    {
+                      report.decision && (
+                        report.decision.action === "REQUEST_EDIT" || 
+                        report.decision.action === "UNPUBLISH" ? (
+                          <Button variant={'outline'} onClick={()=>{
+                            handleUpdateStatus(report.id, "RESOLVED")
+                          }}>Mark as Resolved</Button>
+                        ) : null
+                      )
+                    }
                   </div>
                 </div>
               </CardContent>

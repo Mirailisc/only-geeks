@@ -19,10 +19,13 @@ export class Project {
   photos?: string[]
 
   @Field(() => Boolean, { nullable: true })
-  editRequested?: boolean
+  requestEdit?: boolean
 
   @Field(() => Boolean, { nullable: true })
   requestUnpublish?: boolean
+
+  @Field(() => Boolean, { nullable: true })
+  isResponse?: boolean
 
   @Field({ nullable: true })
   startDate?: Date
