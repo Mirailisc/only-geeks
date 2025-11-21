@@ -255,7 +255,7 @@ mutation UpdateModerationDecision($updateModerationDecisionId: String!, $action:
 }
 `;
 
-export const MARK_MODERATION_DECISION_AS_UNRESPONDED = gql`
+export const MARK_MODERATION_DECISION_AS_NOT_RESPONDED = gql`
   mutation MarkModerationDecisionAsUnresponded($id: String!) {
     markModerationDecisionAsUnresponded(id: $id) {
       id

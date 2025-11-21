@@ -215,7 +215,7 @@ export class AdminService {
     // Log the action
     await this.createAuditLog(
       adminId,
-      'MARK_MODERATION_DECISION_AS_UNRESPONDED',
+      'MARK_MODERATION_DECISION_AS_NOT_RESPONDED',
       'MODERATION_DECISION',
       id,
       'Marked decision as unresponded',

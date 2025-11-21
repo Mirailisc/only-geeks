@@ -1,4 +1,4 @@
-import { CREATE_MODERATION_DECISION, DEACTIVATE_USER, GET_ALL_AUDIT_LOGS, GET_ALL_DEACTIVATED_USERS, GET_REPORTS_BY_STATUS_OR_ALL, UPDATE_MODERATION_DECISION, UPDATE_REPORT_STATUS } from "@/graphql/admin";
+import { CREATE_MODERATION_DECISION, DEACTIVATE_USER, GET_ALL_AUDIT_LOGS, GET_ALL_DEACTIVATED_USERS, GET_REPORTS_BY_STATUS_OR_ALL, MARK_MODERATION_DECISION_AS_NOT_RESPONDED, UPDATE_MODERATION_DECISION, UPDATE_REPORT_STATUS } from "@/graphql/admin";
 import { REPORT_STATUS_TEXT, ReportStatusList, type Report, type ReportStatus } from '@/graphql/report';
 import { useMutation, useQuery } from "@apollo/client/react";
 import { useMemo, useState } from "react";
@@ -35,6 +35,7 @@ export const ReportsTab = () => {
   });
   const [createDecision] = useMutation(CREATE_MODERATION_DECISION);
   const [updateDecision] = useMutation(UPDATE_MODERATION_DECISION);
+  const [markAsNotResponse] = useMutation(MARK_MODERATION_DECISION_AS_NOT_RESPONDED);
   const [deactivateUser] = useMutation(DEACTIVATE_USER);
   const [updateReportStatus] = useMutation(UPDATE_REPORT_STATUS);
   // const { data: deactivatedUsersData, loading: deactivatedUsersLoading, refetch: refetchDeactivated } = useQuery<{getAllDeactivatedUsers: Partial<Profile>[]}>(GET_ALL_DEACTIVATED_USERS);
@@ -60,7 +61,8 @@ export const ReportsTab = () => {
     setFilterStatus(newStatus as ReportStatus);
     // refetchReports will be called automatically by useQuery hook 
     // when filterStatus state changes, triggering a new query.
-  };
+  }
+
   const handleCreateDecision = async (reportId: string) => {
     try {
       await createDecision({
@@ -135,7 +137,8 @@ export const ReportsTab = () => {
         toast.error('Failed to create decision.'); // Added toast
       }
     }
-  };
+  }
+
   const markAsResolved = async (decisionId: string | undefined) => {
     try{
       if (!decisionId) {
@@ -156,6 +159,7 @@ export const ReportsTab = () => {
       toast.error('Failed to mark as resolved.'); // Added toast
     }
   }
+
   const handleUpdateStatus = async (reportId: string, status: ReportStatus) => {
     try {
       await updateReportStatus({
@@ -168,7 +172,25 @@ export const ReportsTab = () => {
       console.error('Error updating status:', error);
       toast.error('Failed to update report status.'); // Added toast
     }
-  };
+  }
+
+  const handleMarkAsNotResponse = async (decisionId: string | undefined) => {
+    try {
+      if (!decisionId) {
+        toast.error('No decision found to mark as not responded.');
+        return;
+      }
+      await markAsNotResponse({
+        variables: { id: decisionId },
+        refetchQueries: [{ query: GET_REPORTS_BY_STATUS_OR_ALL, variables: { status: filterStatus } }]
+      });
+      toast.success('Marked as not responded successfully.');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error marking as not responded:', error);
+      toast.error('Failed to mark as not responded.');
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -276,8 +298,10 @@ export const ReportsTab = () => {
                           </AlertDescription>
                         </div>
                         {
-                          report.decision.isResponse &&
-                          <AlertButton variant={"destructive"}>
+                          report.decision && report.decision.isResponse &&
+                          <AlertButton variant={"destructive"} onClick={()=>{
+                            handleMarkAsNotResponse(report.decision?.id)
+                          }}>
                             Mark as not response
                           </AlertButton>
                         }
