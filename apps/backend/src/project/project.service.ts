@@ -48,7 +48,9 @@ export class ProjectService {
 
       return {
         ...p,
-        isResponse: p.reports.some((r) => r.report.decision.isResponse),
+        isResponse: p.reports.some(
+          (r) => r.report.decision?.isResponse || false,
+        ),
         requestEdit: decisions.includes('REQUEST_EDIT'),
         requestUnpublish: decisions.includes('UNPUBLISH'),
       }
@@ -91,7 +93,9 @@ export class ProjectService {
     return projects.map((p) => {
       return {
         ...p,
-        isResponse: p.reports.some((r) => r.report.decision.isResponse),
+        isResponse: p.reports.some(
+          (r) => r.report.decision?.isResponse || false,
+        ),
         requestEdit: false,
         requestUnpublish: false,
       }

@@ -100,7 +100,7 @@ const AdminModerationDashboard = () => {
             <AuthNavbar />
             <div className="h-[1px] w-full my-2" />
             <div className='px-4'>
-              {activeTab === "dashboard" && <DashboardTab />}
+              {activeTab === "dashboard" && <DashboardTab navigator={setActiveTab} />}
               {activeTab === "reports" && <ReportsTab />}
               {activeTab === "restrictions" && <RestrictionsTab />}
               {activeTab === "user-management" && <UserManagementTab />}

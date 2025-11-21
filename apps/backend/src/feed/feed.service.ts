@@ -102,7 +102,9 @@ export class FeedService {
           return {
             ...p,
             contentType: 'project',
-            isResponse: p.reports.some((r) => r.report.decision.isResponse),
+            isResponse: p.reports.some(
+              (r) => r.report.decision?.isResponse || false,
+            ),
             requestEdit: decisions.includes('REQUEST_EDIT'),
             requestUnpublish: decisions.includes('UNPUBLISH'),
           }
@@ -173,7 +175,9 @@ export class FeedService {
           return {
             ...b,
             contentType: 'blog',
-            isResponse: b.reports.some((r) => r.report.decision.isResponse),
+            isResponse: b.reports.some(
+              (r) => r.report.decision?.isResponse || false,
+            ),
             requestEdit: decisions.includes('REQUEST_EDIT'),
             requestUnpublish: decisions.includes('UNPUBLISH'),
           }

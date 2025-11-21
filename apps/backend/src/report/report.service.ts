@@ -205,6 +205,9 @@ export class ReportService {
   async getAllReportsByStatus(status: ReportStatus): Promise<Report[]> {
     if (status === ReportStatus.ALL) {
       const reports = await this.prisma.report.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
         include: {
           reporter: true,
           decision: { include: { admin: true } },
@@ -217,6 +220,9 @@ export class ReportService {
     }
     const reports = await this.prisma.report.findMany({
       where: { status },
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
         reporter: true,
         decision: { include: { admin: true } },
@@ -231,6 +237,9 @@ export class ReportService {
     let reports: any[] = []
     if (targetType === TargetType.USER) {
       reports = await this.prisma.report.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
         where: { userReport: { isNot: null } },
         include: {
           reporter: true,
@@ -240,6 +249,9 @@ export class ReportService {
       })
     } else if (targetType === TargetType.BLOG) {
       reports = await this.prisma.report.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
         where: { blogReport: { isNot: null } },
         include: {
           reporter: true,
@@ -249,6 +261,9 @@ export class ReportService {
       })
     } else if (targetType === TargetType.PROJECT) {
       reports = await this.prisma.report.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
         where: { projectReport: { isNot: null } },
         include: {
           reporter: true,

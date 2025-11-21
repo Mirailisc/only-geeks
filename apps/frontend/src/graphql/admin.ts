@@ -158,6 +158,75 @@ export const GET_REPORTS_BY_STATUS_OR_ALL = gql`
   }
 `;
 
+export const GET_RECENT_REPORTS = gql`
+query GetRecentReports($limit: Float!) {
+  getRecentReports(limit: $limit) {
+    id
+    reporterId
+    category
+    reason
+    status
+    adminNote
+    targetType
+    createdAt
+    updatedAt
+    reporter {
+      id
+      username
+      email
+    }
+    decision {
+      id
+      action
+      note
+      isResponse
+      createdAt
+      updatedAt
+    }
+    blogReport {
+      target {
+        id
+        title
+        slug
+        User {
+          firstName
+          lastName
+          picture
+          username
+          email
+        }
+        description
+      }
+    }
+    projectReport {
+      target {
+        id
+        photos
+        title
+        description
+        User {
+          lastName
+          firstName
+          picture
+          username
+          email
+        }
+      }
+    }
+    userReport {
+      target {
+        id
+        username
+        picture
+        lastName
+        firstName
+        email
+      }
+    }
+  }
+}
+`
+
 export const GET_ALL_REPORTS_BY_TARGET_TYPE = gql`
 query GetAllReportByTargetType($status: String!) {
   getAllReportByTargetType(status: $status) {

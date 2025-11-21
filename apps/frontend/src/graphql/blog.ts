@@ -31,6 +31,9 @@ export const GET_BLOGS_QUERY = gql`
       userId
       createdAt
       updatedAt
+      isResponse
+      requestEdit
+      requestUnpublish
     }
   }
 `
@@ -47,6 +50,9 @@ export const GET_MY_BLOGS_QUERY_EDITED_MODE = gql`
       userId
       createdAt
       updatedAt
+      isResponse
+      requestEdit
+      requestUnpublish
     }
   }
 `
@@ -71,6 +77,9 @@ export const GET_BLOG_BY_SLUG_AND_USERNAME_QUERY = gql`
       isPublished
       createdAt
       updatedAt
+      isResponse
+      requestEdit
+      requestUnpublish
     }
   }
 `
@@ -93,6 +102,9 @@ export const GET_BLOGS_BY_USERNAME_QUERY = gql`
       isPublished
       createdAt
       updatedAt
+      isResponse
+      requestEdit
+      requestUnpublish
     }
   }
 `
@@ -108,6 +120,9 @@ export const GET_MY_BLOGS_QUERY = gql`
       isPublished
       createdAt
       updatedAt
+      isResponse
+      requestEdit
+      requestUnpublish
     }
   }
 `
@@ -186,22 +201,22 @@ export const DELETE_BLOG_MUTATION = gql`
   }
 `
 
-export const GET_BLOG_BY_ID_MUTATION = gql`
-  query GetBlogById($blogId: String!) {
-    getBlogById(id: $blogId) {
-      id
-      title
-      content
-      slug
-      thumbnail
-      description
-      isPublished
-      userId
-      createdAt
-      updatedAt
-    }
-  }
-`
+// export const GET_BLOG_BY_ID_MUTATION = gql`
+//   query GetBlogById($blogId: String!) {
+//     getBlogById(id: $blogId) {
+//       id
+//       title
+//       content
+//       slug
+//       thumbnail
+//       description
+//       isPublished
+//       userId
+//       createdAt
+//       updatedAt
+//     }
+//   }
+// `
 
 export const BLOG_READ_QUERY = gql`
   query GetBlogBySlugAndUsername($slug: String!, $username: String!) {
@@ -211,9 +226,13 @@ export const BLOG_READ_QUERY = gql`
       thumbnail
       slug
       updatedAt
+      createdAt
       description
       content
       isPublished
+      isResponse
+      requestEdit
+      requestUnpublish
       User {
         bio
         email

@@ -34,6 +34,7 @@ export class BlogResolver {
   }
 
   @Query(() => [Blog])
+  @UseGuards(GuestAuthGuard)
   async getBlogsByUsername(@Args('username') username: string) {
     return await this.blogService.getBlogsByUsername(username)
   }
