@@ -121,7 +121,7 @@ export class ReportService {
         AND: [
           {
             status: {
-              in: ['RESOLVED', 'UNDER_REVIEW'],
+              in: ['RESOLVED', 'UNDER_REVIEW', 'REQUEST_EDIT'],
             },
           },
           {
