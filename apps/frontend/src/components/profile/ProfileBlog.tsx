@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 
-// // Component for a single blog blogPost card
+// // Component for a single blog post card
 const BlogblogPostCard = ({ blogPost, isMyProfile, username }: { blogPost: Blog; isMyProfile: boolean; username: string }) => {
   const [deleteBlogById, { loading }] = useMutation<{ deleteBlogById: Blog }>(DELETE_BLOG_MUTATION, {
     refetchQueries: [{ query: GET_MY_BLOGS_QUERY }],
@@ -27,7 +27,7 @@ const BlogblogPostCard = ({ blogPost, isMyProfile, username }: { blogPost: Blog;
         <DialogContent>
           <DialogHeader>
             <div className="flex flex-col gap-4 p-4">
-              <h2 className="text-lg font-medium text-gray-900">Are you sure you want to delete this blog blogPost?</h2>
+              <h2 className="text-lg font-medium text-gray-900">Are you sure you want to delete this blog post?</h2>
               <p className="text-sm text-gray-500">This action cannot be undone.</p>
             </div>
           </DialogHeader>
@@ -42,6 +42,7 @@ const BlogblogPostCard = ({ blogPost, isMyProfile, username }: { blogPost: Blog;
                 setPromptMeDelete(false)
               }}
               disabled={loading}
+              data-cy="confirm-delete-blog-button"
             >
               {loading ? 'Deleting...' : 'Delete'}
             </Button>
@@ -137,18 +138,17 @@ const BlogblogPostCard = ({ blogPost, isMyProfile, username }: { blogPost: Blog;
 
               {isMyProfile ? (
                 <div className="flex flex-row justify-end gap-2">
-                  {blogPost.isPublished && (
-                    <Button
-                      variant={'secondary'}
-                      disabled={loading}
-                      className=""
-                      onClick={() => {
-                        navigator(`/create/blog/?editid=${blogPost.id}`)
-                      }}
-                    >
-                      <PencilIcon className="h-4 w-4" />
-                    </Button>
-                  )}
+                  <Button
+                    variant={'secondary'}
+                    disabled={loading}
+                    className=""
+                    onClick={() => {
+                      navigator(`/create/blog/?editid=${blogPost.id}`)
+                    }}
+                    data-cy="edit-blog-button"
+                  >
+                    <PencilIcon className="h-4 w-4" />
+                  </Button>
                   <Button
                     variant={'destructive'}
                     disabled={loading}
@@ -156,6 +156,7 @@ const BlogblogPostCard = ({ blogPost, isMyProfile, username }: { blogPost: Blog;
                     onClick={() => {
                       setPromptMeDelete(true)
                     }}
+                    data-cy="delete-blog-button"
                   >
                     <Trash2Icon className="h-4 w-4" />
                   </Button>
@@ -163,14 +164,11 @@ const BlogblogPostCard = ({ blogPost, isMyProfile, username }: { blogPost: Blog;
                     className=""
                     disabled={loading}
                     onClick={() => {
-                      if (blogPost.isPublished) {
-                        navigator(`/blog/${username}/${blogPost.slug}`)
-                      } else {
-                        navigator(`/create/blog/?editid=${blogPost.id}`)
-                      }
+                      navigator(`/blog/${username}/${blogPost.slug}`)
                     }}
+                    data-cy="view-blog-button"
                   >
-                    {blogPost.isPublished ? 'Read More' : 'Edit Draft'}
+                    Read More
                   </Button>
                 </div>
               ) : (
@@ -179,14 +177,11 @@ const BlogblogPostCard = ({ blogPost, isMyProfile, username }: { blogPost: Blog;
                     className=""
                     disabled={loading}
                     onClick={() => {
-                      if (blogPost.isPublished) {
-                        navigator(`/blog/${username}/${blogPost.slug}`)
-                      } else {
-                        navigator(`/create/blog/?editid=${blogPost.id}`)
-                      }
+                      navigator(`/blog/${username}/${blogPost.slug}`)
                     }}
+                    data-cy="view-blog-button"
                   >
-                    {blogPost.isPublished ? 'Read More' : 'Edit Draft'}
+                    Read More
                   </Button>
                 </div>
               )}
@@ -243,7 +238,7 @@ const ProfileBlog = ({
           }
         </div>
 
-        {/* List of Blog blogPosts */}
+        {/* List of blog posts */}
         <div className="space-y-6 px-4 py-4 sm:px-8">
           {BlogblogPosts.length > 0 ? BlogblogPosts.map((blogPost) => (
             <BlogblogPostCard isMyProfile={myUsername === viewUsername} username={viewUsername} key={blogPost.id} blogPost={blogPost} />
@@ -257,15 +252,15 @@ const ProfileBlog = ({
                 <EmptyDescription>
                   {
                     myUsername === viewUsername
-                      ? 'You have not written any blog blogPosts yet. Start sharing your knowledge and experiences with the world!'
-                      : 'This user has not written any blog blogPosts yet.'
+                      ? 'You have not written any blog posts yet. Start sharing your knowledge and experiences with the world!'
+                      : 'This user has not written any blog posts yet.'
                   }
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
                 {myUsername === viewUsername &&
                   <Link to={CREATE_BLOG_PATH}>
-                    <Button variant={"default"}><PencilIcon /> Write Blog</Button>
+                    <Button variant={"default"}><PencilIcon /> Write new blog</Button>
                   </Link>
                 }
               </EmptyContent>

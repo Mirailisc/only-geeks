@@ -1,7 +1,11 @@
-import { AfterAll, BeforeAll, Given, Then } from '@badeball/cypress-cucumber-preprocessor'
+import { AfterAll, BeforeAll, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 
 Given('I am logged in as {string}', (email: string) => {
   cy.login(email)
+})
+
+When('I navigate to {string} page', (page: string) => {
+  cy.visit(page)
 })
 
 Then('I click logout button', () => {

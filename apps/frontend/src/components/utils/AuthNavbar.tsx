@@ -138,7 +138,7 @@ export default function AuthNavbar() {
                   Admin Section
                 </DropdownMenuLabel>}
                 {user.isAdmin && <Link to={ADMIN_DASHBOARD_PATH}>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem data-cy="admin-dashboard-link">
                     <GaugeIcon />
                     <span>Admin Dashboard</span>
                   </DropdownMenuItem>
