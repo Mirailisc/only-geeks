@@ -71,7 +71,7 @@ export class AuthService {
       throw new UnauthorizedException('Username or password is incorrect')
     }
 
-    const isPasswordMatch = bcrypt.compare(input.password, user.password)
+    const isPasswordMatch = await bcrypt.compare(input.password, user.password)
 
     if (!isPasswordMatch) {
       throw new UnauthorizedException('Username or password is incorrect')
