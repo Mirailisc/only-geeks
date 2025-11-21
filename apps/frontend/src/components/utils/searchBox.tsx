@@ -1,12 +1,13 @@
 import { useDebounce } from '@/hooks/useDebounce'
 import { FileTextIcon, SearchIcon, UserIcon } from 'lucide-react'
 import React from 'react'
-import { Input } from '@/components/ui/input'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client/react'
 import { SEARCH_SUGGEST_QUERY, type Search } from './../../graphql/search'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '../ui/input-group'
+import { Kbd } from '../ui/kbd'
 
 const SearchBox = () => {
   const [searchQuery, setSearchQuery] = React.useState('')
@@ -47,6 +48,26 @@ const SearchBox = () => {
       setIsPopoverOpen(false)
     }
   }, [data, debouncedSearch, loading, skipQuery])
+
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+
+        // Focus the input
+        inputRef.current?.focus()
+
+        // Also open popover if there's text
+        if (searchQuery.trim().length >= 2) {
+          setIsPopoverOpen(true)
+        }
+      }
+    }
+
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [searchQuery])
 
   // Function to handle the full search navigation when the user hits Enter
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -147,24 +168,32 @@ const SearchBox = () => {
         <PopoverTrigger asChild>
           <div className="relative">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-
-            <Input
-              data-cy="input-navbar-search"
-              type="search"
-              placeholder="Search for blogs or users..."
-              className="w-full pl-10 pr-4"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearchSubmit}
-              aria-expanded={isPopoverOpen}
-              aria-controls="search-suggestions"
-              autoComplete="off"
-              ref={inputRef}
-              onFocus={() => {
-                // Don't automatically open popover on focus
-                // Let the useEffect handle it based on search results
-              }}
-            />
+              <InputGroup>
+                <InputGroupInput 
+                  data-cy="input-navbar-search"
+                  type="search"
+                  placeholder="Search for blogs or users..."
+                  className="w-full pl-4 pr-4"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchSubmit}
+                  aria-expanded={isPopoverOpen}
+                  aria-controls="search-suggestions"
+                  autoComplete="off"
+                  ref={inputRef}
+                  onFocus={() => {
+                    // Don't automatically open popover on focus
+                    // Let the useEffect handle it based on search results
+                  }}
+                />
+                <InputGroupAddon>
+                  <SearchIcon />
+                </InputGroupAddon>
+                <InputGroupAddon align="inline-end">
+                  <Kbd>⌘</Kbd>
+                  <Kbd>K</Kbd>
+                </InputGroupAddon>
+              </InputGroup>
           </div>
         </PopoverTrigger>
 
