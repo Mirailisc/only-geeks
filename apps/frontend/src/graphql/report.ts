@@ -155,3 +155,84 @@ export const AM_I_REPORT_THIS_QUERY = gql`
     hasReportedTarget(targetId: $targetId, targetType: $targetType)
   }
 `
+
+export const GET_MY_REPORTS = gql`
+  query GetMyReports {
+    getMyReports {
+      id
+      category
+      reason
+      status
+      targetType
+      createdAt
+      decision {
+        action
+        note
+        createdAt
+      }
+      blogReport {
+        target {
+          title
+          slug
+          User {
+            firstName
+            lastName
+            username
+          }
+        }
+      }
+      projectReport {
+        target {
+          title
+          User {
+            firstName
+            lastName
+            username
+          }
+        }
+      }
+      userReport {
+        target {
+          username
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`;
+
+export const GET_MY_WARNINGS = gql`
+  query GetMyWarning {
+    getMyWarnings {
+      id
+      category
+      reason
+      status
+      adminNote
+      targetType
+      createdAt
+      decision {
+        action
+        note
+        createdAt
+      }
+      blogReport {
+        target {
+          title
+          slug
+        }
+      }
+      projectReport {
+        target {
+          title
+        }
+      }
+      userReport {
+        target {
+          username
+        }
+      }
+    }
+  }
+`;

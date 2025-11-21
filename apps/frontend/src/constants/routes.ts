@@ -16,3 +16,6 @@ export const BLOG_READER_PATH = BASE_PATH + 'blog/' + ':username' + '/:slug'
 export const FEED_PATH = BASE_PATH
 
 export const ADMIN_DASHBOARD_PATH = BASE_PATH + "admin"
+
+export const MY_REPORTS_PATH = BASE_PATH + 'reports'
+export const MY_WARNING_PATH = BASE_PATH + 'warnings'

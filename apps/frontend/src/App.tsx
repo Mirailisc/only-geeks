@@ -12,6 +12,8 @@ import {
   USER_PROFILE_PATH,
   FEED_PATH,
   ADMIN_DASHBOARD_PATH,
+  MY_REPORTS_PATH,
+  MY_WARNING_PATH,
 } from './constants/routes'
 import Login from './pages/login'
 import { Toaster } from 'sonner'
@@ -32,6 +34,7 @@ import { ThemeProvider } from 'next-themes'
 import ProtectedAdminRoute from './components/utils/ProtectedAdminRoute'
 import AdminModerationDashboard from './pages/admin'
 import { TooltipProvider } from './components/ui/tooltip'
+import MyReportPage from './pages/my_report'
 
 const router = createBrowserRouter([
   {
@@ -112,6 +115,22 @@ const router = createBrowserRouter([
           <AdminModerationDashboard />
         </ProtectedAdminRoute>),
       },
+      {
+        path: MY_REPORTS_PATH,
+        element: (
+          <ProtectedRoute>
+            <MyReportPage currentPage="reports" />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: MY_WARNING_PATH,
+        element: (
+          <ProtectedRoute>
+            <MyReportPage currentPage="warnings" />
+          </ProtectedRoute>
+        ),
+      }
     ],
   },
   {
