@@ -5,10 +5,14 @@ import { UpdateUserInput } from './dto/update-user.input'
 import * as bcrypt from 'bcrypt'
 import * as crypto from 'crypto'
 import { User } from './entities/user.entity'
+import { AdminService } from 'src/admin/admin.service'
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly adminService: AdminService,
+  ) {}
 
   private async generateUsername(firstName: string, lastName: string) {
     const baseUsername = firstName.toLowerCase() + lastName[0].toLowerCase()
@@ -36,6 +40,26 @@ export class UserService {
       .filter((n) => n !== null) as number[]
     const nextNumber = numbers.length ? Math.max(...numbers) + 1 : 1
     return `${baseUsername}_${nextNumber}`
+  }
+
+  async checkPostingRestriction(userId: string): Promise<boolean> {
+    // verify that user exists and no restriction "NO_POSTING"
+    const user = await this.findUserById(userId)
+    if (!user) throw new BadRequestException('User not found')
+
+    const myRestriction = await Promise.all(
+      await this.adminService.getActiveUserRestrictions(userId),
+    )
+    const now = new Date()
+    const noPostRestrictions = myRestriction.find(
+      (restriction) =>
+        restriction.type === 'NO_POSTING' && restriction.expiresAt > now,
+    )
+    if (noPostRestrictions)
+      throw new BadRequestException(
+        'You are restricted from posting new projects.',
+      )
+    return true
   }
 
   async createOauthUser(input: CreateUserInput): Promise<User> {
@@ -97,10 +121,11 @@ export class UserService {
     username: string,
   ): Promise<User & { password?: string }> {
     return await this.prisma.user.findUnique({
-      where: { username },
+      where: { username, isActive: true },
       include: { preference: true },
     })
   }
+
   async getUserProfileByUsername(
     username: string,
     currentUserId: string | null,
@@ -139,6 +164,45 @@ export class UserService {
     return await this.prisma.user.update({
       where: { id: userId },
       data: input,
+    })
+  }
+
+  async searchQuery(searchQuery: string): Promise<User[]> {
+    return await this.prisma.user.findMany({
+      where: {
+        OR: [
+          {
+            username: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+          {
+            firstName: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+          {
+            lastName: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+          {
+            email: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+          {
+            bio: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
     })
   }
 }

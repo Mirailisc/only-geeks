@@ -8,29 +8,36 @@ datasource db {
 }
 
 model User {
-  id           String  @id @default(uuid())
-  email        String  @unique
-  username     String  @unique
-  firstName    String?
-  lastName     String?
-  password     String?
-  bio          String?
-  picture      String?
-  location     String?
-  organization String?
-  type         String  @default("local")
+  id                String  @id @default(uuid())
+  email             String  @unique
+  username          String  @unique
+  firstName         String?
+  lastName          String?
+  password          String?
+  bio               String?
+  picture           String?
+  location          String?
+  organization      String?
+  type              String  @default("local")
 
-  isAdmin      Boolean @default(false)
+  isAdmin           Boolean @default(false)
+  isActive          Boolean @default(true)   // for admin deactivation
+  deactivatedReason String?
 
-  education    Education[]
-  blog         Blog[]
-  preference   Preference?
+  education         Education[]
+  blog              Blog[]
+  preference        Preference?
+  projects          Project[]
+  achievements      Achievement[]
 
-  projects     Project[]
-  achievements Achievement[]
+  reportsMade       Report[] @relation("ReportsByUser")
+  reportsToMe       UserReport[] @relation("ReportsAgainstUser")
+  adminDecisions    ModerationDecision[]
+  restrictions      UserRestriction[]
+  auditLogs         AdminAuditLog[]
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@index([email])
 }
@@ -61,7 +68,8 @@ model Project {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  User User @relation(fields: [userId], references: [id])
+  User        User      @relation(fields: [userId], references: [id])
+  reports     ProjectReport[]  @relation("ReportsAgainstProject")
 }
 
 model Achievement {
@@ -101,7 +109,8 @@ model Blog {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  User User @relation(fields: [userId], references: [id])
+  User        User @relation(fields: [userId], references: [id])
+  reports     BlogReport[] @relation("ReportsAgainstBlog")
 
   @@unique([userId, slug])
   @@index([title])
@@ -111,4 +120,148 @@ enum Theme {
   LIGHT
   DARK
   SYSTEM
+}
+
+// ==========================
+//  REPORT
+// ==========================
+model Report {
+  id          String   @id @default(uuid())
+  reporterId  String
+  category    ReportCategory
+  reason      String
+  status      ReportStatus @default(PENDING)
+  adminNote   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  reporter    User         @relation("ReportsByUser", fields: [reporterId], references: [id])
+  decision    ModerationDecision?
+
+  userReport     UserReport?
+  blogReport     BlogReport?
+  projectReport  ProjectReport?
+}
+
+model UserReport {
+  id        String  @id @default(uuid())
+  reportId  String  @unique
+  targetId  String
+
+  report    Report  @relation(fields: [reportId], references: [id])
+  target    User    @relation("ReportsAgainstUser", fields: [targetId], references: [id])
+}
+
+model BlogReport {
+  id        String  @id @default(uuid())
+  reportId  String  @unique
+  targetId  String
+
+  report    Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  target    Blog    @relation("ReportsAgainstBlog", fields: [targetId], references: [id], onDelete: Cascade)
+}
+
+model ProjectReport {
+  id        String  @id @default(uuid())
+  reportId  String  @unique
+  targetId  String
+
+  report    Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  target    Project @relation("ReportsAgainstProject", fields: [targetId], references: [id], onDelete: Cascade)
+}
+
+enum ReportTarget {
+  USER
+  BLOG
+  PROJECT
+}
+
+enum ReportStatus {
+  PENDING
+  UNDER_REVIEW
+  REQUEST_EDIT
+  RESOLVED
+  REJECTED
+}
+
+enum ReportCategory {
+  PLAGIARISM
+  VIOLENT_CONTENT
+  INAPPROPRIATE_CONTENT
+  MALWARE
+  INTELLECTUAL_PROPERTY_VIOLATION
+  MISINFORMATION
+  UNSAFE_FEATURES
+  DATA_MISUSE
+  SPAM
+  HARASSMENT
+  IMPERSONATION
+  INAPPROPRIATE_BEHAVIOR
+  SCAM
+  HATE_SPEECH
+  PRIVACY_VIOLATION
+  SEXUAL_HARASSMENT
+  THREATS
+  OTHER
+}
+
+// ==========================
+//  MODERATION DECISION
+// ==========================
+model ModerationDecision {
+  id          String   @id @default(uuid())
+  adminId     String
+  reportId    String   @unique
+  action      ModerationAction
+  isResponse  Boolean  @default(false)
+  note        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
+
+  admin       User     @relation(fields: [adminId], references: [id])
+  report      Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+enum ModerationAction {
+  NONE          // no action taken
+  REQUEST_EDIT  // admin requests user to edit
+  UNPUBLISH     // admin unpublishes blog/project
+  RESOLVED      // issue resolved
+  DEACTIVATE    // admin deactivates user
+  DELETE        // admin deletes content
+}
+
+// ==========================
+//  USER RESTRICTION
+// ==========================
+model UserRestriction {
+  id        String   @id @default(uuid())
+  userId    String
+  type      RestrictionType
+  reason    String?
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum RestrictionType {
+  TEMP_BAN       // cannot login
+  NO_POSTING     // cannot create blogs/projects
+}
+
+// ==========================
+//  ADMIN AUDIT LOG
+// ==========================
+model AdminAuditLog {
+  id          String   @id @default(uuid())
+  adminId     String
+  actionType  String
+  targetType  String
+  targetId    String?
+  details     String?
+  createdAt   DateTime @default(now())
+
+  admin User @relation(fields: [adminId], references: [id])
 }

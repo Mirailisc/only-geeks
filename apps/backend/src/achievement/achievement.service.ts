@@ -7,11 +7,13 @@ import { UserService } from 'src/user/user.service'
 @Injectable()
 export class AchievementService {
   constructor(
-    private readonly prisma: PrismaService,
+    private prisma: PrismaService,
     private readonly userService: UserService,
   ) {}
 
   async create(userId: string, input: CreateAchievementInput) {
+    await this.userService.checkPostingRestriction(userId)
+
     return await this.prisma.achievement.create({
       data: { ...input, userId },
     })
@@ -41,7 +43,9 @@ export class AchievementService {
     return achievement
   }
 
-  async update(id: string, input: UpdateAchievementInput) {
+  async update(id: string, userId: string, input: UpdateAchievementInput) {
+    await this.userService.checkPostingRestriction(userId)
+
     const existing = await this.findOne(id)
     return await this.prisma.achievement.update({
       where: { id: existing.id },
@@ -49,7 +53,9 @@ export class AchievementService {
     })
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
+    await this.userService.checkPostingRestriction(userId)
+
     const existing = await this.findOne(id)
     await this.prisma.achievement.delete({ where: { id: existing.id } })
     return true

@@ -3,18 +3,22 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateBlogInput } from './dto/create-blog.input'
 import { UserService } from 'src/user/user.service'
 import { UpdateBlogInput } from './dto/update-blog.input'
+import { AdminService } from 'src/admin/admin.service'
+import { Blog } from './entities/blog.entity'
 
 @Injectable()
 export class BlogService {
   constructor(
     private prisma: PrismaService,
     private readonly userService: UserService,
+    private readonly adminService: AdminService,
   ) {}
 
   async getBlogs() {
     return await this.prisma.blog.findMany({
       where: {
         isPublished: true,
+        User: { isActive: true },
       },
       select: {
         id: true,
@@ -32,8 +36,8 @@ export class BlogService {
     })
   }
 
-  async getMyBlogs(userId: string) {
-    return await this.prisma.blog.findMany({
+  async getMyBlogs(userId: string): Promise<Blog[]> {
+    const myBlog = await this.prisma.blog.findMany({
       where: { userId },
       select: {
         id: true,
@@ -47,13 +51,37 @@ export class BlogService {
         createdAt: true,
         updatedAt: true,
         User: true,
+        reports: {
+          include: {
+            report: {
+              include: {
+                decision: true,
+              },
+            },
+          },
+        },
       },
+    })
+
+    return myBlog.map((b) => {
+      const decisions = b.reports
+        .map((pr) => pr.report.decision?.action)
+        .filter(Boolean)
+      return {
+        ...b,
+        contentType: 'blog',
+        isResponse: b.reports.some(
+          (r) => r.report.decision?.isResponse || false,
+        ),
+        requestEdit: decisions.includes('REQUEST_EDIT'),
+        requestUnpublish: decisions.includes('UNPUBLISH'),
+      }
     })
   }
 
-  async getBlogById(id: string) {
-    return await this.prisma.blog.findUnique({
-      where: { id },
+  async getBlogById(id: string): Promise<Blog> {
+    const blog = await this.prisma.blog.findUnique({
+      where: { id, User: { isActive: true } },
       select: {
         id: true,
         title: true,
@@ -66,15 +94,51 @@ export class BlogService {
         createdAt: true,
         updatedAt: true,
         User: true,
+        reports: {
+          include: {
+            report: {
+              include: {
+                decision: true,
+              },
+            },
+          },
+        },
       },
     })
+
+    const decisions = blog.reports
+      .map((pr) => pr.report.decision?.action)
+      .filter(Boolean)
+    return {
+      ...blog,
+      isResponse: blog.reports.some(
+        (r) => r.report.decision?.isResponse || false,
+      ),
+      requestEdit: decisions.includes('REQUEST_EDIT'),
+      requestUnpublish: decisions.includes('UNPUBLISH'),
+    }
   }
 
-  async getBlogsByUsername(username: string) {
+  async getBlogsByUsername(username: string): Promise<Blog[]> {
     const user = await this.userService.findUserByUsername(username)
 
-    return await this.prisma.blog.findMany({
-      where: { userId: user.id, isPublished: true },
+    const blog = await this.prisma.blog.findMany({
+      where: {
+        userId: user.id,
+        isPublished: true,
+        // exclude projects that have reports with UNPUBLISH or REQUEST_EDIT
+        reports: {
+          none: {
+            report: {
+              decision: {
+                action: {
+                  in: ['UNPUBLISH', 'REQUEST_EDIT'],
+                },
+              },
+            },
+          },
+        },
+      },
       select: {
         id: true,
         title: true,
@@ -87,7 +151,30 @@ export class BlogService {
         createdAt: true,
         updatedAt: true,
         User: true,
+        reports: {
+          include: {
+            report: {
+              include: {
+                decision: true,
+              },
+            },
+          },
+        },
       },
+    })
+
+    return blog.map((b) => {
+      const decisions = b.reports
+        .map((pr) => pr.report.decision?.action)
+        .filter(Boolean)
+      return {
+        ...b,
+        isResponse: b.reports.some(
+          (r) => r.report.decision?.isResponse || false,
+        ),
+        requestEdit: decisions.includes('REQUEST_EDIT'),
+        requestUnpublish: decisions.includes('UNPUBLISH'),
+      }
     })
   }
 
@@ -95,7 +182,7 @@ export class BlogService {
     slug: string,
     username: string,
     currentUserId: string = null,
-  ) {
+  ): Promise<Blog> {
     const user = await this.userService.findUserByUsername(username)
     if (!user) throw new Error('BLOG_NOT_FOUND')
     if (!user.preference.isPublicProfile && user.id !== currentUserId) {
@@ -117,14 +204,41 @@ export class BlogService {
         createdAt: true,
         updatedAt: true,
         User: true,
+        reports: {
+          include: {
+            report: {
+              include: {
+                decision: true,
+              },
+            },
+          },
+        },
       },
     })
     if (!result || (result && !result.isPublished))
       throw new Error('BLOG_NOT_FOUND')
-    return result
+    const decisions = result.reports
+      .map((pr) => pr.report.decision?.action)
+      .filter(Boolean)
+    if (decisions.includes('UNPUBLISH') && result.userId !== currentUserId) {
+      throw new Error('BLOG_NOT_FOUND')
+    }
+    if (decisions.includes('REQUEST_EDIT') && result.userId !== currentUserId) {
+      throw new Error('BLOG_NOT_FOUND')
+    }
+    return {
+      ...result,
+      isResponse: result.reports.some(
+        (r) => r.report.decision?.isResponse || false,
+      ),
+      requestEdit: decisions.includes('REQUEST_EDIT'),
+      requestUnpublish: decisions.includes('UNPUBLISH'),
+    }
   }
 
   async createBlog(userId: string, input: CreateBlogInput) {
+    await this.userService.checkPostingRestriction(userId)
+
     const slug = input.title.toLowerCase().replace(/\s+/g, '-')
 
     return await this.prisma.blog.create({
@@ -149,8 +263,38 @@ export class BlogService {
     })
   }
 
-  async updateBlog(id: string, input: UpdateBlogInput) {
+  async updateBlog(id: string, userId: string, input: UpdateBlogInput) {
+    await this.userService.checkPostingRestriction(userId)
+
     const slug = input.title.toLowerCase().replace(/\s+/g, '-')
+
+    const existing = await this.prisma.blog.findUnique({
+      where: { id },
+      include: { reports: true },
+    })
+    if (!existing) throw new Error('BLOG_NOT_FOUND')
+
+    const moderationDecisions = await Promise.all(
+      existing.reports.map((r) =>
+        this.adminService.getModerationDecisionByReportId(r.reportId),
+      ),
+    )
+
+    // Filter only decisions (REQUEST_EDIT or UNPUBLISH) that are not yet responded
+    const pendingDecisions = moderationDecisions.filter(
+      (d) =>
+        d &&
+        (d.action === 'REQUEST_EDIT' || d.action === 'UNPUBLISH') &&
+        !d.isResponse,
+    )
+
+    if (pendingDecisions.length > 0) {
+      await Promise.all(
+        pendingDecisions.map((d) =>
+          this.adminService.markModerationDecisionAsResponded(d.id),
+        ),
+      )
+    }
 
     return await this.prisma.blog.update({
       where: { id },
@@ -171,7 +315,9 @@ export class BlogService {
     })
   }
 
-  async deleteBlog(id: string) {
+  async deleteBlog(id: string, userId: string) {
+    await this.userService.checkPostingRestriction(userId)
+
     return await this.prisma.blog.delete({
       where: { id },
       select: {

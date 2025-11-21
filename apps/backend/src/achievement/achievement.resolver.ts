@@ -2,7 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { AchievementService } from './achievement.service'
 import { Achievement } from './entities/achievement.entity'
 import { UseGuards } from '@nestjs/common'
-import { GqlAuthGuard } from 'src/auth/guards/graphql-auth.guard'
+import {
+  GqlAuthGuard,
+  GuestAuthGuard,
+} from 'src/auth/guards/graphql-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { CreateAchievementInput } from './dto/create-achievement.input'
 import { UpdateAchievementInput } from './dto/update-achievement.input'
@@ -18,7 +21,7 @@ export class AchievementResolver {
   }
 
   @Query(() => [Achievement])
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GuestAuthGuard)
   async getAchievementsByUsername(@Args('username') username: string) {
     return await this.achievementService.findAllByUsername(username)
   }
@@ -37,13 +40,14 @@ export class AchievementResolver {
   async updateAchievement(
     @Args('id') id: string,
     @Args('input') input: UpdateAchievementInput,
+    @CurrentUser() user: any,
   ) {
-    return await this.achievementService.update(id, input)
+    return await this.achievementService.update(id, user.id, input)
   }
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
-  async deleteAchievement(@Args('id') id: string) {
-    return await this.achievementService.remove(id)
+  async deleteAchievement(@Args('id') id: string, @CurrentUser() user: any) {
+    return await this.achievementService.remove(id, user.id)
   }
 }

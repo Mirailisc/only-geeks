@@ -1,16 +1,19 @@
 import type { Profile } from '@/graphql/profile'
 import { Link, useNavigate } from 'react-router-dom'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { CalendarIcon, ClockIcon, EditIcon, ShareIcon, Trash2Icon } from 'lucide-react'
-import { Card, CardContent } from '../ui/card'
-import { Button } from '../ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { useMutation } from '@apollo/client/react'
 import { DELETE_BLOG_MUTATION, GET_MY_BLOGS_QUERY, type Blog } from '@/graphql/blog'
 import { useState } from 'react'
-import { Separator } from '../ui/separator'
-import { Badge } from '../ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
+import ReportComponentWithButton from '../report/report'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+
 
 function getReadingTime(markdown: string, wordsPerMinute = 200): number {
   // Remove code blocks, HTML tags, and markdown syntax before counting words
@@ -35,6 +38,9 @@ const BlogCard = ({
   updatedAt,
   content,
   isPublished,
+  requestUnpublish,
+  requestEdit,
+  isResponse,
 }: {
   user: Partial<Profile>
   myUsername: string
@@ -44,11 +50,15 @@ const BlogCard = ({
   updatedAt: string
   content: string
   isPublished: boolean
+  requestUnpublish?: boolean
+  requestEdit?: boolean
+  isResponse?: boolean
 }) => {
   const [deleteBlogById, { loading }] = useMutation<{ deleteBlogById: Blog }>(DELETE_BLOG_MUTATION, {
     refetchQueries: [{ query: GET_MY_BLOGS_QUERY }],
   })
   const [promptMeDelete, setPromptMeDelete] = useState(false)
+  const isMyBlog = myUsername === user.username
   const navigation = useNavigate()
   return (
     <>
@@ -78,13 +88,58 @@ const BlogCard = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
       <Card className="mt-4">
         <CardContent className="flex flex-col gap-4">
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-2">
               <div className="flex flex-row items-center gap-2">
                 <div className="text-balance text-3xl font-bold leading-tight">{title}</div>
-                {myUsername === user.username && (
+                {
+                  requestEdit && isMyBlog && !isResponse && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="warning" className="mt-1">
+                          Admin request to edit this blog
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>This blog will be private until admin resolve your request.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                }
+                {
+                  requestUnpublish && isMyBlog && !isResponse && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="destructive" className="mt-1">
+                          Admin request to unpublish this blog
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>This blog will be private until admin resolve your request.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                }
+                {
+                  isResponse && isMyBlog && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="secondary" className="mt-1">
+                          This blog already responded to admin request
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          Please wait for admin to review your changes. The blog is private until then.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                }
+                {!requestEdit && !requestUnpublish && isMyBlog && (
                   <Badge variant={isPublished ? 'default' : 'destructive'} className="mt-1 h-max text-xs">
                     {' '}
                     {isPublished ? 'Published' : 'Draft'}
@@ -103,6 +158,12 @@ const BlogCard = ({
                 }}>
                   <ShareIcon /> Share this Blog
                 </Button>
+                <ReportComponentWithButton
+                  type="BLOG"
+                  myUsername={myUsername}
+                  user={user}
+                  targetId={blogId}
+                />
                 {myUsername === user.username && (
                   <Link to={`/create/blog/?editid=${blogId}`}>
                     <Button variant="outline" size="sm">

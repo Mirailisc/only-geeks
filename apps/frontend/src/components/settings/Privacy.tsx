@@ -1,11 +1,11 @@
 import { GET_MY_PROFILE_QUERY, type Profile, UPDATE_PREFERENCE_MUTATION } from '@/graphql/profile'
-import { Card, CardContent, CardDescription, CardTitle } from '../ui/card'
-import { Separator } from '../ui/separator'
+import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import { TriangleAlertIcon } from 'lucide-react'
-import { Label } from '../ui/label'
+import { Label } from '@/components/ui/label'
 import { useMutation } from '@apollo/client/react'
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
-import { Switch } from '../ui/switch'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Switch } from '@/components/ui/switch'
 
 interface PrivacySettingsProps {
   profile: Profile
@@ -30,8 +30,10 @@ const PrivacySettings = ({profile}: PrivacySettingsProps) => {
 				{
 					updateError && <Alert	variant='destructive' className='mb-4'>
 						<TriangleAlertIcon />
-						<AlertTitle>Error updating Privacy settings</AlertTitle>
-						<AlertDescription>{updateError.message}</AlertDescription>
+            <div className="flex-1">
+						  <AlertTitle>Error updating Privacy settings</AlertTitle>
+						  <AlertDescription>{updateError.message}</AlertDescription>
+            </div>
 					</Alert>
 				}
         <div className='mt-4 w-full h-[1px]' />
@@ -44,24 +46,28 @@ const PrivacySettings = ({profile}: PrivacySettingsProps) => {
         {profile.preference.isPublicProfile ?
           <Alert variant={"destructive"} className='mt-4 w-max'>
             <TriangleAlertIcon />
-            <AlertTitle className='ml-4 flex items-center gap-2'>
-              Important Notice
-            </AlertTitle>
-            <AlertDescription className='ml-4'>
-              Your profile is visible to all users. <br />
-              Please be cautious about the personal information you choose to share publicly.
-            </AlertDescription>
+            <div className="flex-1">
+              <AlertTitle className='ml-4 flex items-center gap-2'>
+                Important Notice
+              </AlertTitle>
+              <AlertDescription className='ml-4'>
+                Your profile is visible to all users. <br />
+                Please be cautious about the personal information you choose to share publicly.
+              </AlertDescription>
+            </div>
           </Alert>
         :
           <Alert variant={"destructive"} className='mt-4 w-max'>
             <TriangleAlertIcon />
-            <AlertTitle className='ml-4 flex items-center gap-2'>
-              Important Notice
-            </AlertTitle>
-            <AlertDescription className='ml-4'>
-              Setting your profile to private will hide your profile information from other users. <br /> 
-              However, certain data may still be accessible to administrators for moderation and compliance purposes.
-            </AlertDescription>
+            <div className="flex-1">
+              <AlertTitle className='ml-4 flex items-center gap-2'>
+                Important Notice
+              </AlertTitle>
+              <AlertDescription className='ml-4'>
+                Setting your profile to private will hide your profile information from other users. <br /> 
+                However, certain data may still be accessible to administrators for moderation and compliance purposes.
+              </AlertDescription>
+            </div>
           </Alert>
         }
       </CardContent>

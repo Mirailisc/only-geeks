@@ -1,5 +1,5 @@
 import type { Search } from '@/graphql/search'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { CalendarIcon } from 'lucide-react'
 
 export default function StudentBlogCard({ blog }: { blog: Search['blogs'][0] }) {
@@ -8,7 +8,7 @@ export default function StudentBlogCard({ blog }: { blog: Search['blogs'][0] }) 
       <CardContent>
         <CardHeader>
           <CardTitle>{blog.title}</CardTitle>
-          <CardDescription>By User ID: {blog.userId}</CardDescription>
+          <CardDescription>By User: {blog.User.username}</CardDescription>
         </CardHeader>
         <CardFooter>
           <CalendarIcon />

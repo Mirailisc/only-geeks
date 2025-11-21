@@ -1,10 +1,11 @@
 import type { FeedAchievementType, FeedBlogType, FeedItemType, FeedProjectType } from "@/graphql/feed";
-import { Card, CardContent } from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AwardIcon, CalendarIcon, ExternalLinkIcon, FileTextIcon } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export const getInitialName = (firstName: string, lastName: string) => {
   return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
@@ -37,18 +38,20 @@ const RenderFeedProject = ({item}: {item: FeedProjectType}) => {
       <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
-              <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
-            </Avatar>
-            <div>
-            <p className="font-semibold text-sm">
-              {user.firstName} {user.lastName}
-            </p>
-            <p className="text-xs text-muted-foreground">@{user.username}</p>
+          <Link to={`/user/${user.username}`}>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+              <p className="font-semibold text-sm">
+                {user.firstName} {user.lastName}
+              </p>
+              <p className="text-xs text-muted-foreground">@{user.username}</p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Badge variant="secondary" className="gap-1">
             <FileTextIcon className="h-3 w-3" />
             Project
@@ -98,6 +101,50 @@ const RenderFeedProject = ({item}: {item: FeedProjectType}) => {
               <span>View Project</span>
             </a>
             )}
+            {
+              item.requestEdit && !item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="warning" className="mt-1">
+                      Admin request to edit this project
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>This project will be private until admin resolve your request.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
+            {
+              item.requestUnpublish && !item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="destructive" className="mt-1">
+                      Admin request to unpublish this project
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>This project will be private until admin resolve your request.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
+            {
+              item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="secondary" className="mt-1">
+                      This project already responded to admin request
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      Please wait for admin to review your changes. The project is private until then.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
           </div>
         </div>
 
@@ -132,20 +179,22 @@ const RenderFeedBlog = ({item}: {item: FeedBlogType}) => {
       <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
-              <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
-            </Avatar>
-            <div>
-            <p className="font-semibold text-sm">
-              {user.firstName} {user.lastName}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              @{user.username} · {item.createdAt && formatDate(item.createdAt)}
-            </p>
+          <Link to={`/user/${user.username}`}>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+              <p className="font-semibold text-sm">
+                {user.firstName} {user.lastName}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                @{user.username} · {item.createdAt && formatDate(item.createdAt)}
+              </p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Badge variant="secondary" className="gap-1">
             <FileTextIcon className="h-3 w-3" />
             Blog
@@ -173,6 +222,50 @@ const RenderFeedBlog = ({item}: {item: FeedBlogType}) => {
             </Link>
             </Button>
           )}
+          {
+              item.requestEdit && !item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="warning" className="mt-1">
+                      Admin request to edit this project
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>This project will be private until admin resolve your request.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
+            {
+              item.requestUnpublish && !item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="destructive" className="mt-1">
+                      Admin request to unpublish this project
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>This project will be private until admin resolve your request.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
+            {
+              item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="secondary" className="mt-1">
+                      This project already responded to admin request
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      Please wait for admin to review your changes. The project is private until then.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
         </div>
 
         {/* <Separator className="my-4" /> */}
@@ -210,20 +303,22 @@ const RenderFeedAchievement = ({item}: {item: FeedAchievementType}) => {
       <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
-              <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold text-sm">
-                {user.firstName} {user.lastName}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                @{user.username} · {item.createdAt && formatDate(item.createdAt)}
-              </p>
+          <Link to={`/user/${user.username}`}>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-semibold text-sm">
+                  {user.firstName} {user.lastName}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  @{user.username} · {item.createdAt && formatDate(item.createdAt)}
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Badge variant="secondary" className="gap-1">
             <AwardIcon className="h-3 w-3" />
             Achievement

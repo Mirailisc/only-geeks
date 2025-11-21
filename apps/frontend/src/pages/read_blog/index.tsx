@@ -77,6 +77,9 @@ const ReadBlog = () => {
           updatedAt={data?.getBlogBySlugAndUsername.updatedAt || ''}
           content={data?.getBlogBySlugAndUsername.content || ''}
           isPublished={data?.getBlogBySlugAndUsername.isPublished || false}
+          requestUnpublish={data?.getBlogBySlugAndUsername.requestUnpublish || false}
+          requestEdit={data?.getBlogBySlugAndUsername.requestEdit || false}
+          isResponse={data?.getBlogBySlugAndUsername.isResponse || false}
         />
         <MarkdownViewer content={data?.getBlogBySlugAndUsername.content || ''} />
       </div>

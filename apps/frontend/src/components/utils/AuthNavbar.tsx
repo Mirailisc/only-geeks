@@ -6,19 +6,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu'
+} from '@/components/ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
-import { CREATE_BLOG_PATH, CREATE_PROJECT_PATH, FEED_PATH, LOGIN_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
-import { CodeIcon, FileTextIcon, LogInIcon, LogOut, PlusIcon, Settings, User, User2Icon } from 'lucide-react'
+import { ADMIN_DASHBOARD_PATH, CREATE_BLOG_PATH, CREATE_PROJECT_PATH, FEED_PATH, LOGIN_PATH, MY_REPORTS_PATH, PROFILE_PATH, SETTINGS_PATH } from '@/constants/routes'
+import { CodeIcon, FileTextIcon, LogInIcon, LogOut, PlusIcon, Settings, GaugeIcon, User, User2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
 import { clearUser } from '@/store/authSlice'
 import { useAppDispatch } from '@/hooks/useAppDispatch'
 import { useApolloClient, useMutation } from '@apollo/client/react'
 import { LOGOUT_MUTATION } from '@/graphql/auth'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import SearchBox from './searchBox'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 
 export default function AuthNavbar() {
   const { user } = useAppSelector((state) => state.auth)
@@ -46,7 +46,10 @@ export default function AuthNavbar() {
             <div className="flex aspect-square w-10 flex-row items-center justify-center rounded-lg bg-primary font-bold text-white dark:text-black">
               OG
             </div>
-            <h1 className="text-xl font-bold">Only Geeks</h1>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold">Only Geeks</h1>
+              <span className="text-sm">Level up your knowledge</span>
+            </div>
           </div>
         </Link>
 
@@ -112,7 +115,6 @@ export default function AuthNavbar() {
                 <DropdownMenuLabel>
                   {user.firstName} {user.lastName}
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
                 <Link to={PROFILE_PATH}>
                   <DropdownMenuItem>
                     <User className="mr-2 h-4 w-4" />
@@ -125,6 +127,22 @@ export default function AuthNavbar() {
                     <span>Settings</span>
                   </DropdownMenuItem>
                 </Link>
+                <Link to={MY_REPORTS_PATH}>
+                  <DropdownMenuItem>
+                    <FileTextIcon className="mr-2 h-4 w-4" />
+                    <span>My Reports</span>
+                  </DropdownMenuItem>
+                </Link>
+                {user.isAdmin && <DropdownMenuSeparator />}
+                {user.isAdmin && <DropdownMenuLabel>
+                  Admin Section
+                </DropdownMenuLabel>}
+                {user.isAdmin && <Link to={ADMIN_DASHBOARD_PATH}>
+                  <DropdownMenuItem>
+                    <GaugeIcon />
+                    <span>Admin Dashboard</span>
+                  </DropdownMenuItem>
+                </Link>}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} data-cy="logout">
                   <LogOut className="mr-2 h-4 w-4" />

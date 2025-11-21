@@ -12,7 +12,7 @@ import { useLazyQuery, useMutation } from '@apollo/client/react'
 import { Code2Icon, TriangleAlertIcon, CheckCircle2Icon, XCircleIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import Meta from '@/components/utils/metadata'
 
 interface GetGoogleOauthUrlData {
@@ -74,8 +74,25 @@ export default function Login() {
   const [activeTab, setActiveTab] = useState('login')
   const [passwordFocused, setPasswordFocused] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false)
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  // Login form state
+  const [loginForm, setLoginForm] = useState<LoginInput>({
+    username: '',
+    password: '',
+  })
+
+  // Register form state
+  const [registerForm, setRegisterForm] = useState<RegisterInput>({
+    email: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    username: '',
+  })
+
   const changeTab = (tab: string) => {
     //Clear form states when switching tabs
     setLoginForm({
@@ -92,20 +109,6 @@ export default function Login() {
     setConfirmPassword('')
     setActiveTab(tab)
   }
-  // Login form state
-  const [loginForm, setLoginForm] = useState<LoginInput>({
-    username: '',
-    password: '',
-  })
-
-  // Register form state
-  const [registerForm, setRegisterForm] = useState<RegisterInput>({
-    email: '',
-    firstName: '',
-    lastName: '',
-    password: '',
-    username: '',
-  })
 
   useEffect(() => {
     if (user) {
@@ -114,14 +117,30 @@ export default function Login() {
   }, [user])
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const redirect = params.get('redirect')
+    // const params = new URLSearchParams(window.location.search)
+    // const redirect = params.get('redirect')
+    const error = searchParams.get('error')
+    if(error){
+      if(error === "deactivated"){
+        setErrorMessage('Your account has been deactivated due to violations of our community guidelines.');
+      }
+    }
+    const redirect = searchParams.get('redirect')
     if (redirect) {
-      setCurrentRedirectUrl(redirect)
+      // Check redirect is contains admin
+      if(redirect.includes('admin')) {
+        setSearchParams((prev)=>{
+          prev.delete('redirect')
+          return prev
+        })
+        setCurrentRedirectUrl('/profile')
+      }else{
+        setCurrentRedirectUrl(redirect)
+      }
     } else {
       setCurrentRedirectUrl('/profile')
     }
-  }, [])
+  }, [searchParams, setSearchParams])
 
   useEffect(() => {
     if (error) toast.error(error.message)
@@ -250,14 +269,29 @@ export default function Login() {
             </div>
             <h1 className="text-balance text-4xl font-bold tracking-tight">OnlyGeeks</h1>
             <p className="text-pretty text-lg text-muted-foreground">Share your projects, inspire the community</p>
-            {currentRedirectUrl && currentRedirectUrl !== '/profile' && (
+            {
+              errorMessage && (
+                <Alert className="text-left shadow-lg" variant={'destructive'}>
+                  <TriangleAlertIcon size={16} />
+                  <div className="flex-1">
+                    <AlertTitle>Login Error</AlertTitle>
+                    <AlertDescription>
+                      {errorMessage}
+                    </AlertDescription>
+                  </div>
+                </Alert>
+              )
+            }
+            {currentRedirectUrl && currentRedirectUrl !== '/profile' && currentRedirectUrl !== '/' && (
               <Alert className="text-left shadow-lg" variant={'destructive'}>
                 <TriangleAlertIcon size={16} />
-                <AlertTitle>Login required!</AlertTitle>
-                <AlertDescription>
-                  You will be redirected to{' '}
-                  <span className="font-medium">{redirectURIAlertParser(currentRedirectUrl)}</span> after login
-                </AlertDescription>
+                <div className="flex-1">
+                  <AlertTitle>Login required!</AlertTitle>
+                  <AlertDescription>
+                    You will be redirected to{' '}
+                    <span className="font-medium">{redirectURIAlertParser(currentRedirectUrl)}</span> after login
+                  </AlertDescription>
+                </div>
               </Alert>
             )}
           </div>

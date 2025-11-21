@@ -30,7 +30,7 @@ export class GqlAuthGuard {
 }
 
 @Injectable()
-export class OptionalGqlAuthGuard {
+export class GuestAuthGuard {
   constructor(private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -57,6 +57,33 @@ export class OptionalGqlAuthGuard {
         updatedAt: new Date().toISOString(),
       }
     }
+    ctx.req.user = user
+    return true
+  }
+}
+
+@Injectable()
+export class AdminAuthGuard {
+  constructor(private readonly authService: AuthService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const ctx = GqlExecutionContext.create(context).getContext()
+    const token = ctx.req.cookies['access_token']
+
+    if (!token) {
+      throw new UnauthorizedException()
+    }
+
+    const user = await this.authService.getUserFromToken(token)
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid or expired token')
+    }
+
+    if (!user.isAdmin) {
+      throw new UnauthorizedException('Admin access required')
+    }
+
     ctx.req.user = user
     return true
   }

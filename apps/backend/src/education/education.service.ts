@@ -7,8 +7,8 @@ import { UserService } from 'src/user/user.service'
 @Injectable()
 export class EducationService {
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly userService: UserService
+    private prisma: PrismaService,
+    private readonly userService: UserService,
   ) {}
 
   async create(userId: string, input: CreateEducationInput) {

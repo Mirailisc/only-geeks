@@ -29,12 +29,4 @@ const Meta = ({ title, description, keywords, image, url }: {
   );
 };
 
-Meta.defaultProps = {
-  title: "Welcome",
-  description: "We sell the best products for cheap",
-  keywords: "electronics, buy electronics, cheap electronics",
-  image: "https://example.com/default-image.jpg",
-  url: "https://example.com",
-};
-
 export default Meta;

@@ -33,6 +33,15 @@ export class Blog {
   @Field(() => Date)
   updatedAt: Date
 
+  @Field(() => Boolean, { nullable: true })
+  requestEdit?: boolean
+
+  @Field(() => Boolean, { nullable: true })
+  requestUnpublish?: boolean
+
+  @Field(() => Boolean, { nullable: true })
+  isResponse?: boolean
+
   @Field(() => User, { nullable: true })
   User?: User
 }

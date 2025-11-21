@@ -154,19 +154,21 @@ const FeedHome = () => {
           {newItemCount > 0 && (
             <Alert className="mb-4 border-primary bg-primary/5">
               <AlertCircle className="h-4 w-4 text-primary" />
-              <AlertDescription className="flex items-center justify-between">
-                <span>
-                  {newItemCount} new {newItemCount === 1 ? 'post' : 'posts'} available
-                </span>
-                <Button 
-                  size="sm" 
-                  onClick={handleRefresh}
-                  className="ml-4"
-                >
-                  <RefreshCw className="h-3 w-3 mr-1" />
-                  Load new posts
-                </Button>
-              </AlertDescription>
+              <div className="flex-1">
+                <AlertDescription className="flex items-center justify-between">
+                  <span>
+                    {newItemCount} new {newItemCount === 1 ? 'post' : 'posts'} available
+                  </span>
+                  <Button 
+                    size="sm" 
+                    onClick={handleRefresh}
+                    className="ml-4"
+                  >
+                    <RefreshCw className="h-3 w-3 mr-1" />
+                    Load new posts
+                  </Button>
+                </AlertDescription>
+              </div>
             </Alert>
           )}
 
@@ -179,9 +181,11 @@ const FeedHome = () => {
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Failed to load feed. Please try again later.
-              </AlertDescription>
+              <div className="flex-1">
+                <AlertDescription>
+                  Failed to load feed. Please try again later.
+                </AlertDescription>
+              </div>
             </Alert>
           )}
 

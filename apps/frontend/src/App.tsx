@@ -11,6 +11,9 @@ import {
   SETTINGS_PATH,
   USER_PROFILE_PATH,
   FEED_PATH,
+  ADMIN_DASHBOARD_PATH,
+  MY_REPORTS_PATH,
+  MY_WARNING_PATH,
 } from './constants/routes'
 import Login from './pages/login'
 import { Toaster } from 'sonner'
@@ -28,6 +31,10 @@ import CreateProject from './pages/create_project'
 import CreateAchievement from './pages/create_achievements'
 import CreateEducation from './pages/create_education'
 import { ThemeProvider } from 'next-themes'
+import ProtectedAdminRoute from './components/utils/ProtectedAdminRoute'
+import AdminModerationDashboard from './pages/admin'
+import { TooltipProvider } from './components/ui/tooltip'
+import MyReportPage from './pages/my_report'
 
 const router = createBrowserRouter([
   {
@@ -52,11 +59,7 @@ const router = createBrowserRouter([
       },
       {
         path: USER_PROFILE_PATH,
-        element: (
-          <ProtectedRoute>
-            <UserProfile />
-          </ProtectedRoute>
-        ),
+        element: (<UserProfile />),
       },
       {
         path: SEARCH_PATH,
@@ -106,6 +109,28 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: ADMIN_DASHBOARD_PATH,
+        element: (<ProtectedAdminRoute>
+          <AdminModerationDashboard />
+        </ProtectedAdminRoute>),
+      },
+      {
+        path: MY_REPORTS_PATH,
+        element: (
+          <ProtectedRoute>
+            <MyReportPage currentPage="reports" />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: MY_WARNING_PATH,
+        element: (
+          <ProtectedRoute>
+            <MyReportPage currentPage="warnings" />
+          </ProtectedRoute>
+        ),
+      }
     ],
   },
   {
@@ -117,10 +142,12 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ThemeProvider defaultTheme="light" attribute="class" storageKey="onlygeek-theme">
-      <div>
-        <Toaster richColors position="bottom-right" />
-        <RouterProvider router={router} />
-      </div>
+      <TooltipProvider>
+        <div>
+          <Toaster richColors position="bottom-right" />
+          <RouterProvider router={router} />
+        </div>
+      </TooltipProvider>
     </ThemeProvider>
   )
 }
