@@ -331,25 +331,6 @@ export class BlogService {
 
     const reportIds = reports.map((r) => r.reportId)
 
-    // for (const report of reports) {
-    //   const reportId = report.id
-    //   const decision =
-    //     await this.adminService.getModerationDecisionByReportId(reportId)
-    //   if (decision) {
-    //     await this.prisma.moderationDecision.delete({
-    //       where: { id: decision.id },
-    //     })
-    //   }
-    // }
-    // await this.prisma.blogReport.deleteMany({
-    //   where: { targetId: id },
-    // })
-
-    // // Delete the report
-    // await this.prisma.report.deleteMany({
-    //   where: { id: { in: reports.map((r) => r.id) } },
-    // })
-
     await this.prisma.moderationDecision.deleteMany({
       where: { reportId: { in: reportIds } },
     })
