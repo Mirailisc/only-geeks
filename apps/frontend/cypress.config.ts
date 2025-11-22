@@ -113,6 +113,9 @@ export default defineConfig({
               ],
             },
           });
+          await prisma.adminAuditLog.deleteMany({
+            where: { adminId: { in: userIds } },
+          })
           await prisma.blog.deleteMany({
             where: { userId: { in: userIds } },
           })
