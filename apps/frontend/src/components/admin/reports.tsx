@@ -107,7 +107,6 @@ export const ReportsTab = () => {
               },
               refetchQueries: [{ query: GET_REPORTS_BY_STATUS_OR_ALL, variables: { status: filterStatus } }]
             });
-            toast.success('Updated existing decision successfully.'); // Added toast
             if (decisionAction === "DEACTIVATE" && selectedReport?.targetType === "USER" && selectedReport.userReport) {
               try {
                 await deactivateUser({
@@ -124,6 +123,11 @@ export const ReportsTab = () => {
                 toast.error('Failed to deactivate user.');
               }
             }
+            await refetchReports();
+            setSelectedReport(null);
+            setDecisionAction('');
+            setDecisionNote('');
+            toast.success('Updated existing decision successfully.'); // Added toast
           } catch (error) {
             // eslint-disable-next-line no-console
             console.error('Error updating decision:', error);
