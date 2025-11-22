@@ -84,6 +84,35 @@ export default defineConfig({
             select: { id: true },
           })
           const userIds = users.map((u) => u.id)
+          await prisma.moderationDecision.deleteMany({
+            where: {
+              OR: [
+                { report: { userReport: { targetId: { in: userIds } } } },
+                { report: { blogReport: { target: { userId: { in: userIds } } } } },
+                { report: { projectReport: { target: { userId: { in: userIds } } } } },
+                { report: { reporterId: { in: userIds } } },
+              ]
+            }
+          })
+          await prisma.userReport.deleteMany({
+            where: { targetId: { in: userIds } },
+          })
+          await prisma.blogReport.deleteMany({
+            where: { target: { userId: { in: userIds } } },
+          })
+          await prisma.projectReport.deleteMany({
+            where: { target: { userId: { in: userIds } } },
+          })
+          await prisma.report.deleteMany({
+            where: {
+              OR: [
+                { userReport: { targetId: { in: userIds } } },
+                { blogReport: { target: { userId: { in: userIds } } } },
+                { projectReport: { target: { userId: { in: userIds } } } },
+                { reporterId: { in: userIds } },
+              ],
+            },
+          });
           await prisma.blog.deleteMany({
             where: { userId: { in: userIds } },
           })
