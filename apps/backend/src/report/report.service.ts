@@ -302,6 +302,13 @@ export class ReportService {
       },
     })
 
+    if (status === 'REJECTED') {
+      // Delete associated decision if status is REJECTED
+      await this.prisma.moderationDecision.deleteMany({
+        where: { reportId: id },
+      })
+    }
+
     return await this.addTargetTypeToReports(report as unknown as Report)
   }
 
