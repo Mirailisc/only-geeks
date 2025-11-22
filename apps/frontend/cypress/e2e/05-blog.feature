@@ -30,14 +30,14 @@ Feature: Blog management
         Then I click button named "blog-publish-button"
         Then I should see "Success"
         Then I should see "Your blog has been saved as draft successfully."
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I should see "this is test blog"
         Then I should see "Draft"
         Then I should wait for 2 seconds
 
     Scenario: Edit Draft Blog
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I should see "this is test blog"
         Then I should see "Draft"
@@ -52,7 +52,7 @@ Feature: Blog management
         Then I should see "Success"
         Then I should see "Your blog has been saved as draft successfully."
         Then I should wait for 1 seconds
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I should see "this is test blog"
         Then I should see "#testHashtag2"
@@ -60,7 +60,7 @@ Feature: Blog management
         Then I should wait for 2 seconds
 
     Scenario: Convert to Publish Blog
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I should see "this is test blog"
         Then I should see "Draft"
@@ -73,13 +73,13 @@ Feature: Blog management
         Then I click button named "blog-publish-button"
         Then I should see "Success"
         Then I should see "Your blog has been published successfully."
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I should see "Published"
         Then I should wait for 2 seconds
 
     Scenario: Read Blog
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I should see "this is test blog"
         Then I should see "Published"
@@ -93,7 +93,7 @@ Feature: Blog management
         Then I should wait for 2 seconds
 
     Scenario: Delete blog
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I click button named "delete-blog-button"
         Then I click button named "confirm-delete-blog-button"

@@ -8,7 +8,7 @@ Feature: Report Management
         Then I change input "username" value to "imtest"
         Then I click submit button
         Then I should wait for 1 seconds
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
     
         # Create new project
         Then I should wait for 2 seconds
@@ -34,7 +34,7 @@ Feature: Report Management
         Then I change input "username" value to "janetest"
         Then I click submit button
         Then I should wait for 1 seconds
-        Then I view a profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I should wait for 2 seconds
         Then I click button named "projects-tab"
         Then I click button named "report-project-button"
@@ -83,7 +83,7 @@ Feature: Report Management
         Then I click button named "report-submit-decision-button"
 
         Given I am logged in as "user@test.com"
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "projects-tab"
         Then I should see "Admin request to edit this project"
 
@@ -117,7 +117,7 @@ Feature: Report Management
         Then I click button named "report-submit-decision-button"
 
         Given I am logged in as "user@test.com"
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "projects-tab"
         Then I should see "Admin request to unpublish this project"
 

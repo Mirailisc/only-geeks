@@ -13,7 +13,7 @@ Feature: Profile
         Then I click submit button
         Then I should wait for 1 seconds
         
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I should see "Hey!"
         Then I view my profile
         Then I should see "Hey!"

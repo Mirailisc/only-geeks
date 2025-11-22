@@ -6,7 +6,7 @@ Feature: Report Creation
         Then I change input "username" value to "imtest"
         Then I click submit button
         Then I should wait for 1 seconds
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
 
         Given I am logged in as "janedoe@gmail.com"
         Then I view settings
@@ -14,7 +14,7 @@ Feature: Report Creation
         Then I change input "username" value to "janetest"
         Then I click submit button
         Then I should wait for 1 seconds
-        Then I view a profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "report-user-button"
         Then I click button named "report-category-selector"
         Then I click button named "report-reason-SPAM"
@@ -36,7 +36,7 @@ Feature: Report Creation
         Then I change input "username" value to "imtest"
         Then I click submit button
         Then I should wait for 1 seconds
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
 
         # Blog creation belong with user user
         Then I should wait for 2 seconds
@@ -60,7 +60,7 @@ Feature: Report Creation
         Then I click button named "blog-publish-button"
         Then I should see "Success"
         Then I should see "Your blog has been published successfully."
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I should see "Published"
 
@@ -70,7 +70,7 @@ Feature: Report Creation
         Then I change input "username" value to "janetest"
         Then I click submit button
         Then I should wait for 1 seconds
-        Then I view a profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I click button named "view-blog-button"
         Then I click button named "report-blog-button"
@@ -94,7 +94,7 @@ Feature: Report Creation
         Then I change input "username" value to "imtest"
         Then I click submit button
         Then I should wait for 1 seconds
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
     
         # Create new project
         Then I should wait for 2 seconds
@@ -119,7 +119,7 @@ Feature: Report Creation
         Then I change input "username" value to "janetest"
         Then I click submit button
         Then I should wait for 1 seconds
-        Then I view a profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I should wait for 2 seconds
         Then I click button named "projects-tab"
         Then I click button named "report-project-button"

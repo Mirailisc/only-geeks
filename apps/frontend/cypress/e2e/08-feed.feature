@@ -146,7 +146,7 @@ Feature: Feed
         Then I click button named "blog-publish-button"
         Then I should see "Success"
         Then I should see "Your blog has been published successfully."
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I should see "Published"
 
@@ -175,7 +175,7 @@ Feature: Feed
 
         # Delete Blog
         Given I am logged in as "user@test.com"        
-        Then I view my profile page at "imtest"
+        Then I view the profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I click button named "delete-blog-button"
         Then I click button named "confirm-delete-blog-button"

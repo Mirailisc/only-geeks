@@ -4,11 +4,7 @@ Then('I view my profile', () => {
   cy.visit('/profile')
 })
 
-Then('I view my profile page at {string}', (username: string) => {
-  cy.visit(`/user/${username}`)
-})
-
-Then('I view a profile page at {string}', (username: string) => {
+Then('I view the profile page at {string}', (username: string) => {
   cy.visit(`/user/${username}`)
 })
 
