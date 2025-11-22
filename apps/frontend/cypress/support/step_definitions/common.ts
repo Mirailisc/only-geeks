@@ -24,7 +24,7 @@ Then('I click first button named {string}', (btn_name: string) => {
 
 
 Then('I change input {string} value to {string}', (label: string, value: string) => {
-  cy.get(`[data-cy="input-${label}"]`).clear().type(value)
+  cy.get(`[data-cy="input-${label}"]`).clear().type(value, { delay: 50 })
 })
 
 Then('I change editor input {string} value to {string}', (label: string, value: string) => {
