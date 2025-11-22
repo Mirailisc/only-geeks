@@ -318,6 +318,51 @@ export class BlogService {
   async deleteBlog(id: string, userId: string) {
     await this.userService.checkPostingRestriction(userId)
 
+    //Double check if blog exists
+    const existing = await this.prisma.blog.findUnique({
+      where: { id },
+    })
+    if (!existing) throw new Error('BLOG_NOT_FOUND')
+
+    //Delete associated reports and moderation decisions
+    const reports = await this.prisma.blogReport.findMany({
+      where: { targetId: id },
+    })
+
+    const reportIds = reports.map((r) => r.reportId)
+
+    // for (const report of reports) {
+    //   const reportId = report.id
+    //   const decision =
+    //     await this.adminService.getModerationDecisionByReportId(reportId)
+    //   if (decision) {
+    //     await this.prisma.moderationDecision.delete({
+    //       where: { id: decision.id },
+    //     })
+    //   }
+    // }
+    // await this.prisma.blogReport.deleteMany({
+    //   where: { targetId: id },
+    // })
+
+    // // Delete the report
+    // await this.prisma.report.deleteMany({
+    //   where: { id: { in: reports.map((r) => r.id) } },
+    // })
+
+    await this.prisma.moderationDecision.deleteMany({
+      where: { reportId: { in: reportIds } },
+    })
+
+    await this.prisma.blogReport.deleteMany({
+      where: { targetId: id },
+    })
+
+    await this.prisma.report.deleteMany({
+      where: { id: { in: reportIds } },
+    })
+
+    //Delete blog
     return await this.prisma.blog.delete({
       where: { id },
       select: {

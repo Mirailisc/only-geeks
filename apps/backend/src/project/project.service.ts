@@ -150,6 +150,25 @@ export class ProjectService {
     await this.userService.checkPostingRestriction(userId)
 
     const existing = await this.findOne(id)
+
+    const reports = await this.prisma.projectReport.findMany({
+      where: { targetId: id },
+    })
+
+    const reportIds = reports.map((r) => r.reportId)
+
+    await this.prisma.moderationDecision.deleteMany({
+      where: { reportId: { in: reportIds } },
+    })
+
+    await this.prisma.projectReport.deleteMany({
+      where: { targetId: id },
+    })
+
+    await this.prisma.report.deleteMany({
+      where: { id: { in: reportIds } },
+    })
+
     await this.prisma.project.delete({
       where: { id: existing.id },
       include: { User: true },
