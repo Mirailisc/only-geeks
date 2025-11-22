@@ -55,7 +55,7 @@ Feature: Feed
         Then I should not see "testname"
         Then I should not see "testdescription"
 
-    Scenario: Create Achievement
+    Scenario: CRUD Feed (Achievement)
         # Login
         Given I am logged in as "user@test.com"
         Then I view settings
@@ -115,7 +115,7 @@ Feature: Feed
         Then I should not see "testDescription"
         Then I should see button named "add-achievement-button"
 
-    Scenario: Create Blog
+    Scenario: CRUD Feed (Blog)
         # Login
         Given I am logged in as "user@test.com"
         Then I view settings
@@ -182,3 +182,4 @@ Feature: Feed
         Then I should see "No Blog yet"
         Then I should see "Write new blog"
         Then I should wait for 2 seconds
+    
