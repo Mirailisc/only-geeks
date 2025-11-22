@@ -38,26 +38,31 @@ const AdminModerationDashboard = () => {
       title: "Dashboard",
       url: "dashboard",
       icon: HomeIcon,
+      cyname: "admin-dashboard-button"
     },
     {
       title: "Reports",
       url: "reports",
       icon: FilePenIcon,
+      cyname: "admin-reports-button"
     },
     {
       title: "Restrictions",
       url: "restrictions",
       icon: ShieldUserIcon,
+      cyname: "admin-restrictions-button"
     },
     {
       title: "User Management",
       url: "user-management",
       icon: UsersIcon,
+      cyname: "admin-user-management-button"
     },
     {
       title: "Audit Logs",
       url: "audit-logs",
       icon: FileTextIcon,
+      cyname: "admin-audit-logs-button"
     }
   ]
  
@@ -71,7 +76,7 @@ const AdminModerationDashboard = () => {
               <SidebarMenu>
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton onClick={()=>{ setActiveTab(item.url) }}>
+                    <SidebarMenuButton data-cy={item.cyname} onClick={()=>{ setActiveTab(item.url) }}>
                         <item.icon />
                         <span>{item.title}</span>
                     </SidebarMenuButton>
