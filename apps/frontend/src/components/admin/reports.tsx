@@ -311,7 +311,7 @@ export const ReportsTab = () => {
                   <div className="flex gap-2 flex-col w-48">
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button onClick={() => setSelectedReport(report)}>
+                        <Button data-cy="report-take-action-button" onClick={() => setSelectedReport(report)}>
                           Take Action
                         </Button>
                       </DialogTrigger>
@@ -326,15 +326,15 @@ export const ReportsTab = () => {
                           <div>
                             <Label>Action</Label>
                             <Select value={decisionAction} onValueChange={setDecisionAction}>
-                              <SelectTrigger>
+                              <SelectTrigger data-cy="report-action-select-button">
                                 <SelectValue placeholder="Select action" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="NONE">No action taken</SelectItem>
-                                {report.targetType !== 'USER' && <SelectItem value="REQUEST_EDIT">Request Edit</SelectItem>}
-                                {report.targetType !== 'USER' && <SelectItem value="UNPUBLISH">Unpublish</SelectItem>}
-                                {report.targetType !== 'USER' && <SelectItem value="DELETE">Delete Content</SelectItem>}
-                                {report.targetType === 'USER' && <SelectItem value="DEACTIVATE">Deactivate User</SelectItem>}
+                                <SelectItem data-cy="report-action-select-NONE" value="NONE">No action taken</SelectItem>
+                                {report.targetType !== 'USER' && <SelectItem data-cy="report-action-select-REQUEST_EDIT" value="REQUEST_EDIT">Request Edit</SelectItem>}
+                                {report.targetType !== 'USER' && <SelectItem data-cy="report-action-select-UNPUBLISH" value="UNPUBLISH">Unpublish</SelectItem>}
+                                {report.targetType !== 'USER' && <SelectItem data-cy="report-action-select-DELETE" value="DELETE">Delete Content</SelectItem>}
+                                {report.targetType === 'USER' && <SelectItem data-cy="report-action-select-DEACTIVATE" value="DEACTIVATE">Deactivate User</SelectItem>}
                               </SelectContent>
                             </Select>
                           </div>
@@ -342,13 +342,14 @@ export const ReportsTab = () => {
                             <Label>Note</Label>
                             <Textarea
                               value={decisionNote}
+                              data-cy="input-report-decision-note"
                               onChange={(e) => setDecisionNote(e.target.value)}
                               placeholder="Add a note explaining your decision..."
                             />
                           </div>
                         </div>
                         <DialogFooter>
-                          <Button onClick={() => handleCreateDecision(report.id)}>
+                          <Button data-cy="report-submit-decision-button" onClick={() => handleCreateDecision(report.id)}>
                             Submit Decision
                           </Button>
                         </DialogFooter>
@@ -358,15 +359,15 @@ export const ReportsTab = () => {
                       value={report.status}
                       onValueChange={(status: ReportStatus) => handleUpdateStatus(report.id, status)}
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger data-cy="report-change-status-button" className="w-full">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={'PENDING'}>Pending</SelectItem>
-                        <SelectItem value={'UNDER_REVIEW'}>Under Review</SelectItem>
-                        <SelectItem value={'REQUEST_EDIT'}>Request Edit</SelectItem>
-                        <SelectItem value={'RESOLVED'}>Resolved</SelectItem>
-                        <SelectItem value={'REJECTED'}>Rejected</SelectItem>
+                        <SelectItem data-cy="report-change-status-PENDING" value={'PENDING'}>Pending</SelectItem>
+                        <SelectItem data-cy="report-change-status-UNDER_REVIEW" value={'UNDER_REVIEW'}>Under Review</SelectItem>
+                        <SelectItem data-cy="report-change-status-REQUEST_EDIT" value={'REQUEST_EDIT'}>Request Edit</SelectItem>
+                        <SelectItem data-cy="report-change-status-RESOLVED" value={'RESOLVED'}>Resolved</SelectItem>
+                        <SelectItem data-cy="report-change-status-REJECTED" value={'REJECTED'}>Rejected</SelectItem>
                       </SelectContent>
                     </Select>
                     <Dialog>

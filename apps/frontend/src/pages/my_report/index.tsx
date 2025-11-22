@@ -200,7 +200,7 @@ const WarningCard = ({ warning }: {
         )}
 
         {warning.decision && (
-          <Alert className="border-orange-200 bg-orange-50">
+          <Alert className="border-orange-200">
             <AlertCircle className="h-4 w-4 text-orange-600" />
             <AlertDescription>
               <div className="space-y-2">
