@@ -1,5 +1,6 @@
 Feature: Feed
-    Scenario: Create Project
+    Scenario: CRUD Feed (Project)
+        # Login
         Given I am logged in as "user@test.com"
         Then I view settings
         Then I change input "bio" value to "Hey!"
@@ -7,6 +8,7 @@ Feature: Feed
         Then I click submit button
         Then I should wait for 1 seconds
 
+        # Create new project
         Then I click button named "create-dropdown-menu"
         Then I should wait for 2 seconds
         Then I should see "Create New"
@@ -22,35 +24,29 @@ Feature: Feed
         Then I should see "Edit"
         Then I should see "Delete"
 
-    Scenario: View Feed (Show Project)
-        Given I am logged in as "user@test.com"
-        Then I view settings
-        Then I change input "bio" value to "Hey!"
-        Then I change input "username" value to "imtest"
-        Then I click submit button
-        Then I should wait for 1 seconds
-
+        # View Feed as I'm logged in
         Given I visit the landing page
         Then I should see "testname"
         Then I should see "Project"
         Then I should see "User User"
         Then I should see "@imtest"
 
-    Scenario: View Feed as Guest (Show Project)
+        # Logout
+        When I view my profile
+        Then I should wait for 3 seconds
+        When I click dropdown menu
+        Then I click logout button
+        Then I should see "Welcome back"
+
+        # View Feed as Guest
         Given I visit the landing page
         Then I should see "testname"
         Then I should see "Project"
         Then I should see "User User"
         Then I should see "@imtest"
 
-    Scenario: Delete Project
+        # Delete Project
         Given I am logged in as "user@test.com"
-        Then I view settings
-        Then I change input "bio" value to "Hey!"
-        Then I change input "username" value to "imtest"
-        Then I click submit button
-        Then I should wait for 1 seconds
-        
         Then I view my profile
         Then I click button named "projects-tab"
         Then I click button named "delete-project-button"
@@ -60,6 +56,7 @@ Feature: Feed
         Then I should not see "testdescription"
 
     Scenario: Create Achievement
+        # Login
         Given I am logged in as "user@test.com"
         Then I view settings
         Then I change input "bio" value to "Hey!"
@@ -67,7 +64,8 @@ Feature: Feed
         Then I click submit button
         Then I should wait for 1 seconds
 
-        Then I view my profile
+        # Create new Achievement
+        When I view my profile
         Then I click button named "portfolio-tab"
         Then I click button named "add-achievement-button"
         Then I should see "Create Achievement"
@@ -80,14 +78,7 @@ Feature: Feed
         Then I should see "testIssuer"
         Then I should see "12/01/2023"
 
-    Scenario: View Feed (Show Achievement)
-        Given I am logged in as "user@test.com"
-        Then I view settings
-        Then I change input "bio" value to "Hey!"
-        Then I change input "username" value to "imtest"
-        Then I click submit button
-        Then I should wait for 1 seconds
-
+        # View Feed as I'm logged in
         Given I visit the landing page
         Then I should see "testTitle"
         Then I should see "Issued by testIssuer"
@@ -96,7 +87,14 @@ Feature: Feed
         Then I should see "User User"
         Then I should see "@imtest"
 
-    Scenario: View Feed as Guest (Show Achievement)
+        # Logout
+        When I view my profile
+        Then I should wait for 3 seconds
+        When I click dropdown menu
+        Then I click logout button
+        Then I should see "Welcome back"
+
+        # View Feed as Guest
         Given I visit the landing page
         Then I should see "testTitle"
         Then I should see "Issued by testIssuer"
@@ -105,15 +103,8 @@ Feature: Feed
         Then I should see "User User"
         Then I should see "@imtest"
 
-
-    Scenario: Delete Achievement
+        # Delete Achievement
         Given I am logged in as "user@test.com"
-        Then I view settings
-        Then I change input "bio" value to "Hey!"
-        Then I change input "username" value to "imtest"
-        Then I click submit button
-        Then I should wait for 1 seconds
-
         Then I view my profile
         Then I click button named "portfolio-tab"
         Then I click button named "delete-achievement-button"
@@ -125,6 +116,7 @@ Feature: Feed
         Then I should see button named "add-achievement-button"
 
     Scenario: Create Blog
+        # Login
         Given I am logged in as "user@test.com"
         Then I view settings
         Then I change input "bio" value to "Hey!"
@@ -132,6 +124,7 @@ Feature: Feed
         Then I click submit button
         Then I should wait for 1 seconds
 
+        # Create new Blog
         Then I click button named "create-dropdown-menu"
         Then I should wait for 1 seconds
         Then I should see "Create New"
@@ -157,14 +150,7 @@ Feature: Feed
         Then I click button named "blogs-tab"
         Then I should see "Published"
 
-    Scenario: View Feed (Show Blog)
-        Given I am logged in as "user@test.com"
-        Then I view settings
-        Then I change input "bio" value to "Hey!"
-        Then I change input "username" value to "imtest"
-        Then I click submit button
-        Then I should wait for 1 seconds
-
+        # View Feed as I'm logged in
         Given I visit the landing page
         Then I should see "this is test blog"
         Then I should see "Test Blog creation to view in feed #testHashtag"
@@ -172,7 +158,14 @@ Feature: Feed
         Then I should see "User User"
         Then I should see "@imtest"
 
-    Scenario: View Feed as Guest (Show Blog)
+        #Logout
+        When I view my profile
+        Then I should wait for 3 seconds
+        When I click dropdown menu
+        Then I click logout button
+        Then I should see "Welcome back"
+
+        # View Feed as Guest
         Given I visit the landing page
         Then I should see "this is test blog"
         Then I should see "Test Blog creation to view in feed #testHashtag"
@@ -180,14 +173,8 @@ Feature: Feed
         Then I should see "User User"
         Then I should see "@imtest"
 
-    Scenario: Delete Blog
-        Given I am logged in as "user@test.com"
-        Then I view settings
-        Then I change input "bio" value to "Hey!"
-        Then I change input "username" value to "imtest"
-        Then I click submit button
-        Then I should wait for 1 seconds
-        
+        # Delete Blog
+        Given I am logged in as "user@test.com"        
         Then I view my profile page at "imtest"
         Then I click button named "blogs-tab"
         Then I click button named "delete-blog-button"
