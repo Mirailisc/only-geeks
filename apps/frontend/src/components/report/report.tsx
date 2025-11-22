@@ -6,7 +6,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { BLOG_REPORT_REASON, DEFAULT_REPORT_REASON, PROJECT_REPORT_REASON, USER_REPORT_REASON } from '@/constants/report'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import type { Profile } from '@/graphql/profile'
@@ -22,6 +22,7 @@ interface ReportProps {
   myUsername: string
   user: Partial<Profile>
   targetId: string
+  cybuttonname?: string
 }
 const getType = (type: ReportTargetType) => {
   switch(type){
@@ -35,7 +36,7 @@ const getType = (type: ReportTargetType) => {
       return "item";
   }
 }
-const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportProps) => {
+const ReportComponentWithButton = ({type, myUsername, user, targetId, cybuttonname}: ReportProps) => {
   const navigation = useNavigate()
   const defaultReportStructure: ReportStructure = {
     targetType: type,
@@ -112,7 +113,7 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
     
     // Check if the reason is still empty (even after debouncing)
     if(!reportStructure.reason.trim()){
-        setErrorReport("Please provide a description for reporting this " + getType(type).toLowerCase() + ".");
+        setErrorReport("Please provide a description for reporting this " + getType(type).toLowerCase() + ". (" + reportStructure.reason + ")");
         return;
     }
 
@@ -176,15 +177,13 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
                   category: value as ReportStructure['category'],
                 })
               }}>
-                <SelectTrigger id="report-category">
-                  {
-                    reportStructure.category ? REPORT_REASON.find((reason)=>reason.value === reportStructure.category)?.label || "Select reason" : "Select reason"
-                  }
+                <SelectTrigger data-cy="report-category-selector" id="report-category">
+                  <SelectValue placeholder="Select a reason" />
                 </SelectTrigger>
                 <SelectContent>
                   {
                     REPORT_REASON.map((reason)=>(
-                      <SelectItem key={`report-reason-${reason.value}`} value={reason.value}>{reason.label}</SelectItem>
+                      <SelectItem data-cy={`report-reason-${reason.value}`} key={`report-reason-${reason.value}`} value={reason.value}>{reason.label}</SelectItem>
                     ))
                   }
                 </SelectContent>
@@ -194,6 +193,7 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
               <Label htmlFor="report-reason-text">Tell me why?</Label>
               <Textarea 
                 id="report-reason-text"
+                data-cy="input-report-reason"
                 value={localReason} // Bind to local state for immediate feedback
                 onChange={handleReasonChange} // Use the debounced change handler
                 placeholder={`I found this ${getType(type).toLowerCase()} offensive because...`} 
@@ -206,7 +206,7 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
             <DialogClose asChild>
               <Button variant="outline" disabled={loadingCreatingReport}>Cancel</Button>
             </DialogClose>
-            <Button variant={"destructive"} onClick={submitReport} disabled={loadingCreatingReport}>
+            <Button variant={"destructive"} data-cy="submit-report-button" onClick={submitReport} disabled={loadingCreatingReport}>
                 {loadingCreatingReport ? 'Submitting...' : 'Submit'}
             </Button>
           </DialogFooter>
@@ -229,7 +229,7 @@ const ReportComponentWithButton = ({type, myUsername, user, targetId}: ReportPro
       </AlertDialog>
       {
         myUsername !== user.username && (
-          <Button variant="destructive" size="sm" className='w-max' disabled={loadingFindingReport} onClick={()=>{
+          <Button variant="destructive" data-cy={cybuttonname ?? "report-button"} size="sm" className='w-max' disabled={loadingFindingReport} onClick={()=>{
             if(myUsername !== ""){
               toggleReportModal();                        
             }else{

@@ -323,8 +323,8 @@ export default function MyReportPage({
         }}>
           
           <TabsList className="w-full">
-            <TabsTrigger className="w-full" value="reports">My Reports</TabsTrigger>
-            <TabsTrigger className="w-full" value="warnings">My Warnings</TabsTrigger>
+            <TabsTrigger className="w-full" data-cy="my-report-button" value="reports">My Reports</TabsTrigger>
+            <TabsTrigger className="w-full" data-cy="my-warning-button" value="warnings">My Warnings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="reports" className="mt-4">

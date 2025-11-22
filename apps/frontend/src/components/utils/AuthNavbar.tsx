@@ -128,7 +128,7 @@ export default function AuthNavbar() {
                   </DropdownMenuItem>
                 </Link>
                 <Link to={MY_REPORTS_PATH}>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem data-cy="my-reports-link">
                     <FileTextIcon className="mr-2 h-4 w-4" />
                     <span>My Reports</span>
                   </DropdownMenuItem>

@@ -186,6 +186,7 @@ const ProjectCard = ({ project, isMyProfile, myUsername }: { project: Project; i
                 <div className="flex justify-end space-x-2">
                   <ReportComponentWithButton
                     type='PROJECT'
+                    cybuttonname='report-project-button'
                     myUsername={myUsername ?? ''}
                     user={project.User}
                     targetId={project.id}

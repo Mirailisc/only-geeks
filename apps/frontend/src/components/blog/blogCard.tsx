@@ -160,6 +160,7 @@ const BlogCard = ({
                 </Button>
                 <ReportComponentWithButton
                   type="BLOG"
+                  cybuttonname="report-blog-button"
                   myUsername={myUsername}
                   user={user}
                   targetId={blogId}

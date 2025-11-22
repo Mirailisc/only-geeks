@@ -3,10 +3,10 @@ import { useQuery } from '@apollo/client/react'
 import { toast } from 'sonner'
 import AuthNavbar from '@/components/utils/AuthNavbar'
 import { GET_PROFILE_BY_USERNAME_QUERY, type Profile } from '@/graphql/profile'
-import { Loading, NotFound } from '@/components/utils/loading'
+import { Loading } from '@/components/utils/loading'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Building2Icon, MailIcon, MapPinIcon, ShareIcon, type LucideIcon } from 'lucide-react'
+import { Building2Icon, HomeIcon, MailIcon, MapPinIcon, ShareIcon, UserX2Icon, type LucideIcon } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProfileBlog from '@/components/profile/ProfileBlog'
 import ProfileProjects from '@/components/profile/ProfileProject'
@@ -15,6 +15,9 @@ import ProfilePortfolio from './ProfilePortfolio'
 import { Button } from '@/components/ui/button'
 import Meta from '../utils/metadata'
 import ReportComponentWithButton from '../report/report'
+import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
+import { Link } from 'react-router-dom'
+import { FEED_PATH } from '@/constants/routes'
 
 function DisplayWithIcon({ icon, text }: { icon: LucideIcon; text: string }) {
   const Icon = icon
@@ -48,10 +51,57 @@ export default function ProfilePage({ username }: ProfilePageProps) {
     }
   }, [data])
 
-  if (!username) return <NotFound text="Please provide a username." />
+  if (!username) return (
+    <>
+      <AuthNavbar />
+      <div className='flex min-h-[calc(100vh-80px)] items-center justify-center'>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <UserX2Icon />
+            </EmptyMedia>
+            <EmptyTitle>
+              No username provided
+            </EmptyTitle>
+          </EmptyHeader>
+          <EmptyContent>
+            <Link to={FEED_PATH}>
+            <Button>
+              <HomeIcon /> Back to Home
+            </Button>
+            </Link>
+          </EmptyContent>
+        </Empty>
+      </div>
+    </>
+  )
   if (!profile && !loading)
     return (
-      <NotFound text="User not found." description="The user you are looking for does not exist or has been removed." />
+      <>
+        <AuthNavbar />
+        <div className='flex min-h-[calc(100vh-80px)] items-center justify-center'>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <UserX2Icon />
+              </EmptyMedia>
+              <EmptyTitle>
+                User @{username} not found.
+              </EmptyTitle>
+              <EmptyDescription>
+                The user you are looking for does not exist or has been deactivated.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <Link to={FEED_PATH}>
+              <Button>
+                <HomeIcon /> Back to Home
+              </Button>
+              </Link>
+            </EmptyContent>
+          </Empty>
+        </div>
+      </>
     )
   if (loading) return <Loading />
 
@@ -107,6 +157,7 @@ export default function ProfilePage({ username }: ProfilePageProps) {
                   {
                     profile && 
                     <ReportComponentWithButton
+                      cybuttonname='report-user-button'
                       type="USER"
                       myUsername={myUser?.username || ""}
                       user={profile}
