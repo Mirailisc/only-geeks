@@ -14,7 +14,9 @@ Then('I click logout button', () => {
 
 Then('I click button named {string}', (btn_name: string) => {
   cy.get(`[data-cy="${btn_name}"]`).click()
+  cy.wait(200)
 })
+
 
 Then('I change input {string} value to {string}', (label: string, value: string) => {
   cy.get(`[data-cy="input-${label}"]`).clear().type(value)
