@@ -101,7 +101,7 @@ export default function MarkdownViewer({ content = '', className }: Props) {
       const id = slugify(text)
       return (
         <h1 id={id} {...props} className="scroll-mt-24">
-          <a href={`#${id}`} className="no-underline hover:underline">
+          <a href={`#${id}`} className="no-underline hover:underline dark:text-white">
             {children}
           </a>
         </h1>
@@ -112,7 +112,7 @@ export default function MarkdownViewer({ content = '', className }: Props) {
       const id = slugify(text)
       return (
         <h2 id={id} {...props} className="scroll-mt-24">
-          <a href={`#${id}`} className="no-underline hover:underline">
+          <a href={`#${id}`} className="no-underline hover:underline dark:text-white">
             {children}
           </a>
         </h2>
@@ -123,7 +123,7 @@ export default function MarkdownViewer({ content = '', className }: Props) {
       const id = slugify(text)
       return (
         <h3 id={id} {...props} className="scroll-mt-24">
-          <a href={`#${id}`} className="no-underline hover:underline">
+          <a href={`#${id}`} className="no-underline hover:underline dark:text-white">
             {children}
           </a>
         </h3>
@@ -134,7 +134,7 @@ export default function MarkdownViewer({ content = '', className }: Props) {
       const id = slugify(text)
       return (
         <h4 id={id} {...props} className="scroll-mt-24">
-          <a href={`#${id}`} className="no-underline hover:underline">
+          <a href={`#${id}`} className="no-underline hover:underline dark:text-white">
             {children}
           </a>
         </h4>
@@ -145,7 +145,7 @@ export default function MarkdownViewer({ content = '', className }: Props) {
       const id = slugify(text)
       return (
         <h5 id={id} {...props} className="scroll-mt-24">
-          <a href={`#${id}`} className="no-underline hover:underline">
+          <a href={`#${id}`} className="no-underline hover:underline dark:text-white">
             {children}
           </a>
         </h5>
@@ -156,7 +156,7 @@ export default function MarkdownViewer({ content = '', className }: Props) {
       const id = slugify(text)
       return (
         <h6 id={id} {...props} className="scroll-mt-24">
-          <a href={`#${id}`} className="no-underline hover:underline">
+          <a href={`#${id}`} className="no-underline hover:underline dark:text-white">
             {children}
           </a>
         </h6>
