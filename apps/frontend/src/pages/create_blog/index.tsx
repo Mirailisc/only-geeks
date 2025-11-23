@@ -224,7 +224,7 @@ const CreateBlog = () => {
       console.log('Create blog response:', data)
       if (data?.createBlog) {
         setCurrentBlog(data.createBlog)
-        setBlogTitle('Untitled')
+        setBlogTitle(data?.createBlog.title)
         setCurrentMarkdown('')
         setShowBlogListDialog(false)
         setIsInitialLoad(false)

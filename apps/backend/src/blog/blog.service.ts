@@ -239,7 +239,30 @@ export class BlogService {
   async createBlog(userId: string, input: CreateBlogInput) {
     await this.userService.checkPostingRestriction(userId)
 
-    const slug = input.title.toLowerCase().replace(/\s+/g, '-')
+    let slug = input.title.toLowerCase().replace(/\s+/g, '-')
+    // Check if slug already exists for the user
+    const existingSlugs = await this.prisma.blog.findMany({
+      where: {
+        userId,
+        slug: { startsWith: slug },
+      },
+      select: { slug: true },
+    })
+
+    const slugSet = new Set(existingSlugs.map((b) => b.slug))
+
+    let newSlug = slug
+    let counter = 1
+
+    // 3. Increment locally until we find a unique slug
+    while (slugSet.has(newSlug)) {
+      newSlug = `${slug} ${counter}`
+      counter++
+    }
+
+    // 4. Update title and slug
+    input.title = `${input.title} ${counter - 1}` // optional, match your original logic
+    slug = newSlug
 
     return await this.prisma.blog.create({
       data: {
