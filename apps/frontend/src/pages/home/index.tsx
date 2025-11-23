@@ -60,6 +60,7 @@ const FeedHome = () => {
 
         const count = result.data?.getNewFeedCount ?? 0;
         setNewItemCount(count);
+        setInitialLoadTime(new Date().toISOString().split('T')[0]);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         // console.error('Error checking for new content:', err);

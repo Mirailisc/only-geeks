@@ -224,8 +224,8 @@ export class FeedService {
   async getCountNewItems(since: Date, userId?: string) {
     const profileFilter = {
       OR: [
-        { User: { preference: { isPublicProfile: true } } },
-        { User: { preference: { isPublicProfile: undefined } } },
+        { User: { preference: { is: { isPublicProfile: true } } } },
+        { User: { preference: { is: { isPublicProfile: undefined } } } },
         ...(userId ? [{ userId }] : []),
       ],
     }
