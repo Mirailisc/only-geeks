@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { FeedInput, FeedType } from './dto/feed.input'
+import { gunzipSync } from 'zlib'
 
 @Injectable()
 export class FeedService {
@@ -172,8 +173,13 @@ export class FeedService {
           const decisions = b.reports
             .map((pr) => pr.report.decision?.action)
             .filter(Boolean)
+          const compressedContent = b.content
+          const decompressedContent = compressedContent
+            ? gunzipSync(compressedContent).toString('utf8')
+            : null
           return {
             ...b,
+            content: decompressedContent,
             contentType: 'blog',
             isResponse: b.reports.some(
               (r) => r.report.decision?.isResponse || false,

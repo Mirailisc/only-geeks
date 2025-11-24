@@ -5,6 +5,7 @@ import { UserService } from 'src/user/user.service'
 import { UpdateBlogInput } from './dto/update-blog.input'
 import { AdminService } from 'src/admin/admin.service'
 import { Blog } from './entities/blog.entity'
+import { gunzipSync, gzipSync } from 'zlib'
 
 @Injectable()
 export class BlogService {
@@ -15,7 +16,7 @@ export class BlogService {
   ) {}
 
   async getBlogs() {
-    return await this.prisma.blog.findMany({
+    const blogsList = await this.prisma.blog.findMany({
       where: {
         isPublished: true,
         User: { isActive: true },
@@ -33,6 +34,16 @@ export class BlogService {
         updatedAt: true,
         User: true,
       },
+    })
+    return blogsList.map((b) => {
+      const compressedContent = b.content
+      const decompressedContent = compressedContent
+        ? gunzipSync(compressedContent).toString('utf8')
+        : null
+      return {
+        ...b,
+        content: decompressedContent,
+      }
     })
   }
 
@@ -67,8 +78,13 @@ export class BlogService {
       const decisions = b.reports
         .map((pr) => pr.report.decision?.action)
         .filter(Boolean)
+      const compressedContent = b.content
+      const decompressedContent = compressedContent
+        ? gunzipSync(compressedContent).toString('utf8')
+        : null
       return {
         ...b,
+        content: decompressedContent,
         contentType: 'blog',
         isResponse: b.reports.some(
           (r) => r.report.decision?.isResponse || false,
@@ -109,8 +125,13 @@ export class BlogService {
     const decisions = blog.reports
       .map((pr) => pr.report.decision?.action)
       .filter(Boolean)
+    const compressedContent = blog.content
+    const decompressedContent = compressedContent
+      ? gunzipSync(compressedContent).toString('utf8')
+      : null
     return {
       ...blog,
+      content: decompressedContent,
       isResponse: blog.reports.some(
         (r) => r.report.decision?.isResponse || false,
       ),
@@ -167,8 +188,13 @@ export class BlogService {
       const decisions = b.reports
         .map((pr) => pr.report.decision?.action)
         .filter(Boolean)
+      const compressedContent = b.content
+      const decompressedContent = compressedContent
+        ? gunzipSync(compressedContent).toString('utf8')
+        : null
       return {
         ...b,
+        content: decompressedContent,
         isResponse: b.reports.some(
           (r) => r.report.decision?.isResponse || false,
         ),
@@ -226,8 +252,13 @@ export class BlogService {
     if (decisions.includes('REQUEST_EDIT') && result.userId !== currentUserId) {
       throw new Error('BLOG_NOT_FOUND')
     }
+    const compressedContent = result.content
+    const decompressedContent = compressedContent
+      ? gunzipSync(compressedContent).toString('utf8')
+      : null
     return {
       ...result,
+      content: decompressedContent,
       isResponse: result.reports.some(
         (r) => r.report.decision?.isResponse || false,
       ),
@@ -265,11 +296,13 @@ export class BlogService {
       input.title = `${input.title} ${counter - 1}`
       slug = newSlug
     }
-
-    return await this.prisma.blog.create({
+    const decompressedContent = input.content
+    const compressed = gzipSync(Buffer.from(decompressedContent))
+    const create = await this.prisma.blog.create({
       data: {
         ...input,
         userId,
+        content: compressed,
         slug,
       },
       select: {
@@ -286,6 +319,12 @@ export class BlogService {
         User: true,
       },
     })
+
+    const returnBlog: Blog = {
+      ...create,
+      content: decompressedContent,
+    }
+    return returnBlog
   }
 
   async updateBlog(id: string, userId: string, input: UpdateBlogInput) {
@@ -320,10 +359,11 @@ export class BlogService {
         ),
       )
     }
-
-    return await this.prisma.blog.update({
+    const decompressedContent = input.content
+    const compressed = gzipSync(Buffer.from(decompressedContent))
+    const updateBlog = await this.prisma.blog.update({
       where: { id },
-      data: { ...input, slug },
+      data: { ...input, slug, content: compressed },
       select: {
         id: true,
         title: true,
@@ -338,6 +378,11 @@ export class BlogService {
         User: true,
       },
     })
+    const returnBlog: Blog = {
+      ...updateBlog,
+      content: decompressedContent,
+    }
+    return returnBlog
   }
 
   async deleteBlog(id: string, userId: string) {
@@ -369,7 +414,7 @@ export class BlogService {
     })
 
     //Delete blog
-    return await this.prisma.blog.delete({
+    const deleteBlog = await this.prisma.blog.delete({
       where: { id },
       select: {
         id: true,
@@ -385,5 +430,9 @@ export class BlogService {
         User: true,
       },
     })
+    return {
+      ...deleteBlog,
+      content: gunzipSync(deleteBlog.content).toString('utf8'),
+    }
   }
 }

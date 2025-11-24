@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { SearchInput } from './dto/search.input'
 import { Search } from './entities/search.entity'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { gunzipSync } from 'zlib'
 
 @Injectable()
 export class SearchService {
@@ -39,9 +40,20 @@ export class SearchService {
       },
     })
 
+    const decompressBlogContent = blogs.map((b) => {
+      const compressedContent = b.content
+      const decompressedContent = compressedContent
+        ? gunzipSync(compressedContent).toString('utf8')
+        : null
+      return {
+        ...b,
+        content: decompressedContent,
+      }
+    })
+
     return {
       users,
-      blogs,
+      blogs: decompressBlogContent,
     }
   }
 
@@ -78,10 +90,19 @@ export class SearchService {
       },
       take: 3,
     })
-
+    const decompressBlogContent = blogs.map((b) => {
+      const compressedContent = b.content
+      const decompressedContent = compressedContent
+        ? gunzipSync(compressedContent).toString('utf8')
+        : null
+      return {
+        ...b,
+        content: decompressedContent,
+      }
+    })
     return {
       users,
-      blogs,
+      blogs: decompressBlogContent,
     }
   }
 }
