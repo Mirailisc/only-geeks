@@ -37,6 +37,7 @@ query Feed($input: FeedInput!) {
         }
         description
         title
+        id
         thumbnail
         slug
         createdAt
@@ -74,6 +75,7 @@ query Feed($input: FeedInput!) {
         description
         createdAt
         date
+        id
         issuer
         User {
           email
