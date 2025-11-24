@@ -256,7 +256,7 @@ export class BlogService {
 
     // 3. Increment locally until we find a unique slug
     while (slugSet.has(newSlug)) {
-      newSlug = `${slug} ${counter}`
+      newSlug = `${slug}-${counter}`
       counter++
     }
 
