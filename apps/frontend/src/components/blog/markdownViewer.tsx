@@ -163,6 +163,9 @@ function processNode(node: any): string {
       style += format === "right" ? "text-align:right;" : ""
       style += format === "justify" ? "text-align:justify;" : ""
       style += format === "left" ? "text-align:left;" : ""
+      if(style === "color: #000000;background-color: #ffffff;"){
+        style = ""
+      }
       return `<${tag} id="${id}" style="${style}" class="scroll-mt-24"><a href="#${id}" class="no-underline hover:underline dark:text-white">${childrenHtml}</a></${tag}>`;
     }
 
@@ -180,12 +183,15 @@ function processNode(node: any): string {
       style += format === "right" ? "text-align:right;" : ""
       style += format === "justify" ? "text-align:justify;" : ""
       style += format === "left" ? "text-align:left;" : ""
+      if(style === "color: #000000;background-color: #ffffff;"){
+        style = ""
+      }
       return `<li style="${style}">${childrenHtml}</li>`;
     }
 
     /** QUOTE */
     case 'quote':
-      return `<blockquote>${childrenHtml}</blockquote>`;
+      return `<blockquote class="dark:text-white">${childrenHtml}</blockquote>`;
 
     /** HASHTAG */
     case 'hashtag': {
@@ -214,7 +220,7 @@ function processNode(node: any): string {
       style += format === "justify" ? "text-align:justify;" : ""
       style += format === "left" ? "text-align:left;" : ""
       if (node.format) {
-        if (node.format & 1) text = `<strong style="${style}">${text}</strong>`;
+        if (node.format & 1) text = `<strong style="${style}" class="dark:text-white">${text}</strong>`;
         if (node.format & 2) text = `<em style="${style}">${text}</em>`;
         if (node.format & 4) text = `<s style="${style}">${text}</s>`;
         if (node.format & 8) text = `<u style="${style}">${text}</u>`;
@@ -228,7 +234,7 @@ function processNode(node: any): string {
     /** LINKS */
     case 'link':
     case 'autolink':
-      return `<a href="${escapeHtml(node.url || '#')}" style="color:blue;" target="${node.target || '_blank'}">${childrenHtml}</a>`;
+      return `<a href="${escapeHtml(node.url || '#')}" class="dark:text-blue-400 text-blue-600" target="${node.target || '_blank'}">${childrenHtml}</a>`;
 
     /** LINE BREAK */
     case 'linebreak':
