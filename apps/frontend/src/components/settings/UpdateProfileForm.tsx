@@ -1,5 +1,5 @@
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
-import { Input } from '../ui/input'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import React, { useEffect } from 'react'
 import { toast } from 'sonner'
 import { useMutation } from '@apollo/client/react'
@@ -7,11 +7,12 @@ import { UPDATE_PROFILE_INFO_MUTATION, type Profile } from '@/graphql/profile'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
-import { Textarea } from '../ui/textarea'
-import { Button } from '../ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { Label } from '../ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Label } from '@/components/ui/label'
 import { UploadCloudIcon } from 'lucide-react'
+import { ME_QUERY } from '@/graphql/auth'
 
 type Props = {
   profile: Profile
@@ -97,6 +98,7 @@ export default function UpdateProfileForm({ profile, setProfile }: Props) {
       variables: {
         input: { ...values },
       },
+      refetchQueries: [ME_QUERY]
     })
 
     if (data) {

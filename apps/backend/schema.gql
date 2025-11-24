@@ -6,6 +6,20 @@ type Health {
   status: String!
 }
 
+type PreferenceEntity {
+  id: ID!
+  userId: String!
+  currentTheme: String!
+  isPublicProfile: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type User {
   id: String!
   username: String!
@@ -17,26 +31,28 @@ type User {
   location: String
   organization: String
   isAdmin: Boolean!
+  isActive: Boolean!
+  preference: PreferenceEntity
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type AuthUser {
-  firstName: String
-  username: String!
-  lastName: String
-  email: String!
-  isAdmin: Boolean!
-  picture: String
+type Project {
+  id: ID!
+  title: String!
+  description: String
+  link: String
+  photos: [String!]
+  requestEdit: Boolean
+  requestUnpublish: Boolean
+  isResponse: Boolean
+  startDate: DateTime
+  endDate: DateTime
+  User: User
 }
 
 type Blog {
-  id: String!
+  id: ID!
   userId: String!
   slug: String!
   title: String!
@@ -46,7 +62,151 @@ type Blog {
   isPublished: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  requestEdit: Boolean
+  requestUnpublish: Boolean
+  isResponse: Boolean
   User: User
+}
+
+type UserReport {
+  id: String!
+  reportId: String!
+  targetId: String!
+  target: User
+}
+
+type ProjectReport {
+  id: String!
+  reportId: String!
+  targetId: String!
+  target: Project
+}
+
+type BlogReport {
+  id: String!
+  reportId: String!
+  targetId: String!
+  target: Blog
+}
+
+type ModerationDecision {
+  id: ID!
+  adminId: String!
+  reportId: String!
+  action: ModerationAction!
+  isResponse: Boolean
+  note: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  admin: User
+  report: Report
+}
+
+enum ModerationAction {
+  NONE
+  REQUEST_EDIT
+  UNPUBLISH
+  DEACTIVATE
+  DELETE
+  RESOLVED
+}
+
+type ReportsCountSummary {
+  PENDING: Float!
+  UNDER_REVIEW: Float!
+  RESOLVED: Float!
+  REJECTED: Float!
+  REQUEST_EDIT: Float!
+  ALL: Float!
+}
+
+type Report {
+  id: String!
+  reporterId: String!
+  category: ReportCategory!
+  reason: String!
+  status: ReportStatus!
+  adminNote: String
+  targetType: TargetType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  reporter: User
+  decision: ModerationDecision
+  userReport: UserReport
+  blogReport: BlogReport
+  projectReport: ProjectReport
+}
+
+enum ReportCategory {
+  PLAGIARISM
+  VIOLENT_CONTENT
+  INAPPROPRIATE_CONTENT
+  MALWARE
+  INTELLECTUAL_PROPERTY_VIOLATION
+  MISINFORMATION
+  UNSAFE_FEATURES
+  DATA_MISUSE
+  SPAM
+  HARASSMENT
+  IMPERSONATION
+  INAPPROPRIATE_BEHAVIOR
+  SCAM
+  HATE_SPEECH
+  PRIVACY_VIOLATION
+  SEXUAL_HARASSMENT
+  THREATS
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  UNDER_REVIEW
+  RESOLVED
+  REJECTED
+  REQUEST_EDIT
+  ALL
+}
+
+enum TargetType {
+  USER
+  BLOG
+  PROJECT
+}
+
+type AuthUser {
+  firstName: String
+  username: String!
+  lastName: String
+  email: String!
+  isAdmin: Boolean!
+  picture: String
+  preferences: PreferenceEntity
+}
+
+type UserRestriction {
+  id: ID!
+  userId: String!
+  type: RestrictionType!
+  reason: String
+  expiresAt: DateTime
+  createdAt: DateTime!
+  user: User
+}
+
+enum RestrictionType {
+  TEMP_BAN
+  NO_POSTING
+}
+
+type AdminAuditLog {
+  id: ID!
+  adminId: String!
+  actionType: String!
+  targetType: String!
+  targetId: String
+  details: String
+  createdAt: DateTime!
+  admin: User
 }
 
 type Search {
@@ -61,17 +221,6 @@ type Education {
   fieldOfStudy: String
   startDate: DateTime
   endDate: DateTime
-}
-
-type Project {
-  id: ID!
-  title: String!
-  description: String
-  link: String
-  photos: [String!]
-  startDate: DateTime
-  endDate: DateTime
-  User: User
 }
 
 type Achievement {
@@ -94,7 +243,7 @@ type FeedResponse {
 union FeedItem = BlogFeed | ProjectFeed | AchievementFeed
 
 type BlogFeed {
-  id: String!
+  id: ID!
   userId: String!
   slug: String!
   title: String!
@@ -104,6 +253,9 @@ type BlogFeed {
   isPublished: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  requestEdit: Boolean
+  requestUnpublish: Boolean
+  isResponse: Boolean
   User: User
   contentType: String!
 }
@@ -114,6 +266,9 @@ type ProjectFeed {
   description: String
   link: String
   photos: [String!]
+  requestEdit: Boolean
+  requestUnpublish: Boolean
+  isResponse: Boolean
   startDate: DateTime
   endDate: DateTime
   User: User
@@ -137,8 +292,29 @@ type Query {
   getHealth: Health!
   getMyProfile: User!
   getProfileByUsername(username: String!): User!
+  searchUser(query: String!): [User!]!
   getGoogleOauthUrl(state: String!): String!
   me: AuthUser!
+  getAllModerationDecisions: [ModerationDecision!]!
+  getModerationDecisionByReportId(reportId: String!): ModerationDecision!
+  getAllUserRestrictions: [UserRestriction!]!
+  getUserRestrictionsByUserId(userId: String!): [UserRestriction!]!
+  getActiveUserRestrictions(userId: String!): [UserRestriction!]!
+  getAllDeactivatedUsers: [User!]!
+  getAllAuditLogs: [AdminAuditLog!]!
+  getAuditLogsByAdmin(adminId: String!): [AdminAuditLog!]!
+  getAuditLogsByTarget(targetType: String!, targetId: String!): [AdminAuditLog!]!
+  getAuditLogsByActionType(actionType: String!): [AdminAuditLog!]!
+  getRecentAuditLogs(limit: Float! = 50): [AdminAuditLog!]!
+  getMyReports: [Report!]!
+  getMyWarnings: [Report!]!
+  getAllReports: [Report!]!
+  getAllReportsByStatus(status: String!): [Report!]!
+  getAllReportByTargetType(targetType: String!): [Report!]!
+  findReportById(id: String!): Report!
+  countReportsByStatus: ReportsCountSummary!
+  hasReportedTarget(targetId: String!, targetType: String!): Boolean!
+  getRecentReports(limit: Float!): [Report!]!
   getBlogs: [Blog!]!
   getBlogBySlugAndUsername(slug: String!, username: String!): Blog!
   getBlogsByUsername(username: String!): [Blog!]!
@@ -182,6 +358,19 @@ type Mutation {
   login(input: LoginInput!): String!
   register(input: RegisterInput!): String!
   logout: Boolean!
+  createModerationDecision(input: CreateModerationDecisionInput!): ModerationDecision!
+  updateModerationDecision(id: String!, action: String!, note: String): ModerationDecision!
+  deleteModerationDecision(id: String!): ModerationDecision!
+  markModerationDecisionAsResponse(id: String!): ModerationDecision!
+  markModerationDecisionAsUnresponded(id: String!): ModerationDecision!
+  createUserRestriction(input: CreateUserRestrictionInput!): UserRestriction!
+  removeUserRestriction(id: String!): UserRestriction!
+  updateUserRestriction(id: String!, type: String, reason: String, expiresAt: DateTime): UserRestriction!
+  deactivateUser(userId: String!, reason: String!): User!
+  activateUser(userId: String!): User!
+  createReport(input: CreateReportInput!): Report!
+  updateReportStatus(id: String!, status: String!): Report!
+  deleteReport(id: String!): Report!
   createBlog(input: CreateBlogInput!): Blog!
   updateBlog(id: String!, input: UpdateBlogInput!): Blog!
   deleteBlog(id: String!): Blog!
@@ -194,6 +383,7 @@ type Mutation {
   addAchievement(input: CreateAchievementInput!): Achievement!
   updateAchievement(id: String!, input: UpdateAchievementInput!): Achievement!
   deleteAchievement(id: String!): Boolean!
+  updatePreference(input: PreferenceInput!): PreferenceEntity!
 }
 
 input UpdateUserInput {
@@ -217,6 +407,26 @@ input RegisterInput {
   firstName: String!
   lastName: String!
   password: String!
+}
+
+input CreateModerationDecisionInput {
+  reportId: String!
+  action: String!
+  note: String
+}
+
+input CreateUserRestrictionInput {
+  userId: String!
+  type: RestrictionType!
+  reason: String
+  expiresAt: DateTime
+}
+
+input CreateReportInput {
+  targetType: String!
+  targetId: String!
+  reason: String!
+  category: String!
 }
 
 input CreateBlogInput {
@@ -282,4 +492,9 @@ input UpdateAchievementInput {
   issuer: String
   date: DateTime
   photos: [String!]
+}
+
+input PreferenceInput {
+  currentTheme: String
+  isPublicProfile: Boolean
 }

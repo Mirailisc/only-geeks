@@ -3,6 +3,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import AuthNavbar from '@/components/utils/AuthNavbar'
+import Meta from '@/components/utils/metadata'
 import {
   CREATE_ACHIEVEMENT_MUTATION,
   GET_MY_ACHIEVEMENTS_QUERY,
@@ -113,8 +114,8 @@ function AchievementForm({ achievement, onSubmit, loading }: AchievementFormProp
         </Button>
       </div>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="rounded-md border border-black/10 p-4">
-        <h2 className="font-bold">Show off what you do</h2>
-        <p className="mb-6 text-muted-foreground">Share, show off what you do on the past.</p>
+        <h2 className="font-bold">Achievement</h2>
+        <p className="mb-6 text-muted-foreground">Share your achievement with others.</p>
         <div className="flex flex-col items-start gap-8 md:flex-row">
           <div className="flex flex-col items-center gap-4">
             <FormLabel>Certificate</FormLabel>
@@ -260,6 +261,13 @@ export default function CreateAchievementsPage() {
 
   return (
     <>
+      <Meta
+        title={editId ? 'Edit Achievement | Only Geeks' : 'Create Achievement | Only Geeks'}
+        description={editId ? 'Edit your achievement details on Only Geeks.' : 'Create a new achievement to showcase on Only Geeks.'}
+        keywords={editId ? 'edit achievement, only geeks' : 'create achievement, only geeks'}
+        image=""
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="container mx-auto mb-10 mt-4">
         <AchievementForm achievement={achievement} onSubmit={handleSubmit} loading={creating || updating} />

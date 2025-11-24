@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+import { PreferenceEntity } from 'src/preference/entities/preference.entity'
 
 @ObjectType()
 export class AuthUser {
@@ -19,4 +20,7 @@ export class AuthUser {
 
   @Field(() => String, { nullable: true })
   picture?: string
+
+  @Field(() => PreferenceEntity, { nullable: true })
+  preferences?: PreferenceEntity
 }

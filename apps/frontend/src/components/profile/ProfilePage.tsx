@@ -3,20 +3,26 @@ import { useQuery } from '@apollo/client/react'
 import { toast } from 'sonner'
 import AuthNavbar from '@/components/utils/AuthNavbar'
 import { GET_PROFILE_BY_USERNAME_QUERY, type Profile } from '@/graphql/profile'
-import { Loading, NotFound } from '@/components/utils/loading'
+import { Loading } from '@/components/utils/loading'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Building2Icon, MailIcon, MapPinIcon, type LucideIcon } from 'lucide-react'
+import { Building2Icon, HomeIcon, MailIcon, MapPinIcon, ShareIcon, UserX2Icon, type LucideIcon } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProfileBlog from '@/components/profile/ProfileBlog'
 import ProfileProjects from '@/components/profile/ProfileProject'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import ProfilePortfolio from './ProfilePortfolio'
+import { Button } from '@/components/ui/button'
+import Meta from '../utils/metadata'
+import ReportComponentWithButton from '../report/report'
+import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
+import { Link } from 'react-router-dom'
+import { FEED_PATH } from '@/constants/routes'
 
 function DisplayWithIcon({ icon, text }: { icon: LucideIcon; text: string }) {
   const Icon = icon
   return (
-    <div className="flex items-center gap-2 px-6 text-muted-foreground">
+    <div className="flex items-center gap-2 text-muted-foreground">
       <Icon />
       <span>{text}</span>
     </div>
@@ -45,15 +51,69 @@ export default function ProfilePage({ username }: ProfilePageProps) {
     }
   }, [data])
 
-  if (!username) return <NotFound text="Please provide a username." />
+  if (!username) return (
+    <>
+      <AuthNavbar />
+      <div className='flex min-h-[calc(100vh-80px)] items-center justify-center'>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <UserX2Icon />
+            </EmptyMedia>
+            <EmptyTitle>
+              No username provided
+            </EmptyTitle>
+          </EmptyHeader>
+          <EmptyContent>
+            <Link to={FEED_PATH}>
+            <Button>
+              <HomeIcon /> Back to Home
+            </Button>
+            </Link>
+          </EmptyContent>
+        </Empty>
+      </div>
+    </>
+  )
   if (!profile && !loading)
     return (
-      <NotFound text="User not found." description="The user you are looking for does not exist or has been removed." />
+      <>
+        <AuthNavbar />
+        <div className='flex min-h-[calc(100vh-80px)] items-center justify-center'>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <UserX2Icon />
+              </EmptyMedia>
+              <EmptyTitle>
+                User @{username} not found.
+              </EmptyTitle>
+              <EmptyDescription>
+                The user you are looking for does not exist or has been deactivated.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <Link to={FEED_PATH}>
+              <Button>
+                <HomeIcon /> Back to Home
+              </Button>
+              </Link>
+            </EmptyContent>
+          </Empty>
+        </div>
+      </>
     )
   if (loading) return <Loading />
 
   return (
     <>
+      <Meta
+        title={`${profile?.firstName || ''} ${profile?.lastName || ''} (@${profile?.username}) | Only Geeks`}
+        description={profile?.bio || `Check out ${profile?.firstName || ''}'s profile on Only Geeks.`}
+        keywords={`profile, ${profile?.username || ''}, only geeks`}
+        image={profile?.picture || ''}
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="container mx-auto mt-4 flex flex-col gap-6 xl:flex-row">
         <div className="h-max w-full flex-shrink-0 self-start xl:sticky xl:top-20 xl:w-[400px]">
@@ -69,8 +129,8 @@ export default function ProfilePage({ username }: ProfilePageProps) {
                   {profile?.lastName[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <div className="space-y-4">
-                <CardHeader>
+              <div className="space-y-4 pl-6">
+                <CardHeader className='pl-0'>
                   <CardTitle>
                     <h2 className="text-3xl font-bold">
                       {profile?.firstName} {profile?.lastName}
@@ -80,12 +140,31 @@ export default function ProfilePage({ username }: ProfilePageProps) {
                     <p className="text-lg">@{profile?.username}</p>
                   </CardDescription>
                 </CardHeader>
-                <div className="px-6">
+                <div>
                   <p className="text-muted-foreground">{profile?.bio}</p>
                 </div>
                 {profile?.location && <DisplayWithIcon icon={MapPinIcon} text={profile.location} />}
                 {profile?.organization && <DisplayWithIcon icon={Building2Icon} text={profile.organization} />}
                 {profile?.email && <DisplayWithIcon icon={MailIcon} text={profile.email} />}
+                <div className='flex flex-row gap-2'>
+                  <Button variant={"outline"} size={"sm"} onClick={()=>{
+                    const profileUrl = `${window.location.origin}/user/${profile?.username}`;
+                    navigator.clipboard.writeText(profileUrl);
+                    toast.success('Profile URL copied to clipboard!');
+                  }}>
+                    <ShareIcon /> Share Profile
+                  </Button>
+                  {
+                    profile && 
+                    <ReportComponentWithButton
+                      cybuttonname='report-user-button'
+                      type="USER"
+                      myUsername={myUser?.username || ""}
+                      user={profile}
+                      targetId={profile.id}
+                    />
+                  }
+                </div>
               </div>
             </CardContent>
           </Card>

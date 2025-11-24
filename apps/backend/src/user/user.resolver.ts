@@ -2,7 +2,11 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { UserService } from './user.service'
 import { User } from './entities/user.entity'
 import { UseGuards } from '@nestjs/common'
-import { GqlAuthGuard } from 'src/auth/guards/graphql-auth.guard'
+import {
+  AdminAuthGuard,
+  GqlAuthGuard,
+  GuestAuthGuard,
+} from 'src/auth/guards/graphql-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { UpdateUserInput } from './dto/update-user.input'
 
@@ -17,9 +21,18 @@ export class UserResolver {
   }
 
   @Query(() => User)
-  @UseGuards(GqlAuthGuard)
-  async getProfileByUsername(@Args('username') username: string) {
-    return await this.userService.findUserByUsername(username)
+  @UseGuards(GuestAuthGuard)
+  async getProfileByUsername(
+    @Args('username') username: string,
+    @CurrentUser() user: any,
+  ) {
+    return await this.userService.getUserProfileByUsername(username, user.id)
+  }
+
+  @Query(() => [User])
+  @UseGuards(AdminAuthGuard)
+  async searchUser(@Args('query') query: string) {
+    return await this.userService.searchQuery(query)
   }
 
   @Mutation(() => User)

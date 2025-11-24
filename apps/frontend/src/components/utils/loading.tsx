@@ -1,5 +1,5 @@
 import { Loader2Icon, TriangleAlertIcon } from 'lucide-react'
-import { Card, CardHeader, CardTitle, CardDescription } from '../ui/card'
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import AuthNavbar from './AuthNavbar'
 
 const Loading = () => {

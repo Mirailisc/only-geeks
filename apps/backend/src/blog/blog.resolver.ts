@@ -3,7 +3,10 @@ import { BlogService } from './blog.service'
 import { Blog } from './entities/blog.entity'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { UseGuards } from '@nestjs/common'
-import { GqlAuthGuard } from 'src/auth/guards/graphql-auth.guard'
+import {
+  GqlAuthGuard,
+  GuestAuthGuard,
+} from 'src/auth/guards/graphql-auth.guard'
 import { CreateBlogInput } from './dto/create-blog.input'
 import { UpdateBlogInput } from './dto/update-blog.input'
 
@@ -17,14 +20,21 @@ export class BlogResolver {
   }
 
   @Query(() => Blog)
+  @UseGuards(GuestAuthGuard)
   async getBlogBySlugAndUsername(
     @Args('slug') slug: string,
     @Args('username') username: string,
+    @CurrentUser() user: any,
   ) {
-    return await this.blogService.getBlogBySlugAndUsername(slug, username)
+    return await this.blogService.getBlogBySlugAndUsername(
+      slug,
+      username,
+      user.id,
+    )
   }
 
   @Query(() => [Blog])
+  @UseGuards(GuestAuthGuard)
   async getBlogsByUsername(@Args('username') username: string) {
     return await this.blogService.getBlogsByUsername(username)
   }
@@ -54,13 +64,14 @@ export class BlogResolver {
   async updateBlog(
     @Args('id') id: string,
     @Args('input') input: UpdateBlogInput,
+    @CurrentUser() user: any,
   ) {
-    return await this.blogService.updateBlog(id, input)
+    return await this.blogService.updateBlog(id, user.id, input)
   }
 
   @Mutation(() => Blog)
   @UseGuards(GqlAuthGuard)
-  async deleteBlog(@Args('id') id: string) {
-    return await this.blogService.deleteBlog(id)
+  async deleteBlog(@Args('id') id: string, @CurrentUser() user: any) {
+    return await this.blogService.deleteBlog(id, user.id)
   }
 }

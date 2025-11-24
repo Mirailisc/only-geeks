@@ -6,19 +6,68 @@ import { FeedInput, FeedType } from './dto/feed.input'
 export class FeedService {
   constructor(private prisma: PrismaService) {}
 
-  async search(input: FeedInput) {
+  async search(input: FeedInput, userId?: string) {
     const { limit, cursor, type } = input
     const cursorDate = cursor ? new Date(cursor) : undefined
-
-    // Helper to apply cursor filter
     const cursorFilter = cursorDate ? { createdAt: { lt: cursorDate } } : {}
 
-    // Fetch items per type
     const feedItems: any[] = []
 
+    // Helper for filtering by public/private profile
+    const profileFilter = {
+      OR: [
+        // Public profiles
+        {
+          User: {
+            isActive: true,
+            preference: {
+              is: {
+                isPublicProfile: true,
+              },
+            },
+          },
+        },
+        // No preference row → assume public
+        {
+          User: {
+            isActive: true,
+            preference: {
+              is: null,
+            },
+          },
+        },
+        // Owner can see their own content
+        ...(userId ? [{ userId }] : []),
+      ],
+    }
+    // PROJECTS
     if (type === FeedType.ALL || type === FeedType.PROJECT) {
       const projects = await this.prisma.project.findMany({
-        where: { ...cursorFilter },
+        where: {
+          ...cursorFilter,
+          ...profileFilter,
+          AND: [
+            {
+              OR: [
+                // Owner always sees their own projects
+                userId ? { userId } : {},
+
+                // Everyone else: hide projects with REQUEST_EDIT or UNPUBLISH reports
+                {
+                  reports: {
+                    none: {
+                      report: {
+                        decision: {
+                          action: { in: ['REQUEST_EDIT', 'UNPUBLISH'] },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        },
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
@@ -32,15 +81,66 @@ export class FeedService {
           createdAt: true,
           updatedAt: true,
           User: true,
+          reports: {
+            include: {
+              report: {
+                include: {
+                  decision: true,
+                },
+              },
+            },
+          },
         },
         take: limit,
       })
-      feedItems.push(...projects.map((p) => ({ ...p, contentType: 'project' })))
+
+      feedItems.push(
+        ...projects.map((p) => {
+          const decisions = p.reports
+            .map((pr) => pr.report.decision?.action)
+            .filter(Boolean)
+          return {
+            ...p,
+            contentType: 'project',
+            isResponse: p.reports.some(
+              (r) => r.report.decision?.isResponse || false,
+            ),
+            requestEdit: decisions.includes('REQUEST_EDIT'),
+            requestUnpublish: decisions.includes('UNPUBLISH'),
+          }
+        }),
+      )
     }
 
+    // BLOGS
     if (type === FeedType.ALL || type === FeedType.BLOG) {
       const blogs = await this.prisma.blog.findMany({
-        where: { isPublished: true, ...cursorFilter },
+        where: {
+          isPublished: true,
+          ...cursorFilter,
+          ...profileFilter,
+          AND: [
+            {
+              OR: [
+                // Owner always sees their own projects
+                userId ? { userId } : {},
+
+                // Everyone else: hide projects with REQUEST_EDIT or UNPUBLISH reports
+                {
+                  reports: {
+                    none: {
+                      report: {
+                        decision: {
+                          action: { in: ['REQUEST_EDIT', 'UNPUBLISH'] },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        },
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
@@ -54,15 +154,44 @@ export class FeedService {
           createdAt: true,
           updatedAt: true,
           User: true,
+          reports: {
+            include: {
+              report: {
+                include: {
+                  decision: true,
+                },
+              },
+            },
+          },
         },
         take: limit,
       })
-      feedItems.push(...blogs.map((b) => ({ ...b, contentType: 'blog' })))
+      // feedItems.push(...blogs.map((b) => ({ ...b, contentType: 'blog' })))
+      feedItems.push(
+        ...blogs.map((b) => {
+          const decisions = b.reports
+            .map((pr) => pr.report.decision?.action)
+            .filter(Boolean)
+          return {
+            ...b,
+            contentType: 'blog',
+            isResponse: b.reports.some(
+              (r) => r.report.decision?.isResponse || false,
+            ),
+            requestEdit: decisions.includes('REQUEST_EDIT'),
+            requestUnpublish: decisions.includes('UNPUBLISH'),
+          }
+        }),
+      )
     }
 
+    // ACHIEVEMENTS
     if (type === FeedType.ALL || type === FeedType.AWARD) {
       const achievements = await this.prisma.achievement.findMany({
-        where: { ...cursorFilter },
+        where: {
+          ...cursorFilter,
+          ...profileFilter,
+        },
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
@@ -83,45 +212,85 @@ export class FeedService {
       )
     }
 
-    // Sort all by createdAt desc
+    // Sort & paginate
     feedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-
-    // Slice to requested limit
     const items = feedItems.slice(0, limit)
-
-    // Determine next cursor (ISO string of the last item)
     const nextCursor =
       items.length > 0 ? items[items.length - 1].createdAt.toISOString() : null
 
-    const returnItem = {
-      items,
-      nextCursor,
-    }
-    return returnItem
+    return { items, nextCursor }
   }
-  async getCountNewItems(since: Date) {
+
+  async getCountNewItems(since: Date, userId?: string) {
+    const profileFilter = {
+      OR: [
+        { User: { preference: { is: { isPublicProfile: true } } } },
+        { User: { preference: { is: { isPublicProfile: undefined } } } },
+        ...(userId ? [{ userId }] : []),
+      ],
+    }
+
     const blogCount = await this.prisma.blog.count({
       where: {
         isPublished: true,
-        createdAt: {
-          gt: since,
-        },
+        createdAt: { gt: since },
+        ...profileFilter,
+        AND: [
+          {
+            OR: [
+              // Owner always sees their own projects
+              userId ? { userId } : {},
+
+              // Everyone else: hide projects with REQUEST_EDIT or UNPUBLISH reports
+              {
+                reports: {
+                  none: {
+                    report: {
+                      decision: {
+                        action: { in: ['REQUEST_EDIT', 'UNPUBLISH'] },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        ],
       },
     })
 
     const projectCount = await this.prisma.project.count({
       where: {
-        createdAt: {
-          gt: since,
-        },
+        createdAt: { gt: since },
+        ...profileFilter,
+        AND: [
+          {
+            OR: [
+              // Owner always sees their own projects
+              userId ? { userId } : {},
+
+              // Everyone else: hide projects with REQUEST_EDIT or UNPUBLISH reports
+              {
+                reports: {
+                  none: {
+                    report: {
+                      decision: {
+                        action: { in: ['REQUEST_EDIT', 'UNPUBLISH'] },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        ],
       },
     })
 
     const achievementCount = await this.prisma.achievement.count({
       where: {
-        createdAt: {
-          gt: since,
-        },
+        createdAt: { gt: since },
+        ...profileFilter,
       },
     })
 

@@ -1,7 +1,11 @@
-import { AfterAll, BeforeAll, Given, Then } from '@badeball/cypress-cucumber-preprocessor'
+import { AfterAll, BeforeAll, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 
 Given('I am logged in as {string}', (email: string) => {
   cy.login(email)
+})
+
+When('I navigate to {string} page', (page: string) => {
+  cy.visit(page)
 })
 
 Then('I click logout button', () => {
@@ -10,10 +14,17 @@ Then('I click logout button', () => {
 
 Then('I click button named {string}', (btn_name: string) => {
   cy.get(`[data-cy="${btn_name}"]`).click()
+  cy.wait(200)
 })
 
+Then('I click first button named {string}', (btn_name: string) => {
+  cy.get(`[data-cy="${btn_name}"]`).first().click()
+  cy.wait(200)
+})
+
+
 Then('I change input {string} value to {string}', (label: string, value: string) => {
-  cy.get(`[data-cy="input-${label}"]`).clear().type(value)
+  cy.get(`[data-cy="input-${label}"]`).clear().type(value, { delay: 50 })
 })
 
 Then('I change editor input {string} value to {string}', (label: string, value: string) => {

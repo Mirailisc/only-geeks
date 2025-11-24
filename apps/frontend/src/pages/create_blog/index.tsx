@@ -50,6 +50,7 @@ import { dateFormatter, extractMarkdownContent } from '@/lib/utils'
 import { Tabs, TabsContent, TabsTrigger } from '@/components/ui/tabs'
 import { TabsList } from '@radix-ui/react-tabs'
 import { useAppSelector } from '@/hooks/useAppSelector'
+import Meta from '@/components/utils/metadata'
 
 const CreateBlog = () => {
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -93,7 +94,7 @@ const CreateBlog = () => {
     const { firstImage, plainText } = extractMarkdownContent(debouncedMarkdown)
     return {
       thumbnail: firstImage,
-      description: plainText || null,
+      description: plainText.substring(0, 160) || null,
     }
   }, [debouncedMarkdown])
 
@@ -223,7 +224,7 @@ const CreateBlog = () => {
       console.log('Create blog response:', data)
       if (data?.createBlog) {
         setCurrentBlog(data.createBlog)
-        setBlogTitle('Untitled')
+        setBlogTitle(data?.createBlog.title)
         setCurrentMarkdown('')
         setShowBlogListDialog(false)
         setIsInitialLoad(false)
@@ -279,6 +280,13 @@ const CreateBlog = () => {
 
   return (
     <>
+      <Meta
+        title={editid ? 'Edit Blog | Only Geeks' : 'Create Blog | Only Geeks'}
+        description={editid ? 'Edit your blog post on Only Geeks.' : 'Create a new blog post to share on Only Geeks.'}
+        keywords={editid ? 'edit blog, only geeks' : 'create blog, only geeks'}
+        image=""
+        url={window.location.href}
+      />
       <AuthNavbar />
 
       {/* Blog List Dialog */}

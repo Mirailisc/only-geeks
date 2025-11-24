@@ -8,6 +8,10 @@ export const ME_QUERY = gql`
       firstName
       lastName
       isAdmin
+      preferences {
+        currentTheme
+        isPublicProfile
+      }
       picture
     }
   }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Calendar, Globe, Pencil, Trash2 } from 'lucide-react'
+import { Calendar, CodeIcon, Globe, Pencil, PlusIcon, Trash2 } from 'lucide-react'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useMutation, useQuery } from '@apollo/client/react'
@@ -10,11 +10,15 @@ import {
   GET_PROJECTS_BY_USERNAME_QUERY,
 } from '@/graphql/project'
 import { Link, useNavigate } from 'react-router-dom'
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
 import { CREATE_PROJECT_PATH } from '@/constants/routes'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
+import ReportComponentWithButton from '../report/report'
+import { Badge } from '../ui/badge'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 
 // Component for a single project card
-const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: boolean }) => {
+const ProjectCard = ({ project, isMyProfile, myUsername }: { project: Project; isMyProfile: boolean; myUsername: string }) => {
   const [deleteProjectById, { loading }] = useMutation<{ deleteProjectById: Project }>(DELETE_PROJECT_MUTATION, {
     refetchQueries: [{ query: GET_MY_PROJECTS_QUERY }],
   })
@@ -59,29 +63,71 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
       <Card className="mb-6 rounded-xl">
         <CardContent className="p-6 pb-0 pt-0">
           <div className="flex h-full flex-col items-stretch gap-6 md:flex-row">
-            {/* LEFT: Project Details */}
             <div className="flex flex-1 flex-col justify-between">
-              {/* Top Part */}
               <div>
                 <CardTitle className="mb-2 text-2xl font-bold leading-snug">{project.title}</CardTitle>
                 <p className="mb-4 text-base text-gray-600">{project.description}</p>
+                {
+                  project.requestEdit && isMyProfile && !project.isResponse && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="warning" className="mt-1">
+                          Admin request to edit this project
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>This project will be private until admin resolve your request.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                }
+                {
+                  project.requestUnpublish && isMyProfile && !project.isResponse && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="destructive" className="mt-1">
+                          Admin request to unpublish this project
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>This project will be private until admin resolve your request.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                }
+                {
+                  project.isResponse && isMyProfile && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="secondary" className="mt-1">
+                          This project already responded to admin request
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          Please wait for admin to review your changes. The project is private until then.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                }
               </div>
 
               {/* Bottom Actions */}
               <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
-                <a href={project.link ?? '#'} target="_blank" rel="noopener noreferrer">
                   <div className="flex space-x-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100"
-                      disabled={!project.link}
-                      data-cy="project-link-button"
-                    >
-                      <Globe className="mr-2 h-4 w-4" /> Link
-                    </Button>
+                    {project.link && <Link to={project.link} target='_blank' rel='noopener noreferrer'>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100"
+                        disabled={!project.link}
+                        data-cy="project-link-button"
+                      >
+                        <Globe className="mr-2 h-4 w-4" /> Link
+                      </Button>
+                    </Link>}
                   </div>
-                </a>
 
                 <span className="flex items-center text-sm text-gray-500">
                   {project.startDate && <Calendar className="mr-1.5 h-4 w-4 text-blue-500" />}
@@ -109,7 +155,7 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
               </div>
 
               {/* Edit/Delete Buttons */}
-              {isMyProfile && (
+              {isMyProfile ? (
                 <div className="flex justify-end space-x-2">
                   <Button
                     variant="outline"
@@ -136,6 +182,16 @@ const ProjectCard = ({ project, isMyProfile }: { project: Project; isMyProfile: 
                     <Trash2 className="mr-1 h-4 w-4" /> Delete
                   </Button>
                 </div>
+              ) : (
+                <div className="flex justify-end space-x-2">
+                  <ReportComponentWithButton
+                    type='PROJECT'
+                    cybuttonname='report-project-button'
+                    myUsername={myUsername ?? ''}
+                    user={project.User}
+                    targetId={project.id}
+                  />
+                </div>
               )}
             </div>
           </div>
@@ -160,7 +216,7 @@ const ProfileProjects = ({
       variables: {
         username: viewUsername,
       },
-      skip: !viewUsername || !myUsername,
+      skip: !viewUsername,
     },
   )
 
@@ -171,26 +227,60 @@ const ProfileProjects = ({
     }
   }, [data, error, myUsername, viewUsername])
 
-  if (!myUsername || !viewUsername) return null
+  if (!viewUsername) return null
 
   return (
     <div className="min-h-screen">
       <div className="w-full">
         {/* Projects Header and Action Button */}
         <div className="mb-8 flex items-center justify-between px-4 pt-6 sm:px-8">
-          <h1 className="text-3xl font-extrabold text-gray-900">Projects</h1>
-          <Link to={CREATE_PROJECT_PATH}>
-            <Button className="rounded-lg bg-gray-900 text-white shadow-md hover:bg-gray-700">
-              <span className="mr-2 text-xl">+</span> Add new
-            </Button>
-          </Link>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Projects</h1>
+          {
+            myUsername === viewUsername && (
+            <Link to={CREATE_PROJECT_PATH}>
+              <Button variant={"default"}>
+                <PlusIcon /> Add new
+              </Button>
+            </Link>
+            )
+          }
         </div>
 
         {/* List of Projects */}
         <div className="space-y-6 px-4 py-4 sm:px-8">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} isMyProfile={myUsername === viewUsername} />
-          ))}
+          {projects.length > 0 ? projects.map((project) => (
+            <ProjectCard 
+              key={project.id} 
+              project={project} 
+              isMyProfile={myUsername === viewUsername}
+              myUsername={myUsername ?? ''}
+            />
+          )) : (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <CodeIcon />
+                </EmptyMedia>
+                <EmptyTitle>No Projects yet</EmptyTitle>
+                <EmptyDescription>
+                  {
+                    myUsername === viewUsername
+                      ? 'You have not created any projects yet. Start sharing your knowledge and experiences with the world!'
+                      : 'This user has not created any projects yet.'
+                  }
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                {myUsername === viewUsername &&
+                  <Link to={CREATE_PROJECT_PATH}>
+                    <div className="flex gap-2">
+                      <Button variant={"default"}><PlusIcon /> Add new project</Button>
+                    </div>
+                  </Link>
+                }
+              </EmptyContent>
+            </Empty>
+          )}
         </div>
       </div>
     </div>

@@ -1,9 +1,11 @@
 import type { FeedAchievementType, FeedBlogType, FeedItemType, FeedProjectType } from "@/graphql/feed";
-import { Card, CardContent } from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AwardIcon, CalendarIcon, ExternalLinkIcon, FileTextIcon } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export const getInitialName = (firstName: string, lastName: string) => {
   return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
@@ -27,27 +29,29 @@ export const formatDate = (dateString: string) => {
   });
 }
 
-export const renderFeedProject = (item: FeedProjectType) => {
+const RenderFeedProject = ({item}: {item: FeedProjectType}) => {
   const user = item.User;
   if (!user) return null;
 
   return (
     <Card key={item.id} className="mb-4">
-      <CardContent className="p-6">
+      <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
-              <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
-            </Avatar>
-            <div>
-            <p className="font-semibold text-sm">
-              {user.firstName} {user.lastName}
-            </p>
-            <p className="text-xs text-muted-foreground">@{user.username}</p>
+          <Link to={`/user/${user.username}`}>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+              <p className="font-semibold text-sm">
+                {user.firstName} {user.lastName}
+              </p>
+              <p className="text-xs text-muted-foreground">@{user.username}</p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Badge variant="secondary" className="gap-1">
             <FileTextIcon className="h-3 w-3" />
             Project
@@ -97,6 +101,50 @@ export const renderFeedProject = (item: FeedProjectType) => {
               <span>View Project</span>
             </a>
             )}
+            {
+              item.requestEdit && !item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="warning" className="mt-1">
+                      Admin request to edit this project
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>This project will be private until admin resolve your request.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
+            {
+              item.requestUnpublish && !item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="destructive" className="mt-1">
+                      Admin request to unpublish this project
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>This project will be private until admin resolve your request.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
+            {
+              item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="secondary" className="mt-1">
+                      This project already responded to admin request
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      Please wait for admin to review your changes. The project is private until then.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
           </div>
         </div>
 
@@ -122,29 +170,31 @@ export const renderFeedProject = (item: FeedProjectType) => {
   );
 }
 
-  const renderFeedBlog = (item: FeedBlogType) => {
+const RenderFeedBlog = ({item}: {item: FeedBlogType}) => {
   const user = item.User;
   if (!user) return null;
 
   return (
     <Card key={item.id} className="mb-4">
-      <CardContent className="p-6">
+      <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
-              <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
-            </Avatar>
-            <div>
-            <p className="font-semibold text-sm">
-              {user.firstName} {user.lastName}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              @{user.username} · {item.createdAt && formatDate(item.createdAt)}
-            </p>
+          <Link to={`/user/${user.username}`}>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+              <p className="font-semibold text-sm">
+                {user.firstName} {user.lastName}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                @{user.username} · {item.createdAt && formatDate(item.createdAt)}
+              </p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Badge variant="secondary" className="gap-1">
             <FileTextIcon className="h-3 w-3" />
             Blog
@@ -166,12 +216,56 @@ export const renderFeedProject = (item: FeedProjectType) => {
           )}
           {item.slug && (
             <Button variant="link" className="p-0 h-auto" asChild>
-            <a href={`/blog/${item.slug}`}>
+            <Link to={`/blog/${item.User.username}/${item.slug}`}>
               Read more
               <ExternalLinkIcon className="h-3 w-3 ml-1" />
-            </a>
+            </Link>
             </Button>
           )}
+          {
+              item.requestEdit && !item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="warning" className="mt-1">
+                      Admin request to edit this project
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>This project will be private until admin resolve your request.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
+            {
+              item.requestUnpublish && !item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="destructive" className="mt-1">
+                      Admin request to unpublish this project
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>This project will be private until admin resolve your request.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
+            {
+              item.isResponse && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="secondary" className="mt-1">
+                      This project already responded to admin request
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      Please wait for admin to review your changes. The project is private until then.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+            }
         </div>
 
         {/* <Separator className="my-4" /> */}
@@ -200,29 +294,31 @@ export const renderFeedProject = (item: FeedProjectType) => {
   );
   };
 
-  const renderFeedAchievement = (item: FeedAchievementType) => {
+const RenderFeedAchievement = ({item}: {item: FeedAchievementType}) => {
   const user = item.User;
   if (!user) return null;
 
   return (
     <Card key={item.id} className="mb-4">
-      <CardContent className="p-6">
+      <CardContent>
         {/* User Info */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
-              <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold text-sm">
-                {user.firstName} {user.lastName}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                @{user.username} · {item.createdAt && formatDate(item.createdAt)}
-              </p>
+          <Link to={`/user/${user.username}`}>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{getInitialName(user.firstName || '', user.lastName || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-semibold text-sm">
+                  {user.firstName} {user.lastName}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  @{user.username} · {item.createdAt && formatDate(item.createdAt)}
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Badge variant="secondary" className="gap-1">
             <AwardIcon className="h-3 w-3" />
             Achievement
@@ -289,13 +385,13 @@ export const renderFeedProject = (item: FeedProjectType) => {
   );
 }
 
-export const renderFeedItem = (item: FeedItemType) => {
+export const RenderFeedItem = (item: FeedItemType) => {
   if (item.contentType === "project") {
-    return renderFeedProject(item as FeedProjectType);
+    return <RenderFeedProject item={item as FeedProjectType} />;
   } else if (item.contentType === "blog") {
-    return renderFeedBlog(item as FeedBlogType);
+    return <RenderFeedBlog item={item as FeedBlogType} />;
   } else if (item.contentType === "achievement") {
-    return renderFeedAchievement(item as FeedAchievementType);
+    return <RenderFeedAchievement item={item as FeedAchievementType} />;
   }
   return null;
 }

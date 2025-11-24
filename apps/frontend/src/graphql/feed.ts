@@ -37,11 +37,15 @@ query Feed($input: FeedInput!) {
         }
         description
         title
+        id
         thumbnail
         slug
         createdAt
         updatedAt
         contentType
+        requestUnpublish
+        requestEdit
+        isResponse
       }
       ... on ProjectFeed {
         photos
@@ -60,6 +64,9 @@ query Feed($input: FeedInput!) {
           lastName
         }
         contentType
+        requestEdit
+        requestUnpublish
+        isResponse
       }
       ... on AchievementFeed {
         updatedAt
@@ -68,6 +75,7 @@ query Feed($input: FeedInput!) {
         description
         createdAt
         date
+        id
         issuer
         User {
           email

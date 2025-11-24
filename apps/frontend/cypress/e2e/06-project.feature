@@ -21,7 +21,6 @@ Feature: Project management
         Then I click button named "projects-tab"
         Then I should see "testname"
         Then I should see "testDescription"
-        Then I should see button named "project-link-button" disabled
         Then I should see "Edit"
         Then I should see "Delete"
 

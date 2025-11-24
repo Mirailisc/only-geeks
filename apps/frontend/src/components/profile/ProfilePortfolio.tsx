@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Card, CardContent, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
+import { Card, CardContent, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Pencil, Trash2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '../ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
 import {
   GET_MY_EDUCATION_QUERY,
   GET_EDUCATION_BY_USERNAME_QUERY,
@@ -26,7 +26,7 @@ const EducationCard = ({ myUsername, viewUsername }: { myUsername?: string; view
     isMyProfile ? GET_MY_EDUCATION_QUERY : GET_EDUCATION_BY_USERNAME_QUERY,
     {
       variables: { username: viewUsername },
-      skip: !viewUsername || !myUsername,
+      skip: !viewUsername,
     },
   )
 
@@ -69,7 +69,7 @@ const EducationCard = ({ myUsername, viewUsername }: { myUsername?: string; view
                   variant="outline"
                   size="sm"
                   data-cy="add-education-button"
-                  className="mt-4 rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100"
+                  className="mt-4 rounded-lg border-gray-300 hover:bg-gray-100"
                 >
                   <span className="mr-2 text-xl">+</span> Add education
                 </Button>
@@ -176,7 +176,7 @@ const AchievementsCard = ({ myUsername, viewUsername }: { myUsername?: string; v
     getAchievementsByUsername?: AchievementType[]
   }>(isMyProfile ? GET_MY_ACHIEVEMENTS_QUERY : GET_ACHIEVEMENTS_BY_USERNAME_QUERY, {
     variables: { username: viewUsername },
-    skip: !viewUsername || !myUsername,
+    skip: !viewUsername,
   })
 
   useEffect(() => {
@@ -210,7 +210,7 @@ const AchievementsCard = ({ myUsername, viewUsername }: { myUsername?: string; v
                   variant="outline"
                   size="sm"
                   data-cy="add-achievement-button"
-                  className="mt-4 rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100"
+                  className="mt-4 rounded-lg border-gray-300"
                 >
                   <span className="mr-2 text-xl">+</span> Add achievement
                 </Button>
@@ -258,7 +258,7 @@ const AchievementsCard = ({ myUsername, viewUsername }: { myUsername?: string; v
             <h1 className="text-2xl font-bold leading-snug">Achievements</h1>
             {isMyProfile && (
               <Link to={CREATE_ACHIEVEMENT_PATH}>
-                <Button className="ml-4 rounded-lg bg-gray-900 text-white shadow-md hover:bg-gray-700">
+                <Button className="ml-4 rounded-lg shadow-md">
                   <span className="mr-2 text-xl">+</span> Add new
                 </Button>
               </Link>

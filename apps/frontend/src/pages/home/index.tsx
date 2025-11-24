@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import AuthNavbar from "@/components/utils/AuthNavbar";
 import { FEED_QUERY, FEED_NEW_COUNT_QUERY, type FeedResponse, type FeedItemType } from "@/graphql/feed";
 import { useLazyQuery } from "@apollo/client/react";
-import { renderFeedItem } from '@/components/utils/feedRenderer';
+import { RenderFeedItem } from '@/components/utils/feedRenderer';
+import Meta from '@/components/utils/metadata';
 
 const FeedHome = () => {
   const [getFeed, { data, loading, error, fetchMore }] = useLazyQuery<{ feed: FeedResponse }>(FEED_QUERY);
@@ -59,6 +60,7 @@ const FeedHome = () => {
 
         const count = result.data?.getNewFeedCount ?? 0;
         setNewItemCount(count);
+        setInitialLoadTime(new Date().toISOString().split('T')[0]);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         // console.error('Error checking for new content:', err);
@@ -139,6 +141,13 @@ const FeedHome = () => {
 
   return (
     <>
+      <Meta
+        title="Home | Only Geeks"
+        description="Stay updated with the latest posts from the Only Geeks community."
+        keywords="feed, only geeks, latest posts, community"
+        image=""
+        url={window.location.href}
+      />
       <AuthNavbar />
       <div className="min-h-screen bg-muted/30">
         <div className="container mx-auto px-4 py-6 max-w-2xl">
@@ -146,19 +155,21 @@ const FeedHome = () => {
           {newItemCount > 0 && (
             <Alert className="mb-4 border-primary bg-primary/5">
               <AlertCircle className="h-4 w-4 text-primary" />
-              <AlertDescription className="flex items-center justify-between">
-                <span>
-                  {newItemCount} new {newItemCount === 1 ? 'post' : 'posts'} available
-                </span>
-                <Button 
-                  size="sm" 
-                  onClick={handleRefresh}
-                  className="ml-4"
-                >
-                  <RefreshCw className="h-3 w-3 mr-1" />
-                  Load new posts
-                </Button>
-              </AlertDescription>
+              <div className="flex-1">
+                <AlertDescription className="flex items-center justify-between">
+                  <span>
+                    {newItemCount} new {newItemCount === 1 ? 'post' : 'posts'} available
+                  </span>
+                  <Button 
+                    size="sm" 
+                    onClick={handleRefresh}
+                    className="ml-4"
+                  >
+                    <RefreshCw className="h-3 w-3 mr-1" />
+                    Load new posts
+                  </Button>
+                </AlertDescription>
+              </div>
             </Alert>
           )}
 
@@ -171,25 +182,31 @@ const FeedHome = () => {
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Failed to load feed. Please try again later.
-              </AlertDescription>
+              <div className="flex-1">
+                <AlertDescription>
+                  Failed to load feed. Please try again later.
+                </AlertDescription>
+              </div>
             </Alert>
           )}
 
           {items.length > 0 && (
             <>
-              {items.map(renderFeedItem)}
+              {items.map((i) => {
+                return <RenderFeedItem {...i} key={"feed"+ i.id} />
+              })}
               
               {/* Infinite Scroll Trigger */}
-              <div ref={observerTarget} className="h-20 flex items-center justify-center">
+              <div ref={observerTarget} className="h-20 w-full flex items-center justify-center">
                 {loadingMore && (
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
                 )}
                 {!nextCursor && !loadingMore && items.length > 0 && (
-                  <p className="text-sm text-muted-foreground">
-                    You&lsquo;ve reached the end
-                  </p>
+                  <Card className="p-8 text-center w-full">
+                    <p className="text-sm text-muted-foreground">
+                      You&lsquo;ve reached the end
+                    </p>
+                  </Card>
                 )}
               </div>
             </>

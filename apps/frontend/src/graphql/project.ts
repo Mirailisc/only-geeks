@@ -3,10 +3,13 @@ import { gql } from '@apollo/client'
 import type { Profile } from "./profile"
 
 export interface Project {
-    User: Profile
+    User: Partial<Profile>
     contentType: string
     description: string
     endDate: string
+    isResponse?: boolean
+    requestEdit?: boolean
+    requestUnpublish?: boolean
     id: string
     link: string
     photos: string[]
@@ -26,6 +29,9 @@ export const GET_MY_PROJECTS_QUERY = gql`
       photos
       startDate
       endDate
+      isResponse
+      requestEdit
+      requestUnpublish
     }
   }
 `
@@ -40,6 +46,9 @@ export const GET_MY_PROJECTS_QUERY_EDITING = gql`
       photos
       startDate
       endDate
+      isResponse
+      requestEdit
+      requestUnpublish
     }
   }
 `
@@ -54,6 +63,13 @@ export const GET_PROJECTS_BY_USERNAME_QUERY = gql`
       photos
       startDate
       endDate
+      User {
+        username
+        lastName
+        firstName
+        email
+        picture
+      }
     }
   }
 `

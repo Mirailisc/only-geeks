@@ -22,6 +22,9 @@ export const SEARCH_QUERY = gql`
         id
         title
         userId
+        User {
+          username
+        }
         createdAt
         updatedAt
         slug

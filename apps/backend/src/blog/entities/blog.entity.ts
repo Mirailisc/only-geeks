@@ -1,9 +1,9 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Field, ID, ObjectType } from '@nestjs/graphql'
 import { User } from 'src/user/entities/user.entity'
 
 @ObjectType()
 export class Blog {
-  @Field(() => String)
+  @Field(() => ID)
   id: string
 
   @Field(() => String)
@@ -32,6 +32,15 @@ export class Blog {
 
   @Field(() => Date)
   updatedAt: Date
+
+  @Field(() => Boolean, { nullable: true })
+  requestEdit?: boolean
+
+  @Field(() => Boolean, { nullable: true })
+  requestUnpublish?: boolean
+
+  @Field(() => Boolean, { nullable: true })
+  isResponse?: boolean
 
   @Field(() => User, { nullable: true })
   User?: User
