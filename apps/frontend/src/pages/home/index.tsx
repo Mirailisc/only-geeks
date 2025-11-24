@@ -16,7 +16,7 @@ const FeedHome = () => {
   const [nextCursor, setNextCursor] = useState<string | null | undefined>(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [newItemCount, setNewItemCount] = useState(0);
-  const [initialLoadTime, setInitialLoadTime] = useState<string | null>(null);
+  const initialLoadTimeRef = useRef<string | null>(null);
   const observerTarget = useRef(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -34,7 +34,7 @@ const FeedHome = () => {
   useEffect(() => {
     loadFeed();
     // Set initial load time for polling
-    setInitialLoadTime(new Date().toISOString().split('T')[0]);
+    initialLoadTimeRef.current = new Date().toISOString();
   }, [loadFeed]);
 
   useEffect(() => {
@@ -46,21 +46,20 @@ const FeedHome = () => {
 
   // Polling for new content
   useEffect(() => {
-    if (!initialLoadTime) return;
-
     const checkForNewContent = async () => {
+      if (!initialLoadTimeRef.current) return;
+
       try {
         const result = await getNewCount({
           variables: {
             input: {
-              since: initialLoadTime
+              since: initialLoadTimeRef.current
             }
           }
         });
 
         const count = result.data?.getNewFeedCount ?? 0;
         setNewItemCount(count);
-        setInitialLoadTime(new Date().toISOString().split('T')[0]);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         // console.error('Error checking for new content:', err);
@@ -78,11 +77,11 @@ const FeedHome = () => {
         clearInterval(pollingIntervalRef.current);
       }
     };
-  }, [initialLoadTime, getNewCount]);
+  }, [getNewCount]); // Only depend on getNewCount, not initialLoadTime
 
   const handleRefresh = useCallback(() => {
     setNewItemCount(0);
-    setInitialLoadTime(new Date().toISOString().split('T')[0]);
+    initialLoadTimeRef.current = new Date().toISOString();
     loadFeed();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [loadFeed]);
