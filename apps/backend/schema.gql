@@ -52,7 +52,7 @@ type Project {
 }
 
 type Blog {
-  id: String!
+  id: ID!
   userId: String!
   slug: String!
   title: String!
@@ -224,7 +224,7 @@ type Education {
 }
 
 type Achievement {
-  id: String!
+  id: ID!
   title: String!
   description: String
   issuer: String
@@ -243,7 +243,7 @@ type FeedResponse {
 union FeedItem = BlogFeed | ProjectFeed | AchievementFeed
 
 type BlogFeed {
-  id: String!
+  id: ID!
   userId: String!
   slug: String!
   title: String!
@@ -276,7 +276,7 @@ type ProjectFeed {
 }
 
 type AchievementFeed {
-  id: String!
+  id: ID!
   title: String!
   description: String
   issuer: String

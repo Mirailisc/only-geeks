@@ -1,9 +1,9 @@
-import { ObjectType, Field } from '@nestjs/graphql'
+import { ObjectType, Field, ID } from '@nestjs/graphql'
 import { User } from 'src/user/entities/user.entity'
 
 @ObjectType()
 export class Achievement {
-  @Field(() => String)
+  @Field(() => ID)
   id: string
 
   @Field()
