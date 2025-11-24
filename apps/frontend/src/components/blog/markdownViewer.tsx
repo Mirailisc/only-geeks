@@ -115,13 +115,13 @@ function processNode(node: any): string {
     case 'paragraph': {
       let style = node.textStyle || "";
       const format = node.format || 0;
-
+      const indent = node.indent || 0;
       // append text alignment from format to style
       style += format === "center" ? "text-align:center;" : "";
       style += format === "right" ? "text-align:right;" : "";
       style += format === "justify" ? "text-align:justify;" : "";
       style += format === "left" ? "text-align:left;" : "";
-
+      style += `margin-left: ${indent * 35}px`;
       // --- SINGLE-SPAN CHECK ---
       let out = childrenHtml;
 
