@@ -260,9 +260,11 @@ export class BlogService {
       counter++
     }
 
-    // 4. Update title and slug
-    input.title = `${input.title} ${counter - 1}` // optional, match your original logic
-    slug = newSlug
+    // 4. Update title and slug if it not the first untitled blog
+    if (counter - 1 !== 0) {
+      input.title = `${input.title} ${counter - 1}` // optional, match your original logic
+      slug = newSlug
+    }
 
     return await this.prisma.blog.create({
       data: {
