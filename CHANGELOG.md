@@ -1,5 +1,44 @@
 # Changelog
 
+## [1.1.0](https://github.com/Mirailisc/only-geeks/compare/v1.0.0...v1.1.0) (2025-11-24)
+
+
+### Features
+
+* blog CRUD test, failed login test, admin dashboard access test ([c727841](https://github.com/Mirailisc/only-geeks/commit/c727841a81468ea14873d3bb0d2f1c325daa3a21))
+* e2e test feed ([66ade2b](https://github.com/Mirailisc/only-geeks/commit/66ade2b786fe39e76e93cec25df0c33bf9c255c2))
+* e2e test report management ([3b72257](https://github.com/Mirailisc/only-geeks/commit/3b72257f98f7b0c1ade797b538518457e93462d1))
+* moderation, report, report management ([#55](https://github.com/Mirailisc/only-geeks/issues/55)) ([414195f](https://github.com/Mirailisc/only-geeks/commit/414195fdee81040a5cb47043b2e9bf7604a7b7e9))
+* preference & settings ([#50](https://github.com/Mirailisc/only-geeks/issues/50)) ([d8a94f9](https://github.com/Mirailisc/only-geeks/commit/d8a94f99c16eafa69e3acc081bd15a96653f0315))
+* press ctrl+k to focus ([#56](https://github.com/Mirailisc/only-geeks/issues/56)) ([2ff2771](https://github.com/Mirailisc/only-geeks/commit/2ff2771284b5e2ad59c118f2ed113c98a4ea49a3))
+* report creation test scenario for user, project and blog ([ae35853](https://github.com/Mirailisc/only-geeks/commit/ae358536c0472f4a3b1e728ab14a05b2e365ea78))
+
+
+### Bug Fixes
+
+* add missing 'id' field to BlogFeed and AchievementFeed in FEED_QUERY ([299a8b9](https://github.com/Mirailisc/only-geeks/commit/299a8b909bd0b63a2438dab069751680c1a2c8ed))
+* blog privacy on private mode ([#51](https://github.com/Mirailisc/only-geeks/issues/51)) ([bc3f871](https://github.com/Mirailisc/only-geeks/commit/bc3f871d4e3df8b57a61af092b95b7eab1c0c3bc))
+* blog viewing in guest mode, add metadata ([#52](https://github.com/Mirailisc/only-geeks/issues/52)) ([7d45dec](https://github.com/Mirailisc/only-geeks/commit/7d45dec15b9061cf1f2b69220532ebafd99a1d0a))
+* cannot create blog with the same name untitled ([a8dfca3](https://github.com/Mirailisc/only-geeks/commit/a8dfca376d758db3744d6af0aad3f81927a8b2da))
+* cleanup state when update decision ([ffdaab3](https://github.com/Mirailisc/only-geeks/commit/ffdaab3d09b4b4b9d1cbe6f50a01d87090b72c57))
+* cypress AfterAll cleanup report, decisionModeration, and related cotnent ([01eb5d8](https://github.com/Mirailisc/only-geeks/commit/01eb5d8b58df790139f269962642c55a04dd6f10))
+* cypress e2e cleanup and test sequence ([#54](https://github.com/Mirailisc/only-geeks/issues/54)) ([0df0917](https://github.com/Mirailisc/only-geeks/commit/0df09172ea9f8895e9c0b2811fbfca9c9028305d))
+* feed not change time to load new item ([04cb242](https://github.com/Mirailisc/only-geeks/commit/04cb2423fefdaf3c5a37a9ac991a50b51eb97cd5))
+* feed test scenario is share state. ([c5ee74e](https://github.com/Mirailisc/only-geeks/commit/c5ee74e77f7b3062555ee44b46a5edeeb621361d))
+* font color in darkmode markdown ([c48add4](https://github.com/Mirailisc/only-geeks/commit/c48add47fdeffb4388bd9eb503b9df79a188e728))
+* id type is mismatch ([be4f698](https://github.com/Mirailisc/only-geeks/commit/be4f698167568d4b143dcc50b0123cec6ceab3a1))
+* remove decision when report status change to rejected ([09203ec](https://github.com/Mirailisc/only-geeks/commit/09203ec25f5b77b2c0a6669c91eb2bb0a5c99c14))
+* report cleanup before delete blog (updated) ([2d328c5](https://github.com/Mirailisc/only-geeks/commit/2d328c57d6ab7a6662710d5e08e9f1b68c3f9b9e))
+* report cleanup before delete project and blog ([164babb](https://github.com/Mirailisc/only-geeks/commit/164babbfb3b70331bf59c69faf430e326614956a))
+* request_edited report not showing in my warning page ([3e3be0b](https://github.com/Mirailisc/only-geeks/commit/3e3be0b1b58c9a278f62a2e07428a637b0c808e0))
+* search blog no link to read ([bd8f1ad](https://github.com/Mirailisc/only-geeks/commit/bd8f1adad7a55e4a92ed3bd925c896f3493525d2))
+* set default DBNAME in docker-compose ([1feea90](https://github.com/Mirailisc/only-geeks/commit/1feea9019b41de78b1e02ba285b67594fb6d7cce))
+* slug is not replace blank with hyphen ([654e723](https://github.com/Mirailisc/only-geeks/commit/654e723bb6f20e5c94989afa4fd22a3aa171502f))
+* update title and slug counter handling for untitled blogs ([1bbc13a](https://github.com/Mirailisc/only-geeks/commit/1bbc13aadab83b52ddc9fc0f7da0c77ca43d56c1))
+* update title handling for untitled blogs to maintain original logic ([0237a0f](https://github.com/Mirailisc/only-geeks/commit/0237a0f7d9b8d3381f6356425ccce19afd0c16fc))
+* wait password for password compare ([75ba8e1](https://github.com/Mirailisc/only-geeks/commit/75ba8e10fdf3a87367a990cc34f6267e6bf0ba0f))
+* wrong graphql type ([4ebb821](https://github.com/Mirailisc/only-geeks/commit/4ebb82151a2abef9d594593064bb1cd30ac718f0))
+
 ## 1.0.0 (2025-11-04)
 
 
