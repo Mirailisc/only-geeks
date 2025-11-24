@@ -262,7 +262,7 @@ export class BlogService {
 
     // 4. Update title and slug if it not the first untitled blog
     if (counter - 1 !== 0) {
-      input.title = `${input.title} ${counter - 1}` // optional, match your original logic
+      input.title = `${input.title} ${counter - 1}`
       slug = newSlug
     }
 
