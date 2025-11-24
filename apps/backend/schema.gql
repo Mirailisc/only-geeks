@@ -224,7 +224,7 @@ type Education {
 }
 
 type Achievement {
-  id: ID!
+  id: String!
   title: String!
   description: String
   issuer: String
@@ -276,7 +276,7 @@ type ProjectFeed {
 }
 
 type AchievementFeed {
-  id: ID!
+  id: String!
   title: String!
   description: String
   issuer: String
