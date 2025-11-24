@@ -105,7 +105,7 @@ import { TWEET } from "@/components/editor/transformers/markdown-tweet-transform
 import { Separator } from "@/components/ui/separator"
 
 const placeholder = "Press / for commands..."
-const maxLength = 500
+const maxLength = 5000
 
 // eslint-disable-next-line no-empty-pattern
 export function Plugins({}) {
@@ -128,7 +128,7 @@ export function Plugins({}) {
             <Separator orientation="vertical" className="!h-7" />
             <BlockFormatDropDown>
               <FormatParagraph />
-              <FormatHeading levels={["h1", "h2", "h3"]} />
+              <FormatHeading levels={["h1", "h2", "h3", "h4", "h5", "h6"]} />
               <FormatNumberedList />
               <FormatBulletedList />
               <FormatCheckList />
@@ -232,6 +232,9 @@ export function Plugins({}) {
             HeadingPickerPlugin({ n: 1 }),
             HeadingPickerPlugin({ n: 2 }),
             HeadingPickerPlugin({ n: 3 }),
+            HeadingPickerPlugin({ n: 4 }),
+            HeadingPickerPlugin({ n: 5 }),
+            HeadingPickerPlugin({ n: 6 }),
             TablePickerPlugin(),
             CheckListPickerPlugin(),
             NumberedListPickerPlugin(),

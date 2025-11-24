@@ -53,7 +53,45 @@ export default {
           4: 'hsl(var(--chart-4))',
           5: 'hsl(var(--chart-5))',
         },
-      }
+      },
+      typography: (theme) => ({
+        'no-backticks': {
+          css: {
+            // Apply only to inline code (not fenced)
+            'p > code, li > code': {
+              backgroundColor: 'hsl(var(--secondary))',
+              padding: '0.2em 0.4em',
+              borderRadius: '0.25rem',
+              fontWeight: '900',
+            },
+            'p > code::before, li > code::before': {
+              content: '""',
+            },
+            'p > code::after, li > code::after': {
+              content: '""',
+            },
+          },
+        },
+        'no-m': {
+          css: {
+            'hr':{
+              marginTop: "1rem",
+              marginBottom: "1rem",
+            },
+            'h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote': {
+              marginTop: 0,
+              marginBottom: 0,
+            },
+            // Optional: remove list spacing
+            'ul, ol': {
+              paddingLeft: theme('spacing.5'),
+            },
+            'li + li': {
+              marginTop: 0,
+            },
+          },
+        },
+      }),
     },
   },
   plugins: [animate, typography],
