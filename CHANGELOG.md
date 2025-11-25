@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.2.0](https://github.com/Mirailisc/only-geeks/compare/v1.1.0...v1.2.0) (2025-11-25)
+
+
+### Features
+
+* **backend:** blog CRUD handler for lexical ([2d2abfc](https://github.com/Mirailisc/only-geeks/commit/2d2abfce9f1677c1db701dc5c576143448bf89eb))
+* **frontend:** blog lexical support ([e0c57fb](https://github.com/Mirailisc/only-geeks/commit/e0c57fb666f699a250d86feeb4fb856d1b2c80ef))
+* Lexical Editor & Reader ([8cf6927](https://github.com/Mirailisc/only-geeks/commit/8cf692709658088bcd54f881ec20b54c94f7af79))
+* lexical editor and reader ([439bc7e](https://github.com/Mirailisc/only-geeks/commit/439bc7e3df882bb89fc35bf65fd9beefee9aadfd))
+* lexical processing (temporary) ([66a9a50](https://github.com/Mirailisc/only-geeks/commit/66a9a50e8870a82425b929d7bdd8c8e249c2eeeb))
+* lexical reader ([481cb9c](https://github.com/Mirailisc/only-geeks/commit/481cb9c5865f12623abf87049988aff71575d202))
+
+
+### Bug Fixes
+
+* add indent to paragraph ([c61f9e7](https://github.com/Mirailisc/only-geeks/commit/c61f9e7e9d8bd7ea583927112e14218fa5e1708d))
+* cypress click too early before component mount ([31cc289](https://github.com/Mirailisc/only-geeks/commit/31cc289a0365b2231ef55debc0b041766d70f35e))
+* dark theme conflict, lexical processing ([058b4d0](https://github.com/Mirailisc/only-geeks/commit/058b4d0bbe1e6ae983924f3d552a9302de615c15))
+* darkmode text background light ([9e21cdb](https://github.com/Mirailisc/only-geeks/commit/9e21cdb35d12e801bc7d6f5868e3fcb2b6099a94))
+* feed check new item with only date not datetime ([dc99783](https://github.com/Mirailisc/only-geeks/commit/dc997838038595b012bb87dcb88f21eca570b1b3))
+* show session expired even not login ([bae8074](https://github.com/Mirailisc/only-geeks/commit/bae807454fa3e8841b9a9efcfe32df789845f1c6))
+
 ## [1.1.0](https://github.com/Mirailisc/only-geeks/compare/v1.0.0...v1.1.0) (2025-11-24)
 
 
