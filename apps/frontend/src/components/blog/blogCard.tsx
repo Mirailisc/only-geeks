@@ -146,7 +146,7 @@ const BlogCard = ({
                   </Badge>
                 )}
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground hidden">
                 {description.length > 50 ? description.slice(0, 50) + '...' : description}
               </div>
             </div>

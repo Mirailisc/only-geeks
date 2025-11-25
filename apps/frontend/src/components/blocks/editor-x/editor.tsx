@@ -16,7 +16,6 @@ import type { Blog } from '@/graphql/blog'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { useEffect } from 'react'
 import {
-  $convertFromMarkdownString,
   $convertToMarkdownString,
   CHECK_LIST,
   ELEMENT_TRANSFORMERS,
@@ -38,15 +37,15 @@ const editorConfig: InitialConfigType = {
 const BlogEditorManager = ({
   setCurrentMarkdown,
   debouncedEditorState,
-  blogToLoad, // Blog object to load when component mounts or a new one is selected
+  blogToLoad,
 }: {
   blogToLoad: Blog | null
   setCurrentMarkdown: React.Dispatch<React.SetStateAction<string>>
   debouncedEditorState: EditorState | null
 }) => {
-  const [editor] = useLexicalComposerContext() // ✅ This is now INSIDE the LexicalComposer
+  const [editor] = useLexicalComposerContext()
 
-  // Convert editor state to markdown (MOVED from CreateBlog)
+  // Convert editor state to markdown
   useEffect(() => {
     if (!debouncedEditorState) return
 
@@ -70,7 +69,6 @@ const BlogEditorManager = ({
           rootNode,
           true,
         )
-        // Pass the markdown up to CreateBlog's state
         setCurrentMarkdown(markdown)
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -79,33 +77,23 @@ const BlogEditorManager = ({
     })
   }, [debouncedEditorState, setCurrentMarkdown])
 
-  // Effect to load content when a blog is selected (MOVED and adjusted)
+  // Load blog content from stringified Lexical state
   useEffect(() => {
-    if (blogToLoad) {
-      editor.update(() => {
-        const markdownString = blogToLoad.content || ''
-        $convertFromMarkdownString(markdownString, [
-          TABLE,
-          HR,
-          IMAGE,
-          EMOJI,
-          TWEET,
-          YOUTUBE,
-          CHECK_LIST,
-          ...ELEMENT_TRANSFORMERS,
-          ...MULTILINE_ELEMENT_TRANSFORMERS,
-          ...TEXT_FORMAT_TRANSFORMERS,
-        ])
-      })
-      // Important: Only run once per selection, so update the dependency array if needed,
-      // or handle the 'blogToLoad' state transition in CreateBlog.
+    if (blogToLoad?.content) {
+      try {
+        // Parse the stringified Lexical editor state
+        const editorState = editor.parseEditorState(blogToLoad.content)
+        
+        // Set it as the current editor state
+        editor.setEditorState(editorState)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error loading blog content:', error)
+      }
     }
   }, [blogToLoad, editor])
 
-  // Since you moved handleSelectBlog's editor logic:
-  // Now handleSelectBlog in CreateBlog can just update 'blogToLoad' state.
-
-  return null // This component just manages state and effects, no UI needed
+  return null
 }
 
 export function Editor({
