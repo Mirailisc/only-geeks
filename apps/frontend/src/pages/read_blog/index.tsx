@@ -1,5 +1,5 @@
 import BlogCard from '@/components/blog/blogCard'
-import MarkdownViewer from '@/components/blog/markdownViewer'
+import LexicalViewer from '@/components/blog/lexicalViewer'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import AuthNavbar from '@/components/utils/AuthNavbar'
@@ -81,7 +81,7 @@ const ReadBlog = () => {
           requestEdit={data?.getBlogBySlugAndUsername.requestEdit || false}
           isResponse={data?.getBlogBySlugAndUsername.isResponse || false}
         />
-        <MarkdownViewer content={data?.getBlogBySlugAndUsername.content || ''} />
+        <LexicalViewer content={data?.getBlogBySlugAndUsername.content || ''} />
       </div>
     </>
   )

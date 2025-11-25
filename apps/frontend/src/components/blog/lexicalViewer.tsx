@@ -97,14 +97,14 @@ function lexicalToHtml(editorState: any): string {
   if (!editorState?.root) return ''
   // eslint-disable-next-line no-console
   console.log('Lexical Editor State:', editorState.root)
-  return processNode(editorState.root)
+  return processNode(editorState.root, "")
 }
 
-function processNode(node: any): string {
+function processNode(node: any, listParentType: string): string {
   if (!node) return '';
 
   const children = node.children || [];
-  const childrenHtml = children.map((child: any) => processNode(child)).join('');
+  const childrenHtml = children.map((child: any) => processNode(child, node.listType || "")).join('');
 
   switch (node.type) {
     /** ROOT */
@@ -166,14 +166,28 @@ function processNode(node: any): string {
       if(style === "color: #000000;background-color: #ffffff;"){
         style = ""
       }
+      // add font size to every heading based on tag
+      style += tag === "h1" ? "font-size:2.25rem;" : ""
+      style += tag === "h2" ? "font-size:1.875rem;" : ""
+      style += tag === "h3" ? "font-size:1.5rem;" : ""
+      style += tag === "h4" ? "font-size:1.25rem;" : ""
+      style += tag === "h5" ? "font-size:1.125rem;" : ""
+      style += tag === "h6" ? "font-size:1rem;" : ""
       return `<${tag} id="${id}" style="${style}" class="scroll-mt-24"><a href="#${id}" class="no-underline hover:underline dark:text-white">${childrenHtml}</a></${tag}>`;
     }
 
     /** LISTS */
-    case 'list': {
-      const tag = node.listType === 'number' ? 'ol' : 'ul';
-      return `<${tag}>${childrenHtml}</${tag}>`;
-    }
+      case 'list': {
+        const listTagMap: Record<string, string> = {
+          number: 'ol',
+          check: 'div',
+          bullet: 'ul'
+        };
+
+        const key = String(node.listType);
+        const tag = listTagMap[key] || 'ul';
+        return `<${tag}>${childrenHtml}</${tag}>`;
+      }
 
     case 'listitem':{
       let style = node.textStyle || ""
@@ -186,12 +200,15 @@ function processNode(node: any): string {
       if(style === "color: #000000;background-color: #ffffff;"){
         style = ""
       }
-      return `<li style="${style}">${childrenHtml}</li>`;
+      return `<${listParentType === "check" ? "div" : "li"} style="${style}">
+        ${listParentType === "check" ? `<input type="checkbox" disabled ${node.checked ? "checked" : ""} id="" name="" value="">` : ""}
+        ${childrenHtml}
+        </${listParentType === "check" ? "div" : "li"}>`;
     }
 
     /** QUOTE */
     case 'quote':
-      return `<blockquote class="dark:text-white">${childrenHtml}</blockquote>`;
+      return `<blockquote class="dark:text-white font-serif">${childrenHtml}</blockquote>`;
 
     /** HASHTAG */
     case 'hashtag': {
@@ -241,8 +258,10 @@ function processNode(node: any): string {
       return '<br>';
 
     /** IMAGES */
-    case 'image':
-      return `<img src="${escapeHtml(node.src || '')}" alt="${escapeHtml(node.altText || '')}" />`;
+    case 'image':{
+      const styleWidth = node.maxWidth ? `max-width:${node.maxWidth}px;width:${node.maxWidth}px;` : ''
+      return `<div class="flex flex-row justify-center items-center"><img style="${styleWidth}" src="${escapeHtml(node.src || '')}" alt="${escapeHtml(node.altText || '')}" /></div>`;
+    }
 
     /** HORIZONTAL RULE */
     case 'horizontalrule':
