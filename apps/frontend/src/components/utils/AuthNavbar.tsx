@@ -48,7 +48,6 @@ export default function AuthNavbar() {
             </div>
             <div className="flex flex-col">
               <h1 className="text-xl font-bold">Only Geeks</h1>
-              <span className="text-sm">Level up your knowledge</span>
             </div>
           </div>
         </Link>

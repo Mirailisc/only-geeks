@@ -24,12 +24,14 @@ export default function Boot() {
   const [logoutMutation] = useMutation(LOGOUT_MUTATION)
 
   useEffect(() => {
-    const handleLogout = async () => {
+    const handleLogout = async (showToast = false) => {
       try {
         await logoutMutation()
       } finally {
         dispatch(clearUser())
-        toast.error('Session expired. Please log in again.')
+        if (showToast) {
+          toast.error('Session expired. Please log in again.')
+        }
       }
     }
 
@@ -44,7 +46,7 @@ export default function Boot() {
         }
         dispatch(setUser({ user: data.me, accessToken: '' }))
       } else {
-        handleLogout()
+        handleLogout(false)
       }
       setLoading(false)
     }
@@ -52,8 +54,16 @@ export default function Boot() {
 
   useEffect(() => {
     if (error) {
-      toast.error(error.message)
       setLoading(false)
+      
+      // Check if the error is NO_ACCESS_TOKEN
+      const isNoAccessToken = error.message.includes('NO_ACCESS_TOKEN')
+      
+      // Only show toast if it's NOT a missing token error
+      if (!isNoAccessToken) {
+        toast.error('Session expired. Please log in again.')
+      }
+      
       logoutMutation()
         .catch(() => {})
         .finally(() => dispatch(clearUser()))

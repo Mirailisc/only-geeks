@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { AuthService } from '../auth.service'
+import { ACCESS_TOKEN } from 'src/constants/cookie'
 
 @Injectable()
 export class GqlAuthGuard {
@@ -12,16 +13,16 @@ export class GqlAuthGuard {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context).getContext()
-    const token = ctx.req.cookies['access_token']
+    const token = ctx.req.cookies[ACCESS_TOKEN]
 
     if (!token) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException('NO_ACCESS_TOKEN')
     }
 
     const user = await this.authService.getUserFromToken(token)
 
     if (!user) {
-      throw new UnauthorizedException('Invalid or expired token')
+      throw new UnauthorizedException('INVALID_OR_EXPIRED_TOKEN')
     }
 
     ctx.req.user = user
@@ -35,7 +36,7 @@ export class GuestAuthGuard {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context).getContext()
-    const token = ctx.req.cookies['access_token']
+    const token = ctx.req.cookies[ACCESS_TOKEN]
     let user
     if (token) {
       user = await this.authService.getUserFromToken(token)
@@ -68,7 +69,7 @@ export class AdminAuthGuard {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context).getContext()
-    const token = ctx.req.cookies['access_token']
+    const token = ctx.req.cookies[ACCESS_TOKEN]
 
     if (!token) {
       throw new UnauthorizedException()

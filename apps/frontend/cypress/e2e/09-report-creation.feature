@@ -16,7 +16,9 @@ Feature: Report Creation
         Then I should wait for 1 seconds
         Then I view the profile page at "imtest"
         Then I click button named "report-user-button"
+        Then I should wait for 1 seconds
         Then I click button named "report-category-selector"
+        Then I should wait for 1 seconds
         Then I click button named "report-reason-SPAM"
         Then I change input "report-reason" value to "this is test report of user"
         Then I should wait for 2 seconds
@@ -74,7 +76,9 @@ Feature: Report Creation
         Then I click button named "blogs-tab"
         Then I click button named "view-blog-button"
         Then I click button named "report-blog-button"
+        Then I should wait for 1 seconds
         Then I click button named "report-category-selector"
+        Then I should wait for 1 seconds
         Then I click button named "report-reason-INAPPROPRIATE_CONTENT"
         Then I change input "report-reason" value to "this is test report of blog"
         Then I should wait for 2 seconds
@@ -123,7 +127,9 @@ Feature: Report Creation
         Then I should wait for 2 seconds
         Then I click button named "projects-tab"
         Then I click button named "report-project-button"
+        Then I should wait for 1 seconds
         Then I click button named "report-category-selector"
+        Then I should wait for 1 seconds
         Then I click button named "report-reason-INAPPROPRIATE_CONTENT"
         Then I change input "report-reason" value to "this is test report of project"
         Then I should wait for 2 seconds

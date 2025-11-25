@@ -74,6 +74,10 @@ export default {
         },
         'no-m': {
           css: {
+            'hr':{
+              marginTop: "1rem",
+              marginBottom: "1rem",
+            },
             'h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote': {
               marginTop: 0,
               marginBottom: 0,

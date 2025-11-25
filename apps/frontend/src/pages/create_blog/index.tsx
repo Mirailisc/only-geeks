@@ -79,6 +79,7 @@ const CreateBlog = () => {
   const debouncedMarkdown = useDebounce(currentMarkdown, 1000)
   const debouncedSaveTrigger = useDebounce(
     {
+      editorState: currentEditorState,
       markdown: currentMarkdown,
       title: blogTitle,
     },
@@ -126,7 +127,7 @@ const CreateBlog = () => {
     setCurrentEditorState(editorState)
   }, [])
 
-  // Convert editor state to markdown
+  // Convert editor state to markdown (for description and thumbnail extraction only)
   useEffect(() => {
     if (!debouncedEditorState) return
 
@@ -156,19 +157,26 @@ const CreateBlog = () => {
       }
     })
   }, [debouncedEditorState])
-
+  // useEffect(()=>{
+  //   console.log(debouncedSaveTrigger.editorState)
+  //   console.log(debouncedSaveTrigger.editorState?.toJSON())
+  // },[debouncedSaveTrigger])
   // Auto-save functionality (Google Docs style)
   useEffect(() => {
-    const { markdown: debouncedMarkdownForSave, title: debouncedTitleForSave } = debouncedSaveTrigger
+    const { editorState: debouncedEditorStateForSave, title: debouncedTitleForSave } = debouncedSaveTrigger
 
-    if (!currentBlog || isInitialLoad) return
+    if (!currentBlog || isInitialLoad || !debouncedEditorStateForSave) return
 
     const autoSave = async () => {
       if (!currentBlog) return
-      const contentChanged = currentBlog.content !== debouncedMarkdownForSave
+
+      // Get Lexical JSON string
+      const lexicalJson = JSON.stringify(debouncedEditorStateForSave.toJSON())
+      
+      const contentChanged = currentBlog.content !== lexicalJson
       const titleChanged = currentBlog.title !== debouncedTitleForSave
 
-      if ((contentChanged || titleChanged) && debouncedMarkdownForSave.trim() !== '') {
+      if ((contentChanged || titleChanged) && lexicalJson.trim() !== '') {
         setIsSaving(true)
         try {
           await updateBlog({
@@ -176,7 +184,7 @@ const CreateBlog = () => {
               blogId: currentBlog.id,
               input: {
                 title: debouncedTitleForSave,
-                content: debouncedMarkdownForSave,
+                content: lexicalJson,
                 description: description,
                 thumbnail: thumbnail,
               },
@@ -189,7 +197,7 @@ const CreateBlog = () => {
               ? {
                   ...prev,
                   title: debouncedTitleForSave,
-                  content: debouncedMarkdownForSave,
+                  content: lexicalJson,
                   description: description,
                   thumbnail: thumbnail,
                   updatedAt: new Date().toISOString(),
@@ -214,7 +222,16 @@ const CreateBlog = () => {
         variables: {
           input: {
             title: 'Untitled',
-            content: '',
+            content: JSON.stringify({
+              root: {
+                children: [],
+                direction: null,
+                format: '',
+                indent: 0,
+                type: 'root',
+                version: 1,
+              },
+            }),
             description: null,
             thumbnail: null,
           },
@@ -238,22 +255,24 @@ const CreateBlog = () => {
   const handleSelectBlog = (blog: Blog) => {
     setCurrentBlog(blog)
     setBlogTitle(blog.title)
-    setCurrentMarkdown(blog.content || '')
+    // Don't set markdown here - let the editor handle loading from lexical JSON
     setBlogToLoad(blog)
     setShowBlogListDialog(false)
   }
 
   // Handle publish
   const handlePublish = async () => {
-    if (!currentBlog) return
+    if (!currentBlog || !currentEditorState) return
 
     try {
+      const lexicalJson = JSON.stringify(currentEditorState.toJSON())
+      
       await updateBlog({
         variables: {
           blogId: currentBlog.id,
           input: {
             title: blogTitle,
-            content: currentMarkdown,
+            content: lexicalJson,
             description: description,
             thumbnail: thumbnail,
             isPublished: publishVisibility,
@@ -347,7 +366,7 @@ const CreateBlog = () => {
                         <div className="min-w-0 flex-1">
                           <div className="truncate font-semibold">{blog.title}</div>
                           <div className="text-sm text-muted-foreground">
-                            Last edited: {dateFormatter(blog.updatedAt)}
+                            Last edited: {dateFormatter(blog.updatedAt, true)}
                           </div>
                         </div>
                       </Button>

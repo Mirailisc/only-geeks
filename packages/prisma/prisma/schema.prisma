@@ -102,7 +102,7 @@ model Blog {
   userId      String
   slug        String
   title       String
-  content     String?
+  content     Bytes?
   description String?
   thumbnail   String?
   isPublished Boolean  @default(false)
