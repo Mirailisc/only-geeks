@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
  
 import { useEffect, useRef } from 'react'
@@ -79,7 +80,7 @@ export default function LexicalViewer({ content = '', className }: Props) {
         loadTwitterWidgets()
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
+
       console.error('Error parsing Lexical JSON:', error)
       containerRef.current.innerHTML = '<p>Error rendering content</p>'
     }
@@ -95,17 +96,59 @@ export default function LexicalViewer({ content = '', className }: Props) {
 
 function lexicalToHtml(editorState: any): string {
   if (!editorState?.root) return ''
-  // eslint-disable-next-line no-console
   console.log('Lexical Editor State:', editorState.root)
-  return processNode(editorState.root, "")
+  return processNode(editorState.root, "", "", editorState.root.children.length)
 }
+function extractColorsOnly(style = "") {
+  // Use negative lookbehind to ensure 'color' is not preceded by a hyphen
+  const colorMatch = style.match(/(?<!-)color\s*:\s*[^;]+/i);
+  const bgMatch = style.match(/background-color\s*:\s*[^;]+/i);
 
-function processNode(node: any, listParentType: string): string {
+  let finalStyle = "";
+
+  if (colorMatch) finalStyle += colorMatch[0] + ";";
+  if (bgMatch) finalStyle += bgMatch[0] + ";";
+
+  // if (finalStyle !== "") {
+    // console.log(`Extracted Colors Only Style: (final: ${finalStyle}) ${style}`);
+  // }
+  return finalStyle;
+}
+function stripHexColors(style = "") {
+  const hasColor =
+    /color\s*:\s*#([A-Fa-f0-9]{3,6})/i.test(style) ||
+    /background-color\s*:\s*#([A-Fa-f0-9]{3,6})/i.test(style);
+
+  if (!hasColor) return style;
+
+  return style
+    .replace(/color\s*:\s*#([A-Fa-f0-9]{3,6});?/gi, "")
+    .replace(/background-color\s*:\s*#([A-Fa-f0-9]{3,6});?/gi, "")
+    .trim();
+}
+function compareColorStyles(style1: string, style2: string): boolean {
+  // Helper to extract color and background-color
+  const extractColors = (style: string) => {
+    const obj: Record<string, string> = {};
+    style.split(";").forEach((s) => {
+      const [key, value] = s.split(":").map((x) => x?.trim());
+      if (key === "color" || key === "background-color") {
+        obj[key] = value;
+      }
+    });
+    return obj;
+  };
+
+  const c1 = extractColors(style1);
+  const c2 = extractColors(style2);
+
+  return c1["color"] === c2["color"] && c1["background-color"] === c2["background-color"];
+}
+function processNode(node: any, listParentType: string, parentTextStyle: string, parentChildCount: number): string {
   if (!node) return '';
 
   const children = node.children || [];
-  const childrenHtml = children.map((child: any) => processNode(child, node.listType || "")).join('');
-
+  const childrenHtml = children.map((child: any) => processNode(child, node.listType || "", extractColorsOnly(node.textStyle), children.length)).join('');
   switch (node.type) {
     /** ROOT */
     case 'root':
@@ -113,6 +156,7 @@ function processNode(node: any, listParentType: string): string {
 
     /** PARAGRAPH */
     case 'paragraph': {
+      console.log("node pg: ", node);
       let style = node.textStyle || "";
       const format = node.format || 0;
       const indent = node.indent || 0;
@@ -123,32 +167,11 @@ function processNode(node: any, listParentType: string): string {
       style += format === "left" ? "text-align:left;" : "";
       style += `margin-left: ${indent * 35}px`;
       // --- SINGLE-SPAN CHECK ---
-      let out = childrenHtml;
-
-      // match exactly ONE span as the entire childrenHtml
-      const singleSpanRegex = /^<span([^>]*)>(.*?)<\/span>$/s;
-      const match = childrenHtml?.match(singleSpanRegex);
-
-      if (match) {
-        const attr = match[1];      // attributes inside <span ...>
-        const inner = match[2];     // text/content inside span
-
-        // check if style contains background-color
-        const hasBackground =
-          /background(?:-color)?\s*:/i.test(attr || "");
-
-        if (!hasBackground) {
-          // Remove the style="" entirely
-          const cleanedAttr = attr
-            .replace(/\s*style\s*=\s*"(.*?)"/, "")   // remove style=""
-            .replace(/\s*style\s*=\s*'(.*?)'/, ""); // remove style=''
-
-          // ensure <span> or <span >
-          out = `<span${cleanedAttr}>${inner}</span>`;
-        }
+      style = stripHexColors(style);
+      if(childrenHtml == ""){
+        return `<br />`
       }
-
-      return `<p style="${style}">${out || ""}</p>`;
+      return `<p style="${style}">${childrenHtml || ""}</p>`;
     }
 
     /** HEADINGS */
@@ -163,9 +186,11 @@ function processNode(node: any, listParentType: string): string {
       style += format === "right" ? "text-align:right;" : ""
       style += format === "justify" ? "text-align:justify;" : ""
       style += format === "left" ? "text-align:left;" : ""
-      if(style === "color: #000000;background-color: #ffffff;"){
-        style = ""
-      }
+      // if(style === "color: #000000;background-color: #ffffff;"){
+      //   style = ""
+      // }
+      style = stripHexColors(style);
+
       // add font size to every heading based on tag
       style += tag === "h1" ? "font-size:2.25rem;" : ""
       style += tag === "h2" ? "font-size:1.875rem;" : ""
@@ -173,7 +198,14 @@ function processNode(node: any, listParentType: string): string {
       style += tag === "h4" ? "font-size:1.25rem;" : ""
       style += tag === "h5" ? "font-size:1.125rem;" : ""
       style += tag === "h6" ? "font-size:1rem;" : ""
-      return `<${tag} id="${id}" style="${style}" class="scroll-mt-24"><a href="#${id}" class="no-underline hover:underline dark:text-white">${childrenHtml}</a></${tag}>`;
+      let textScrolling = ""
+      textScrolling += tag === "h1" ? "scroll-mt-20" : ""
+      textScrolling += tag === "h2" ? "scroll-mt-20" : ""
+      textScrolling += tag === "h3" ? "scroll-mt-16" : ""
+      textScrolling += tag === "h4" ? "scroll-mt-16" : ""
+      textScrolling += tag === "h5" ? "scroll-mt-16" : ""
+      textScrolling += tag === "h6" ? "scroll-mt-16" : ""
+      return `<${tag} id="${id}" style="${style}" class="${textScrolling}"><a href="#${id}" class="no-underline hover:underline dark:text-white">${childrenHtml}</a></${tag}>`;
     }
 
     /** LISTS */
@@ -197,9 +229,7 @@ function processNode(node: any, listParentType: string): string {
       style += format === "right" ? "text-align:right;" : ""
       style += format === "justify" ? "text-align:justify;" : ""
       style += format === "left" ? "text-align:left;" : ""
-      if(style === "color: #000000;background-color: #ffffff;"){
-        style = ""
-      }
+      style = stripHexColors(style);
       return `<${listParentType === "check" ? "div" : "li"} style="${style}">
         ${listParentType === "check" ? `<input type="checkbox" disabled ${node.checked ? "checked" : ""} id="" name="" value="">` : ""}
         ${childrenHtml}
@@ -229,7 +259,12 @@ function processNode(node: any, listParentType: string): string {
     /** TEXT */
     case 'text': {
       let text = escapeHtml(node.text || '');
-      let style = node.textStyle || ""
+      const textStyle = node.textStyle || node.style
+      // eslint-disable-next-line no-nested-ternary
+      let style = parentChildCount === 0 ? "" :
+      // eslint-disable-next-line no-nested-ternary
+      parentChildCount === 1 ? textStyle || parentTextStyle :
+      compareColorStyles(textStyle,parentTextStyle) ? parentTextStyle : ""
       const format = node.format || 0 // center | justify | left | right
       // append text alignment from format to style
       style += format === "center" ? "text-align:center;" : ""

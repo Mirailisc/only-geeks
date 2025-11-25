@@ -157,7 +157,10 @@ const CreateBlog = () => {
       }
     })
   }, [debouncedEditorState])
-
+  // useEffect(()=>{
+  //   console.log(debouncedSaveTrigger.editorState)
+  //   console.log(debouncedSaveTrigger.editorState?.toJSON())
+  // },[debouncedSaveTrigger])
   // Auto-save functionality (Google Docs style)
   useEffect(() => {
     const { editorState: debouncedEditorStateForSave, title: debouncedTitleForSave } = debouncedSaveTrigger

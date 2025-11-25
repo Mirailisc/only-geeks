@@ -1,4 +1,5 @@
 import BlogCard from '@/components/blog/blogCard'
+import { BlogCTA } from '@/components/blog/blogCTA'
 import LexicalViewer from '@/components/blog/lexicalViewer'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
@@ -11,10 +12,11 @@ import type { Profile } from '@/graphql/profile'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import { useQuery } from '@apollo/client/react'
 import { HomeIcon, PencilIcon, TriangleAlertIcon } from 'lucide-react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const ReadBlog = () => {
   const { username, slug: blogSlug } = useParams()
+  const navigator = useNavigate();
   const { user } = useAppSelector((state) => state.auth)
   const { data, loading, error } = useQuery<{ getBlogBySlugAndUsername: Partial<Blog> & { User: Partial<Profile> } }>(
     BLOG_READ_QUERY,
@@ -82,6 +84,21 @@ const ReadBlog = () => {
           isResponse={data?.getBlogBySlugAndUsername.isResponse || false}
         />
         <LexicalViewer content={data?.getBlogBySlugAndUsername.content || ''} />
+        <div>
+          
+        </div>
+        <BlogCTA 
+          author={{
+            image: data?.getBlogBySlugAndUsername.User?.picture || '',
+            username: data?.getBlogBySlugAndUsername.User?.username || '',
+            firstName: data?.getBlogBySlugAndUsername.User?.firstName || '',
+            lastName: data?.getBlogBySlugAndUsername.User?.lastName || '',
+          }}
+          blogTitle={data?.getBlogBySlugAndUsername.title || ''}
+          onCreateClick={() => {
+            navigator(CREATE_BLOG_PATH)
+          }}
+        />
       </div>
     </>
   )
