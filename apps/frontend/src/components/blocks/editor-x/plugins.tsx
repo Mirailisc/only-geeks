@@ -8,7 +8,6 @@ import {
 } from "@lexical/markdown"
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin"
 import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin"
-import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin"
 import { ClickableLinkPlugin } from "@lexical/react/LexicalClickableLinkPlugin"
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
 import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin"
@@ -23,15 +22,8 @@ import { TablePlugin } from "@lexical/react/LexicalTablePlugin"
 import { ContentEditable } from "@/components/editor/editor-ui/content-editable"
 import { ActionsPlugin } from "@/components/editor/plugins/actions/actions-plugin"
 import { CharacterLimitPlugin } from "@/components/editor/plugins/actions/character-limit-plugin"
-import { ClearEditorActionPlugin } from "@/components/editor/plugins/actions/clear-editor-plugin"
 import { CounterCharacterPlugin } from "@/components/editor/plugins/actions/counter-character-plugin"
-import { EditModeTogglePlugin } from "@/components/editor/plugins/actions/edit-mode-toggle-plugin"
-import { ImportExportPlugin } from "@/components/editor/plugins/actions/import-export-plugin"
-import { MarkdownTogglePlugin } from "@/components/editor/plugins/actions/markdown-toggle-plugin"
 import { MaxLengthPlugin } from "@/components/editor/plugins/actions/max-length-plugin"
-import { ShareContentPlugin } from "@/components/editor/plugins/actions/share-content-plugin"
-import { SpeechToTextPlugin } from "@/components/editor/plugins/actions/speech-to-text-plugin"
-import { TreeViewPlugin } from "@/components/editor/plugins/actions/tree-view-plugin"
 import { AutoLinkPlugin } from "@/components/editor/plugins/auto-link-plugin"
 import { AutocompletePlugin } from "@/components/editor/plugins/autocomplete-plugin"
 import { CodeActionMenuPlugin } from "@/components/editor/plugins/code-action-menu-plugin"
@@ -271,40 +263,14 @@ export function Plugins({}) {
         <ListMaxIndentLevelPlugin />
       </div>
       <ActionsPlugin>
-        <div className="clear-both flex items-center justify-between gap-2 overflow-auto border-t p-1">
+        <div className="clear-both flex items-center justify-between gap-2 overflow-auto border-t p-2">
           <div className="flex flex-1 justify-start">
             <MaxLengthPlugin maxLength={maxLength} />
             <CharacterLimitPlugin maxLength={maxLength} charset="UTF-16" />
           </div>
           <div>
             <CounterCharacterPlugin charset="UTF-16" />
-          </div>
-          <div className="flex flex-1 justify-end">
-            <SpeechToTextPlugin />
-            <ShareContentPlugin />
-            <ImportExportPlugin />
-            <MarkdownTogglePlugin
-              shouldPreserveNewLinesInMarkdown={true}
-              transformers={[
-                TABLE,
-                HR,
-                IMAGE,
-                EMOJI,
-                TWEET,
-                CHECK_LIST,
-                ...ELEMENT_TRANSFORMERS,
-                ...MULTILINE_ELEMENT_TRANSFORMERS,
-                ...TEXT_FORMAT_TRANSFORMERS,
-                ...TEXT_MATCH_TRANSFORMERS,
-              ]}
-            />
-            <EditModeTogglePlugin />
-            <>
-              <ClearEditorActionPlugin />
-              <ClearEditorPlugin />
-            </>
-            <TreeViewPlugin />
-          </div>
+          </div>          
         </div>
       </ActionsPlugin>
     </div>
